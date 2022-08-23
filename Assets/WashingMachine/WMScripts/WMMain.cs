@@ -32,7 +32,8 @@ public class WMMain : MonoBehaviour
     private UIDocument _uiDocument;
     private WMHud _wmHud;
     private float _baseWheelHeight;
-    private float _wheelSpeed = 5f;
+    private float _wheelSpeed = 1f;
+    private float _wheelStartPos;
     void Awake()
     {
 
@@ -45,12 +46,14 @@ public class WMMain : MonoBehaviour
         playfield.transform.localScale = new Vector3(r.width,r.height,0f);
 
         playfield.transform.position = new Vector3(r.center.x,r.center.y,100f);
-        wheel.transform.position = new Vector3(r.center.x,r.center.y,90f);
+        
 
         var wsr = wheel.GetComponent<SpriteRenderer>();
+        _wheelStartPos = r.center.y + wsr.sprite.vertices[0].y;
+        wheel.transform.position = new Vector3(r.center.x,_wheelStartPos,90f);
         //Debug.Log($"size: { wsr.sprite.vertices[0]}, { wsr.sprite.vertices[1]}");
         _baseWheelHeight = wsr.sprite.vertices[0].y * 2;
-        wsr.size = new Vector2(r.width, r.height * 4f);
+        wsr.size = new Vector2(r.width, mainCamera.Camera.orthographicSize*4f);
         //wheel.transform.localScale = new Vector3(r.width,r.height*2f,0f);
         
         _uiDocument = gameObject.GetComponent<UIDocument>();
@@ -59,6 +62,7 @@ public class WMMain : MonoBehaviour
 
         _wmHud = new WMHud(mainCamera.topBarRect, mainCamera.bottomBarRect);
         _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
+        
     }
 
     
@@ -101,10 +105,10 @@ public class WMMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Tools.TranslatePosition(wheel,y: Time.deltaTime*_wheelSpeed );
-        if (wheel.transform.position.y > _baseWheelHeight)
+        Tools.TranslatePosition(wheel,y: -Time.deltaTime*_wheelSpeed );
+        if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
         {
-            Tools.MutatePosition(wheel,y: wheel.transform.position.y%_baseWheelHeight);
+            Tools.MutatePosition(wheel,y: wheel.transform.position.y+_baseWheelHeight);
         }
 
         sockSpawnTimer += Time.deltaTime;
