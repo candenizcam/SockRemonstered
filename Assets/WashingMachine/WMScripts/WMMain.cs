@@ -19,7 +19,8 @@ public class WMMain : MonoBehaviour
     public GameObject playfield;
     public WMHud hudScript;
     public GameObject wheel;
-    
+    public GameObject bottomWater;
+    public GameObject topWater;
     
     private float sockSpawnTime = 1f;
     private float sockSpawnTimer = 0f;
@@ -27,8 +28,6 @@ public class WMMain : MonoBehaviour
     private List<SockPrefabScript> _activeSocks = new List<SockPrefabScript>();
     private WMLayout mainCamera;
 
-    private float _playfieldTopBorder = 0.9f;
-    private float _playfieldBottomBorder = 0.05f;
     private UIDocument _uiDocument;
     private WMHud _wmHud;
     private float _baseWheelHeight;
@@ -60,9 +59,19 @@ public class WMMain : MonoBehaviour
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
 
-        _wmHud = new WMHud(mainCamera.topBarRect, mainCamera.bottomBarRect);
+        _wmHud = new WMHud(mainCamera.topBarRect(), mainCamera.bottomBarRect());
         _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
+
+        var left = r.xMin;
+        var bottom = r.yMax;
         
+        var tw = topWater.GetComponent<SpriteRenderer>().size;
+        
+
+        topWater.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
+        bottomWater.transform.position = new Vector3(left + tw.x / 2f, r.yMin - tw.y / 2f, 0f);
+        //bottomWater.transform.position = 
+
     }
 
     
@@ -118,7 +127,7 @@ public class WMMain : MonoBehaviour
             
             if (_activeSocks.Count < 5)
             {
-                _activeSocks.Add(generateSock(Tools.RandomVector2(y: _playfieldTopBorder)));
+                _activeSocks.Add(generateSock(Tools.RandomVector2(y: mainCamera.playfieldTop)));
                 ArrangeActiveSocks();
             }
             
@@ -128,7 +137,7 @@ public class WMMain : MonoBehaviour
         {
             sockPrefabScript.MoveDownTime();
             var p = mainCamera.Camera.WorldToViewportPoint(sockPrefabScript.gameObject.transform.position);
-            if (p.y < _playfieldBottomBorder)
+            if (p.y < mainCamera.playfieldBottom)
             {
                 sockPrefabScript.ToBeDestroyed = true;
                 Destroy(sockPrefabScript.gameObject);

@@ -20,7 +20,7 @@ public class WMHud
         _topBar.style.bottom = topBarRect.y;
         _topBar.style.height = topBarRect.height;
         _topBar.style.width = topBarRect.width;
-        _topBar.style.backgroundColor = new Color(1f,1f,0f,0.6f);
+        //_topBar.style.backgroundColor = new Color(1f,1f,0f,0.6f);
 
 
         _bottomBar = new VisualElement();
@@ -30,7 +30,7 @@ public class WMHud
         _bottomBar.style.bottom = bottomBarRect.y;
         _bottomBar.style.height = bottomBarRect.height;
         _bottomBar.style.width = bottomBarRect.width;
-        _bottomBar.style.backgroundColor = new Color(1f,0f,0f,0.6f);
+        //_bottomBar.style.backgroundColor = new Color(1f,0f,0f,0.6f);
     }
 
 
