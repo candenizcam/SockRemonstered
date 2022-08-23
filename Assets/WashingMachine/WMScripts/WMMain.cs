@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Schema;
 using Classes;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using WashingMachine.WMScripts;
@@ -16,6 +18,7 @@ public class WMMain : MonoBehaviour
     
     public GameObject playfield;
     public WMHud hudScript;
+    public GameObject wheel;
     
     
     private float sockSpawnTime = 1f;
@@ -28,6 +31,8 @@ public class WMMain : MonoBehaviour
     private float _playfieldBottomBorder = 0.05f;
     private UIDocument _uiDocument;
     private WMHud _wmHud;
+    private float _baseWheelHeight;
+    private float _wheelSpeed = 5f;
     void Awake()
     {
 
@@ -40,7 +45,14 @@ public class WMMain : MonoBehaviour
         playfield.transform.localScale = new Vector3(r.width,r.height,0f);
 
         playfield.transform.position = new Vector3(r.center.x,r.center.y,100f);
+        wheel.transform.position = new Vector3(r.center.x,r.center.y,90f);
 
+        var wsr = wheel.GetComponent<SpriteRenderer>();
+        //Debug.Log($"size: { wsr.sprite.vertices[0]}, { wsr.sprite.vertices[1]}");
+        _baseWheelHeight = wsr.sprite.vertices[0].y * 2;
+        wsr.size = new Vector2(r.width, r.height * 4f);
+        //wheel.transform.localScale = new Vector3(r.width,r.height*2f,0f);
+        
         _uiDocument = gameObject.GetComponent<UIDocument>();
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
@@ -64,7 +76,7 @@ public class WMMain : MonoBehaviour
         var thisTurnTouches = thisTurnTouches2.ToList();
         
         if (thisTurnTouches.Count <= 0) return; // if there is no touch to be handled, break
-        Debug.Log("exists");
+        //Debug.Log("exists");
         foreach (var sockPrefabScript in _activeSocks) // look at each sock with each touch, remove touches and socks that collide starting from the top sock and first touch
         {
             var touched = false;
@@ -85,10 +97,15 @@ public class WMMain : MonoBehaviour
     
     
     
+    
     // Update is called once per frame
     void Update()
     {
-
+        Tools.TranslatePosition(wheel,y: Time.deltaTime*_wheelSpeed );
+        if (wheel.transform.position.y > _baseWheelHeight)
+        {
+            Tools.MutatePosition(wheel,y: wheel.transform.position.y%_baseWheelHeight);
+        }
 
         sockSpawnTimer += Time.deltaTime;
         if (sockSpawnTimer > sockSpawnTime)

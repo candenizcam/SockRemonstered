@@ -10,6 +10,7 @@ namespace Classes
         public CameraTools(Camera c)
         {
             Camera = c;
+            c.orthographicSize = Screen.height / 200f;
         }
 
 

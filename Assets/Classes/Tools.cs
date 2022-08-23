@@ -65,6 +65,12 @@ public static class Tools
         {
             g.transform.position = MutateVector3(g.transform.position, x, y, z);
         }
+        
+        public static void TranslatePosition(GameObject g, float x = 0f, float y=0f, float z=0f)
+        {
+            var p = g.transform.position;
+            g.transform.position = MutateVector3(g.transform.position, p.x+x, p.y+y, p.z+z);
+        }
 
         public static Color MutateColour(Color c, float? r = null, float? g= null, float? b = null, float? a= null)
         {

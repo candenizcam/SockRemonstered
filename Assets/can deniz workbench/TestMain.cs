@@ -15,8 +15,15 @@ public class TestMain : MonoBehaviour
     {
         Debug.Log($"screen, width {Screen.width}, height {Screen.height}");
         
+        Debug.Log($"{Screen.resolutions}, {Screen.currentResolution}");
         
+        Debug.Log($"camera main target width: {Camera.main.scaledPixelWidth}, height: {Camera.main.scaledPixelHeight}");
         
+        Debug.Log($"os: {Camera.main.orthographicSize}");
+
+        Camera.main.orthographicSize = Screen.height / 200f;
+
+        /*
         // Debug.Log($"camera main rect width: {Camera.main.rect.width}, height: {Camera.main.rect.height}"); 1,1
         
         Debug.Log($"camera main pixel width: {Camera.main.pixelWidth}, height: {Camera.main.pixelHeight}");
@@ -39,7 +46,7 @@ public class TestMain : MonoBehaviour
         
         Debug.Log($"v2 screen world {Camera.main.ViewportToScreenPoint(new Vector3(1,1,0))} {Camera.main.ViewportToWorldPoint(new Vector3(1,1,0))}");
         
-        Camera.main.orthographicSize *= 2f;
+        //Camera.main.orthographicSize *= 2f;
 
         
         var gc12 = visual.GetComponent<SpriteRenderer>();
@@ -57,6 +64,7 @@ public class TestMain : MonoBehaviour
        
         otherVisual5.transform.localScale = new Vector3(2f, 2f, 1f);
         rendererStats("52",gc52);
+        */
     }
 
     void rendererStats(string pre, SpriteRenderer sr)
