@@ -46,9 +46,7 @@ public class SockPrefabScript : MonoBehaviour
     {
         var y= gameObject.transform.position.y - Time.deltaTime * fallSpeed;
         Tools.MutatePosition(gameObject, y:y);
-        
-        
-        
     }
+
 
 }
