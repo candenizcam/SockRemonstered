@@ -32,6 +32,9 @@ public class WMMain : MonoBehaviour
     private System.Random _random;
     private int levelIndex = 0;
     private int _maxSock= -1;
+    private int _moveNo = 0;
+
+    private bool _levelEnd = false;
     
     void Awake()
     {
@@ -80,6 +83,7 @@ public class WMMain : MonoBehaviour
         _wheelSpeed = thisLevel.WheelSpeed;
         sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
+        _moveNo = thisLevel.MoveNo;
         //public float SockSpawnTime;
         //public float WheelSpeed;
         //public int MaxSock;
@@ -109,6 +113,7 @@ public class WMMain : MonoBehaviour
                 if (!sockPrefabScript.Collides(worldPoint)) continue; // if no collision continue
                 touched = true;
                 thisTurnTouches.RemoveAt(i);
+                _moveNo -= 1;
                 break;
             }
             if (!touched) continue;
@@ -124,38 +129,55 @@ public class WMMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Tools.TranslatePosition(wheel,y: -Time.deltaTime*_wheelSpeed );
-        if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
+        if (_moveNo <= 0)
         {
-            Tools.MutatePosition(wheel,y: wheel.transform.position.y+_baseWheelHeight);
+            _levelEnd = true;
+            Debug.Log("No more moves");
         }
 
-        sockSpawnTimer += Time.deltaTime;
-        if (sockSpawnTimer > sockSpawnTime)
+        if (_levelEnd)
         {
-            sockSpawnTimer %= sockSpawnTime;
-            if (_maxSock <= 0 || _activeSocks.Count < _maxSock)
+            
+        }
+        else
+        {
+            Tools.TranslatePosition(wheel,y: -Time.deltaTime*_wheelSpeed );
+            if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
             {
-                var x =(float)_random.NextDouble() * 0.8f+ .1f;
-                _activeSocks.Add(generateSock(new Vector2(x: x, y: mainCamera.playfieldTop)));
-                ArrangeActiveSocks();
+                Tools.MutatePosition(wheel,y: wheel.transform.position.y+_baseWheelHeight);
             }
+
+            sockSpawnTimer += Time.deltaTime;
+            if (sockSpawnTimer > sockSpawnTime)
+            {
+                sockSpawnTimer %= sockSpawnTime;
+                if (_maxSock <= 0 || _activeSocks.Count < _maxSock)
+                {
+                    var x =(float)_random.NextDouble() * 0.8f+ .1f;
+                    _activeSocks.Add(generateSock(new Vector2(x: x, y: mainCamera.playfieldTop)));
+                    ArrangeActiveSocks();
+                }
+            }
+        
+            foreach (var sockPrefabScript in _activeSocks)
+            {
+                sockPrefabScript.MoveDownTime();
+                var p = mainCamera.Camera.WorldToViewportPoint(sockPrefabScript.gameObject.transform.position);
+                if (p.y <  0f)//mainCamera.playfieldBottom)
+                {
+                    sockPrefabScript.ToBeDestroyed = true;
+                    Destroy(sockPrefabScript.gameObject);
+                }
+            }
+        
+            HandleTouch();
+            _activeSocks.RemoveAll(x => x.ToBeDestroyed);
+            ArrangeActiveSocks();
         }
         
-        foreach (var sockPrefabScript in _activeSocks)
-        {
-            sockPrefabScript.MoveDownTime();
-            var p = mainCamera.Camera.WorldToViewportPoint(sockPrefabScript.gameObject.transform.position);
-            if (p.y <  0f)//mainCamera.playfieldBottom)
-            {
-                sockPrefabScript.ToBeDestroyed = true;
-                Destroy(sockPrefabScript.gameObject);
-            }
-        }
         
-        HandleTouch();
-        _activeSocks.RemoveAll(x => x.ToBeDestroyed);
-        ArrangeActiveSocks();
+        
+        
     }
 
     /** This script generates a sock

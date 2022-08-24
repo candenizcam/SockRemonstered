@@ -7,7 +7,7 @@ namespace WashingMachine.WMScripts
     {
         public static readonly WMLevelInfo[] WmLevelInfos =
         {
-            new WMLevelInfo(0.5f,1f,-1,
+            new WMLevelInfo(0.5f,1f,-1, 25,
                 new WMSockInfo[]
                 {
                     new WMSockInfo(0,0,1,10),
@@ -15,7 +15,7 @@ namespace WashingMachine.WMScripts
                     new WMSockInfo(0,2,0,15,3),
                     new WMSockInfo(0,2,0,5,3),
                 }),
-            new WMLevelInfo(0.5f,1f,-1,
+            new WMLevelInfo(0.5f,1f,-1, 25,
                 new WMSockInfo[]
                 {
                     new WMSockInfo(0,0,1,10),
@@ -38,7 +38,8 @@ namespace WashingMachine.WMScripts
         public float SockSpawnTime; // sock spawn time in seconds
         public float WheelSpeed; // the speed of the wheel, individual sock speed depends on this
         public int MaxSock; // the max number of socks, if -1 there is no limit
-        public WMLevelInfo(float sockSpawnTime, float wheelSpeed, int maxSock, WMSockInfo[] wmSockInfos)
+        public int MoveNo; // number of moves
+        public WMLevelInfo(float sockSpawnTime, float wheelSpeed, int maxSock, int moveNo, WMSockInfo[] wmSockInfos)
         {
             _wmSockInfos = wmSockInfos;
             fullBias = 0;
@@ -50,6 +51,7 @@ namespace WashingMachine.WMScripts
             SockSpawnTime = sockSpawnTime;
             WheelSpeed = wheelSpeed;
             MaxSock = maxSock;
+            MoveNo = moveNo;
 
 
         }
