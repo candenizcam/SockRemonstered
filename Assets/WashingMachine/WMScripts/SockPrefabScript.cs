@@ -10,7 +10,8 @@ public class SockPrefabScript : MonoBehaviour
     public List<SpriteRenderer> sockSpriteList;
     public Collider2D hitbox;
     public SpriteShapeRenderer hitboxRenderer;
-    
+
+    public float fallSpeed = 1f;
     // Start is called before the first frame update
     public bool ToBeDestroyed = false;
 
@@ -30,6 +31,15 @@ public class SockPrefabScript : MonoBehaviour
 
     }
 
+    public void ChangeSprite(int cs)
+    {
+        _selectedSprite = cs;
+        for (int i = 0; i < sockSpriteList.Count; i++)
+        {
+            sockSpriteList[i].gameObject.SetActive(i == _selectedSprite);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -40,5 +50,12 @@ public class SockPrefabScript : MonoBehaviour
     {
         return hitbox.OverlapPoint(point);
     }
+
+    public void MoveDownTime()
+    {
+        var y= gameObject.transform.position.y - Time.deltaTime * fallSpeed;
+        Tools.MutatePosition(gameObject, y:y);
+    }
+
 
 }

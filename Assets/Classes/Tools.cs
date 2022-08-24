@@ -6,15 +6,21 @@ using UnityEngine;
 public static class Tools
 {
 
-    public static Vector2 RandomVector2()
+    /** Generates a vector with given values, while filling the rest randomly between 0f-1f
+     *  
+     */
+    public static Vector2 RandomVector2(float? x=null, float? y = null)
     {
         var a = new System.Random();
         //var a = new Unity.Mathematics.Random();
-        float r1 = (float) a.NextDouble();
-        float r2 = (float) a.NextDouble();
+        
+        float r1 = x ??= (float) a.NextDouble();
+        float r2 = y ??= (float) a.NextDouble();
         return new Vector2(r1, r2);
     }
 
+    
+    
     
      public static Vector3 Vector3Scale(Vector3 v, float scalar)
         {
@@ -61,6 +67,12 @@ public static class Tools
         public static void MutatePosition(GameObject g, float? x = null, float? y=null, float? z=null)
         {
             g.transform.position = MutateVector3(g.transform.position, x, y, z);
+        }
+        
+        public static void TranslatePosition(GameObject g, float x = 0f, float y=0f, float z=0f)
+        {
+            var p = g.transform.position;
+            g.transform.position = MutateVector3(g.transform.position, p.x+x, p.y+y, p.z+z);
         }
 
         public static Color MutateColour(Color c, float? r = null, float? g= null, float? b = null, float? a= null)
