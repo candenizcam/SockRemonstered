@@ -33,10 +33,12 @@ public class WMMain : MonoBehaviour
     private float _baseWheelHeight;
     private float _wheelSpeed = 1f;
     private float _wheelStartPos;
+    private Random _random;
+    
     void Awake()
     {
 
-        
+        _random = new Random();        
         
         mainCamera = new WMLayout(Camera.main);
 
@@ -125,9 +127,11 @@ public class WMMain : MonoBehaviour
         {
             sockSpawnTimer %= sockSpawnTime;
             
-            if (_activeSocks.Count < 5)
+            if (_activeSocks.Count < 25)
             {
-                _activeSocks.Add(generateSock(Tools.RandomVector2(y: mainCamera.playfieldTop)));
+                var x =(float)_random.NextDouble() * 0.8f+ .1f;
+                
+                _activeSocks.Add(generateSock(new Vector2(x: x, y: mainCamera.playfieldTop)));
                 ArrangeActiveSocks();
             }
             
@@ -137,7 +141,7 @@ public class WMMain : MonoBehaviour
         {
             sockPrefabScript.MoveDownTime();
             var p = mainCamera.Camera.WorldToViewportPoint(sockPrefabScript.gameObject.transform.position);
-            if (p.y < mainCamera.playfieldBottom)
+            if (p.y <  0f)//mainCamera.playfieldBottom)
             {
                 sockPrefabScript.ToBeDestroyed = true;
                 Destroy(sockPrefabScript.gameObject);

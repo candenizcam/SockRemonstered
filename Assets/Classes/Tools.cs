@@ -13,11 +13,14 @@ public static class Tools
     {
         var a = new System.Random();
         //var a = new Unity.Mathematics.Random();
+        
         float r1 = x ??= (float) a.NextDouble();
         float r2 = y ??= (float) a.NextDouble();
         return new Vector2(r1, r2);
     }
 
+    
+    
     
      public static Vector3 Vector3Scale(Vector3 v, float scalar)
         {
