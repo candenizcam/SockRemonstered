@@ -25,7 +25,7 @@ namespace WashingMachine.WMScripts
         };
 
 
-        public static string[] WmSockTypeLookup = {"prefabs/BaseSockPrefab"};
+        public static string[] WmSockTypeLookup = {"prefabs/s1","prefabs/s2","prefabs/s3","prefabs/s4","prefabs/s5","prefabs/s6","prefabs/s7","prefabs/s8","prefabs/s9"};
 
     }
 
