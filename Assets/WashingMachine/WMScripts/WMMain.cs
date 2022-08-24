@@ -1,16 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Xml.Schema;
 using Classes;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using WashingMachine.WMScripts;
-using Random = System.Random;
 
 public class WMMain : MonoBehaviour
 {
@@ -21,6 +16,7 @@ public class WMMain : MonoBehaviour
     public GameObject wheel;
     public GameObject bottomWater;
     public GameObject topWater;
+    public int LevelIndex = -1;
     
     private float sockSpawnTime = 1f;
     private float sockSpawnTimer = 0f;
@@ -33,12 +29,16 @@ public class WMMain : MonoBehaviour
     private float _baseWheelHeight;
     private float _wheelSpeed = 1f;
     private float _wheelStartPos;
-    private Random _random;
+    private System.Random _random;
+    private int levelIndex = 0;
+    private int _maxSock= -1;
     
     void Awake()
     {
 
-        _random = new Random();        
+        
+        
+        _random = new System.Random();        
         
         mainCamera = new WMLayout(Camera.main);
 
@@ -52,10 +52,8 @@ public class WMMain : MonoBehaviour
         var wsr = wheel.GetComponent<SpriteRenderer>();
         _wheelStartPos = r.center.y + wsr.sprite.vertices[0].y;
         wheel.transform.position = new Vector3(r.center.x,_wheelStartPos,90f);
-        //Debug.Log($"size: { wsr.sprite.vertices[0]}, { wsr.sprite.vertices[1]}");
         _baseWheelHeight = wsr.sprite.vertices[0].y * 2;
         wsr.size = new Vector2(r.width, mainCamera.Camera.orthographicSize*4f);
-        //wheel.transform.localScale = new Vector3(r.width,r.height*2f,0f);
         
         _uiDocument = gameObject.GetComponent<UIDocument>();
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
@@ -68,12 +66,23 @@ public class WMMain : MonoBehaviour
         var bottom = r.yMax;
         
         var tw = topWater.GetComponent<SpriteRenderer>().size;
-        
+        var bw = bottomWater.GetComponent<SpriteRenderer>().size;
 
         topWater.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
-        bottomWater.transform.position = new Vector3(left + tw.x / 2f, r.yMin - tw.y / 2f, 0f);
-        //bottomWater.transform.position = 
+        bottomWater.transform.position = new Vector3(left + bw.x / 2f, r.yMin - bw.y / 2f, 0f);
 
+        if (LevelIndex > 0)
+        {
+            levelIndex = LevelIndex;
+        }
+
+        var thisLevel = WMLevels.WmLevelInfos[levelIndex];
+        _wheelSpeed = thisLevel.WheelSpeed;
+        sockSpawnTime = thisLevel.SockSpawnTime;
+        _maxSock = thisLevel.MaxSock;
+        //public float SockSpawnTime;
+        //public float WheelSpeed;
+        //public int MaxSock;
     }
 
     
@@ -91,7 +100,6 @@ public class WMMain : MonoBehaviour
         var thisTurnTouches = thisTurnTouches2.ToList();
         
         if (thisTurnTouches.Count <= 0) return; // if there is no touch to be handled, break
-        //Debug.Log("exists");
         foreach (var sockPrefabScript in _activeSocks) // look at each sock with each touch, remove touches and socks that collide starting from the top sock and first touch
         {
             var touched = false;
@@ -126,15 +134,12 @@ public class WMMain : MonoBehaviour
         if (sockSpawnTimer > sockSpawnTime)
         {
             sockSpawnTimer %= sockSpawnTime;
-            
-            if (_activeSocks.Count < 25)
+            if (_maxSock <= 0 || _activeSocks.Count < _maxSock)
             {
                 var x =(float)_random.NextDouble() * 0.8f+ .1f;
-                
                 _activeSocks.Add(generateSock(new Vector2(x: x, y: mainCamera.playfieldTop)));
                 ArrangeActiveSocks();
             }
-            
         }
         
         foreach (var sockPrefabScript in _activeSocks)
@@ -148,13 +153,9 @@ public class WMMain : MonoBehaviour
             }
         }
         
-        
-        
         HandleTouch();
-       
         _activeSocks.RemoveAll(x => x.ToBeDestroyed);
         ArrangeActiveSocks();
-        
     }
 
     /** This script generates a sock
@@ -162,10 +163,20 @@ public class WMMain : MonoBehaviour
      */
     SockPrefabScript generateSock(Vector2 viewPortPos)
     {
-        var bsp = Instantiate(Resources.Load(_baseSockPrefabPath));
+        
+        // WmSockTypeLookup
+        var s = WMLevels.WmLevelInfos[levelIndex].GetRandomSock(_random.NextDouble());
+        
+            
+        var bsp = Instantiate(Resources.Load(WMLevels.WmSockTypeLookup[s.SockType]));
         var sps = bsp.GetComponent <SockPrefabScript> ();
+        sps.ChangeSprite(s.SockNo);
+        
         sps.gameObject.transform.position = Tools.MutateVector3(mainCamera.Camera.ViewportToWorldPoint(viewPortPos), z : 1f);
-
+        
+        sps.gameObject.transform.rotation = Quaternion.Euler(x: _random.Next(2)*180f, y: _random.Next(2)*180f, z: _random.Next(4) *90f);
+        
+        sps.fallSpeed = ((float) s.Speed) / 10f*_wheelSpeed;
 
         return sps;
     }

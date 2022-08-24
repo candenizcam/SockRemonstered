@@ -31,6 +31,15 @@ public class SockPrefabScript : MonoBehaviour
 
     }
 
+    public void ChangeSprite(int cs)
+    {
+        _selectedSprite = cs;
+        for (int i = 0; i < sockSpriteList.Count; i++)
+        {
+            sockSpriteList[i].gameObject.SetActive(i == _selectedSprite);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
