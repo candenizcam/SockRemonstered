@@ -15,6 +15,8 @@ public class SockPrefabScript : MonoBehaviour
     // Start is called before the first frame update
     public bool ToBeDestroyed = false;
 
+    public byte style = 0;
+    public byte no = 0;
 
     private int _selectedSprite;
     void Awake()

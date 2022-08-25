@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace WashingMachine.WMScripts
@@ -11,9 +13,10 @@ namespace WashingMachine.WMScripts
                 new WMSockInfo[]
                 {
                     new WMSockInfo(0,0,1,10),
+                    new WMSockInfo(0,0,1,20),
                     //new WMSockInfo(0,1,1),
                     new WMSockInfo(1,0,0,10,3),
-                    new WMSockInfo(4,0,0,10,3),
+                    new WMSockInfo(0,0,1,10,3),
                 }),
             new WMLevelInfo(0.5f,1f,-1, 25,
                 new WMSockInfo[]
@@ -30,13 +33,22 @@ namespace WashingMachine.WMScripts
             "prefabs/SockPrefabs/s4", "prefabs/SockPrefabs/s5", "prefabs/SockPrefabs/s6",
             "prefabs/SockPrefabs/s7", "prefabs/SockPrefabs/s8", "prefabs/SockPrefabs/s9"};
 
+
+        public static string[,] WMUISockLookup =
+        {
+            { "ui/wm_socks/ss1"}, {"ui/wm_socks/ss2" }, {"ui/wm_socks/ss3" },
+            {"ui/wm_socks/ss4" }, {"ui/wm_socks/ss5" }, {"ui/wm_socks/ss6" },
+            {"ui/wm_socks/ss7" }, {"ui/wm_socks/ss8" }, {"ui/wm_socks/ss9" }
+            
+        };
+
     }
 
 
 
     public class WMLevelInfo
     {
-        private WMSockInfo[] _wmSockInfos;
+        public WMSockInfo[] WmSockInfos;
         private int fullBias;
         public float SockSpawnTime; // sock spawn time in seconds
         public float WheelSpeed; // the speed of the wheel, individual sock speed depends on this
@@ -44,9 +56,9 @@ namespace WashingMachine.WMScripts
         public int MoveNo; // number of moves
         public WMLevelInfo(float sockSpawnTime, float wheelSpeed, int maxSock, int moveNo, WMSockInfo[] wmSockInfos)
         {
-            _wmSockInfos = wmSockInfos;
+            WmSockInfos = wmSockInfos;
             fullBias = 0;
-            foreach (var wmSockInfo in _wmSockInfos)
+            foreach (var wmSockInfo in WmSockInfos)
             {
                 fullBias += wmSockInfo.Bias;
             }
@@ -68,17 +80,19 @@ namespace WashingMachine.WMScripts
             //i %= _wmSockInfos.Length;
             var dd = fullBias * d;
             var runningBias = 0;
-            for (int i = 0; i < _wmSockInfos.Length; i++)
+            for (int i = 0; i < WmSockInfos.Length; i++)
             {
-                runningBias += _wmSockInfos[i].Bias;
+                runningBias += WmSockInfos[i].Bias;
                 if (runningBias > dd)
                 {
-                    return _wmSockInfos[i];
+                    return WmSockInfos[i];
                 }
             }
             
-            return _wmSockInfos[0];
+            return WmSockInfos[0];
         }
+        
+        
     }
 
     public class WMSockInfo
@@ -98,6 +112,64 @@ namespace WashingMachine.WMScripts
         }
         
         
+        
+        
+    }
+
+    public class WMScoreboard
+    {
+        private List<WMSockInfo> _scoreSocks;
+        private int[] _collected;
+
+        public int[] Collected => _collected;
+
+        public WMScoreboard(List<WMSockInfo> scoreSocks)
+        {
+            _scoreSocks = scoreSocks;
+            _collected = new int[_scoreSocks.Count];
+        }
+
+        public string[] ScoreAddressArray()
+        {
+            return (string[]) (from ss in _scoreSocks select WMLevels.WMUISockLookup[ss.SockType, ss.SockNo]).ToArray();
+        }
+
+        public void IncreseSock(byte style, byte no, byte by =1)
+        {
+            var lastIndex = -1;
+            var lastValue = 10000;
+            
+            for (var i = 0; i < _scoreSocks.Count; i++)
+            {
+                if (_scoreSocks[i].SockNo == no && _scoreSocks[i].SockType == style)
+                {
+                    if (_collected[i] == 0)
+                    {
+                        _collected[i] += by;
+                        return; 
+                    }else if (_collected[i] == 10000)
+                    {
+                        throw new Exception("collected is greater than 10000 something is clearly wrong");
+                    }
+                    else
+                    {
+                        if (lastValue>_collected[i])
+                        {
+                            lastIndex = i;
+                            lastValue = _collected[i];
+                            
+                        }
+                        
+                    }        
+                } 
+            }
+            if(lastIndex==-1) return;
+
+            _collected[lastIndex] += by;
+
+
+
+        }
         
         
     }

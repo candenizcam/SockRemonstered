@@ -33,8 +33,9 @@ public class WMMain : MonoBehaviour
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
-
+    //private int[,,] _collectArray;
     private bool _levelEnd = false;
+    private WMScoreboard _wmScoreboard;
     
     void Awake()
     {
@@ -84,6 +85,17 @@ public class WMMain : MonoBehaviour
         sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
         _moveNo = thisLevel.MoveNo;
+
+        //var a = new string[thisLevel.WmSockInfos.Length];
+
+        _wmScoreboard = new WMScoreboard((from t in thisLevel.WmSockInfos
+            where t.LevelCollect > 0
+            select t).ToList());
+        _wmHud.generateSocks(_wmScoreboard.ScoreAddressArray());
+
+        _wmHud.adjustSocks(_wmScoreboard.Collected);
+
+
         //public float SockSpawnTime;
         //public float WheelSpeed;
         //public int MaxSock;
@@ -114,12 +126,17 @@ public class WMMain : MonoBehaviour
                 touched = true;
                 thisTurnTouches.RemoveAt(i);
                 _moveNo -= 1;
+                
                 break;
             }
             if (!touched) continue;
             Destroy(sockPrefabScript.gameObject);
+            
+            _wmScoreboard.IncreseSock( sockPrefabScript.style,sockPrefabScript.no );
+            
             sockPrefabScript.ToBeDestroyed = true;
         }
+        _wmHud.adjustSocks(_wmScoreboard.Collected);
     }
     
     
@@ -200,6 +217,10 @@ public class WMMain : MonoBehaviour
         
         sps.fallSpeed = ((float) s.Speed) / 10f*_wheelSpeed;
 
+        sps.no = s.SockNo;
+        sps.style = s.SockType;
+        
+        
         return sps;
     }
 
