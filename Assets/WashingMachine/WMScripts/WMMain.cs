@@ -130,11 +130,10 @@ public class WMMain : MonoBehaviour
                 break;
             }
             if (!touched) continue;
-            Destroy(sockPrefabScript.gameObject);
+            //Destroy(sockPrefabScript.gameObject);
             
             _wmScoreboard.IncreseSock( sockPrefabScript.style,sockPrefabScript.no );
-            
-            sockPrefabScript.ToBeDestroyed = true;
+            sockPrefabScript.Kill();
         }
         _wmHud.adjustSocks(_wmScoreboard.Collected);
     }
@@ -146,15 +145,27 @@ public class WMMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_moveNo <= 0)
+        if (_moveNo <= 0 && !_levelEnd)
         {
             _levelEnd = true;
             Debug.Log("No more moves");
         }
 
+        if (_wmScoreboard.GameWon()&& !_levelEnd)
+        {
+            _levelEnd = true;
+            Debug.Log("Level Won");
+            
+        }
+
         if (_levelEnd)
         {
             
+            foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
+            {
+                Destroy(sockPrefabScript.gameObject);
+            }
+            _activeSocks.RemoveAll(x => x.ToBeDestroyed);
         }
         else
         {
@@ -182,12 +193,19 @@ public class WMMain : MonoBehaviour
                 var p = mainCamera.Camera.WorldToViewportPoint(sockPrefabScript.gameObject.transform.position);
                 if (p.y <  0f)//mainCamera.playfieldBottom)
                 {
-                    sockPrefabScript.ToBeDestroyed = true;
-                    Destroy(sockPrefabScript.gameObject);
+                    sockPrefabScript.Kill(instantly:true);
+                    //sockPrefabScript.ToBeDestroyed = true;
+                    //Destroy(sockPrefabScript.gameObject);
                 }
             }
         
             HandleTouch();
+            foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
+            {
+                Destroy(sockPrefabScript.gameObject);
+            }
+            
+            
             _activeSocks.RemoveAll(x => x.ToBeDestroyed);
             ArrangeActiveSocks();
         }

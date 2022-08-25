@@ -15,8 +15,9 @@ namespace WashingMachine.WMScripts
                     new WMSockInfo(0,0,1,10),
                     new WMSockInfo(0,0,1,20),
                     //new WMSockInfo(0,1,1),
-                    new WMSockInfo(1,0,0,10,3),
-                    new WMSockInfo(0,0,1,10,3),
+                    new WMSockInfo(1,0,0,10,1),
+                    new WMSockInfo(0,0,1,10,1),
+                    new WMSockInfo(0,0,0,5,1)
                 }),
             new WMLevelInfo(0.5f,1f,-1, 25,
                 new WMSockInfo[]
@@ -169,6 +170,19 @@ namespace WashingMachine.WMScripts
 
 
 
+        }
+
+        public bool GameWon()
+        {
+            for (var i = 0; i < _scoreSocks.Count; i++)
+            {
+                if (_scoreSocks[i].LevelCollect != _collected[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
         
         

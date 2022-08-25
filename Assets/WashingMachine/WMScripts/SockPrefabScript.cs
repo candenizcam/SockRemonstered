@@ -13,8 +13,12 @@ public class SockPrefabScript : MonoBehaviour
 
     public float fallSpeed = 1f;
     // Start is called before the first frame update
-    public bool ToBeDestroyed = false;
-
+    private float _tweenTimer = 0.5f;
+    private float _tweenTime = 0.5f;
+    private bool _killAnimation = false;
+    private bool _toBeDestroyed = false;
+    public bool ToBeDestroyed => _toBeDestroyed;
+    private bool interactable = true;
     public byte style = 0;
     public byte no = 0;
 
@@ -42,15 +46,56 @@ public class SockPrefabScript : MonoBehaviour
         }
     }
 
+    public void Kill(bool instantly = false)
+    {
+        
+        _toBeDestroyed = instantly;
+        _killAnimation = true;
+        interactable = false;
+    } 
+
     // Update is called once per frame
     void Update()
     {
+        if (_killAnimation)
+        {
+            var v = 1f - _tweenTimer / _tweenTime;
+            var s = -1.25f * v * v + 0.25f * v + 1f;
+            
+            gameObject.transform.localScale= Tools.MutateVector3(gameObject.transform.localScale, 
+                x: s,
+                y:s);
+            
+            Debug.Log($"{gameObject.transform.rotation}");
+            var r = gameObject.transform.rotation;
+            gameObject.transform.rotation= Quaternion.Euler(
+                r.eulerAngles.x,
+                r.eulerAngles.y,
+                    r.eulerAngles.z+200f*Time.deltaTime
+                );
+            
+            /*
+            gameObject.transform.rotation = Quaternion.Euler(
+                gameObject.transform.rotation.eulerAngles.x,
+                gameObject.transform.rotation.y*57.3f,
+                gameObject.transform.rotation.z*57.3f+ Time.deltaTime*100);
+                */
+            
+            
+            _tweenTimer -= Time.deltaTime;
+            if (_tweenTimer <= 0)
+            {
+                _toBeDestroyed = true;
+            }
+            //gameObject.transform.localScale = new Vector3(gameObject.transform.localScale)
+        }
         
     }
 
     public bool Collides(Vector2 point)
     {
-        return hitbox.OverlapPoint(point);
+        
+        return interactable && hitbox.OverlapPoint(point);
     }
 
     public void MoveDownTime()
