@@ -7,25 +7,28 @@ namespace WashingMachine.WMScripts
     {
         public static readonly WMLevelInfo[] WmLevelInfos =
         {
-            new WMLevelInfo(0.5f,1f,-1, 25,
+            new WMLevelInfo(1f,4f,-1, 25,
                 new WMSockInfo[]
                 {
                     new WMSockInfo(0,0,1,10),
                     //new WMSockInfo(0,1,1),
-                    new WMSockInfo(0,2,0,15,3),
-                    new WMSockInfo(0,2,0,5,3),
+                    new WMSockInfo(1,0,0,10,3),
+                    new WMSockInfo(4,0,0,10,3),
                 }),
             new WMLevelInfo(0.5f,1f,-1, 25,
                 new WMSockInfo[]
                 {
                     new WMSockInfo(0,0,1,10),
-                    new WMSockInfo(0,1,0,10),
-                    new WMSockInfo(0,2,1,10),
+                    new WMSockInfo(1,0,0,10),
+                    new WMSockInfo(4,0,1,10),
                 })
         };
 
 
-        public static string[] WmSockTypeLookup = {"prefabs/s1","prefabs/s2","prefabs/s3","prefabs/s4","prefabs/s5","prefabs/s6","prefabs/s7","prefabs/s8","prefabs/s9"};
+        public static string[] WmSockTypeLookup = {
+            "prefabs/SockPrefabs/s1", "prefabs/SockPrefabs/s2", "prefabs/SockPrefabs/s3",
+            "prefabs/SockPrefabs/s4", "prefabs/SockPrefabs/s5", "prefabs/SockPrefabs/s6",
+            "prefabs/SockPrefabs/s7", "prefabs/SockPrefabs/s8", "prefabs/SockPrefabs/s9"};
 
     }
 
