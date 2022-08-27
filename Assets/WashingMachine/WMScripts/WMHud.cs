@@ -16,9 +16,13 @@ public class WMHud
     private float[] _polynomial;
     private int[] _amounts;
     
-    public WMHud(Rect topBarRect, Rect bottomBarRect)
+    public WMHud(WMLayout wmLayout)
     {
+        var topBarRect = wmLayout.topBarRect();
+        var bottomBarRect = wmLayout.topBarRect();
 
+        var scale = Screen.width/1284f;
+        
         _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
             _pixelPoints[4], _pixelPoints[5]);
         _topBar = new VisualElement();
@@ -35,8 +39,8 @@ public class WMHud
         pins.style.position = Position.Absolute;
         pins.style.left = 0f;
         pins.style.bottom = 0f;
-        pins.style.width = pins.sprite.rect.width;
-        pins.style.height = pins.sprite.rect.height;
+        pins.style.width = pins.sprite.rect.width*scale;
+        pins.style.height = pins.sprite.rect.height*scale;
         //pins.style.backgroundColor = Color.blue;
         _topBar.Add(pins);
 
@@ -49,7 +53,8 @@ public class WMHud
 
         var w = 306f;
         var h = 256f;
-        var scale = 0.5f;
+        
+        Debug.Log(Screen.width);
         
         var moveBg = new Image();
         moveBg.style.position = Position.Absolute;

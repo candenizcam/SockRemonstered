@@ -63,7 +63,7 @@ public class WMMain : MonoBehaviour
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
 
-        _wmHud = new WMHud(mainCamera.topBarRect(), mainCamera.bottomBarRect());
+        _wmHud = new WMHud(mainCamera);
         _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
 
         var left = r.xMin;
