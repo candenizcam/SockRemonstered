@@ -47,6 +47,38 @@ public class WMHud
         
         _topBar.Add(_sockHolder);
 
+        var w = 306f;
+        var h = 256f;
+        
+        var moveBg = new Image();
+        moveBg.style.position = Position.Absolute;
+        moveBg.sprite = Resources.Load<Sprite>("ui/moveframebg");
+        moveBg.style.right = w -moveBg.sprite.rect.width;
+        moveBg.style.top = h-moveBg.sprite.rect.height;
+        _topBar.Add(moveBg);
+        
+        var moveTop = new Image();
+        moveTop.style.position = Position.Absolute;
+        moveTop.sprite = Resources.Load<Sprite>("ui/moveframetop");
+        moveTop.style.right = w -moveTop.sprite.rect.width;
+        moveTop.style.top = h-moveTop.sprite.rect.height;
+        _topBar.Add(moveTop);
+        
+        var frameBg = new Image();
+        frameBg.style.position = Position.Absolute;
+        frameBg.sprite = Resources.Load<Sprite>("ui/framebg");
+        frameBg.style.right = w -frameBg.sprite.rect.width;
+        frameBg.style.top = h-frameBg.sprite.rect.height;
+        _topBar.Add(frameBg);
+        
+        var frameTop = new Image();
+        frameTop.style.position = Position.Absolute;
+        frameTop.sprite = Resources.Load<Sprite>("ui/frametop");
+        frameTop.style.right = w -frameTop.sprite.rect.width;
+        frameTop.style.top = h-frameTop.sprite.rect.height ;
+        _topBar.Add(frameTop);
+        
+        
         /*
         for (int i = 0; i < 6; i++)
         {
