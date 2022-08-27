@@ -54,7 +54,7 @@ public class WMHud
         var w = 306f;
         var h = 256f;
         
-        Debug.Log(Screen.width);
+        
         
         var moveBg = new Image();
         moveBg.style.position = Position.Absolute;
