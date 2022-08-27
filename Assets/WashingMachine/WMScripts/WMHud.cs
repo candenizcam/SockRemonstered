@@ -15,13 +15,13 @@ public class WMHud
     private float[] _pixelPoints = {0, 250, 410, 175, 920, 250};
     private float[] _polynomial;
     private int[] _amounts;
-    
+    private float scale = Screen.width / 1284f;
     public WMHud(WMLayout wmLayout)
     {
         var topBarRect = wmLayout.topBarRect();
         var bottomBarRect = wmLayout.topBarRect();
 
-        var scale = Screen.width/1284f;
+        
         
         _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
             _pixelPoints[4], _pixelPoints[5]);
@@ -164,8 +164,10 @@ public class WMHud
             var n = new Image();
             n.sprite = Resources.Load<Sprite>(address[i]);
             n.style.position = Position.Absolute;
-            n.style.left = x - n.sprite.rect.width/2f;
-            n.style.bottom = y- n.sprite.rect.height;
+            n.style.width = scale*n.sprite.rect.width;
+            n.style.height = scale*n.sprite.rect.height;
+            n.style.left = (x - n.sprite.rect.width/2f)*scale;
+            n.style.bottom = (y- n.sprite.rect.height)*scale;
             _sockHolder.Add(n);
         }
         
@@ -176,8 +178,10 @@ public class WMHud
             var n = new Image();
             n.sprite = Resources.Load<Sprite>(address[i]);
             n.style.position = Position.Absolute;
-            n.style.left = x - n.sprite.rect.width/2f;
-            n.style.bottom = y- n.sprite.rect.height;
+            n.style.width = scale*n.sprite.rect.width;
+            n.style.height = scale*n.sprite.rect.height;
+            n.style.left = (x - n.sprite.rect.width/2f)*scale;
+            n.style.bottom = (y- n.sprite.rect.height)*scale;
             n.visible = false;
             _sockHolder.Add(n);
         }
