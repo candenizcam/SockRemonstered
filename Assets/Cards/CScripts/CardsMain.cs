@@ -16,13 +16,13 @@ public class CardsMain : MonoBehaviour
     private int _rows;
 
     private UnityEngine.Object _sockCardPrefab;
-    
+    private List<SockCardPrefabScript> _sockCardPrefabs = new List<SockCardPrefabScript>();
     
     void Awake()
     {
         _random = new System.Random();        
         
-        _mainCamera = new CardLayout(Camera.main);
+        _mainCamera = new CardLayout(Camera.main, _rows, _columns);
 
         _rows = 4;
         _columns = 6;
@@ -31,7 +31,22 @@ public class CardsMain : MonoBehaviour
         _sockCardPrefab = Resources.Load("prefabs/SockCardPrefab");
         var ssp1 = _sockCardPrefab.GetComponent<SockCardPrefabScript>();
 
-        var cardList = generateCardList(ssp1.socks.Count);
+        var cardTypeList = generateCardList(ssp1.socks.Count);
+        
+        
+        
+        for (var i = 0; i < cardTypeList.Count; i++)
+        {
+
+            var c = i % _columns;
+            var r = i / _columns;
+            var s = (GameObject)Instantiate(_sockCardPrefab);
+            var sc = s.GetComponent<SockCardPrefabScript>();
+            sc.SelectedSockCard = cardTypeList[i];
+            //s.transform.position = new Vector3(, 3f);
+            _sockCardPrefabs.Add(sc);
+        }
+        
 
 
         //var r = new Range(0, ssp1.socks.Count);
@@ -91,7 +106,14 @@ public class CardsMain : MonoBehaviour
             }
         }
         r2.AddRange(extra);
-        return r2;
+        
+        for (var i = 0; i < r2.Count; i++)
+        {
+            r2.Add(r2[i]);
+        }
+        var m2 = r2.OrderBy(_ => _random.Next()).ToList();
+        
+        return m2;
     }
 
     // Update is called once per frame
