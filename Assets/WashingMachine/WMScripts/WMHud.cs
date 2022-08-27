@@ -47,9 +47,9 @@ public class WMHud
         
         _topBar.Add(_sockHolder);
 
-        var w = 356f;
-        var h = 356f;
-        
+        var w = 306f;
+        var h = 256f;
+        var scale = 0.5f;
         var moveBg = new Image();
         moveBg.style.position = Position.Absolute;
         moveBg.sprite = Resources.Load<Sprite>("ui/moveframebg");
