@@ -49,33 +49,44 @@ public class WMHud
 
         var w = 306f;
         var h = 256f;
-        
+        var scale = 0.5f;
         var moveBg = new Image();
         moveBg.style.position = Position.Absolute;
         moveBg.sprite = Resources.Load<Sprite>("ui/moveframebg");
-        moveBg.style.right = w -moveBg.sprite.rect.width;
-        moveBg.style.top = h-moveBg.sprite.rect.height;
+        //moveBg.scaleMode = ScaleMode.ScaleToFit;
+        //moveBg.style.scale = new Scale(new Vector3(0.1f,0.1f,1f));
+        
+        moveBg.style.width = scale*moveBg.sprite.rect.width;
+        moveBg.style.height = scale*moveBg.sprite.rect.height;
+        moveBg.style.right = (w -moveBg.sprite.rect.width)*scale;
+        moveBg.style.top = (h-moveBg.sprite.rect.height)*scale;
         _topBar.Add(moveBg);
         
         var moveTop = new Image();
         moveTop.style.position = Position.Absolute;
         moveTop.sprite = Resources.Load<Sprite>("ui/moveframetop");
-        moveTop.style.right = w -moveTop.sprite.rect.width;
-        moveTop.style.top = h-moveTop.sprite.rect.height;
+        moveTop.style.width = scale*moveTop.sprite.rect.width;
+        moveTop.style.height = scale*moveTop.sprite.rect.height;
+        moveTop.style.right = (w -moveTop.sprite.rect.width)*scale;
+        moveTop.style.top = (h-moveTop.sprite.rect.height)*scale;
         _topBar.Add(moveTop);
         
         var frameBg = new Image();
         frameBg.style.position = Position.Absolute;
         frameBg.sprite = Resources.Load<Sprite>("ui/framebg");
-        frameBg.style.right = w -frameBg.sprite.rect.width;
-        frameBg.style.top = h-frameBg.sprite.rect.height;
+        frameBg.style.width = scale*frameBg.sprite.rect.width;
+        frameBg.style.height = scale*frameBg.sprite.rect.height;
+        frameBg.style.right = (w -frameBg.sprite.rect.width)*scale;
+        frameBg.style.top = (h-frameBg.sprite.rect.height)*scale;
         _topBar.Add(frameBg);
         
         var frameTop = new Image();
         frameTop.style.position = Position.Absolute;
         frameTop.sprite = Resources.Load<Sprite>("ui/frametop");
-        frameTop.style.right = w -frameTop.sprite.rect.width;
-        frameTop.style.top = h-frameTop.sprite.rect.height ;
+        frameTop.style.width = scale*frameTop.sprite.rect.width;
+        frameTop.style.height = scale*frameTop.sprite.rect.height;
+        frameTop.style.right = (w -frameTop.sprite.rect.width)*scale;
+        frameTop.style.top = (h-frameTop.sprite.rect.height )*scale;
         _topBar.Add(frameTop);
         
         
