@@ -63,10 +63,9 @@ public class SockPrefabScript : MonoBehaviour
             var s = -1.25f * v * v + 0.25f * v + 1f;
             
             gameObject.transform.localScale= Tools.MutateVector3(gameObject.transform.localScale, 
-                x: s,
-                y:s);
+                x: s*Screen.width / 1284f,
+                y:s*Screen.width / 1284f);
             
-            Debug.Log($"{gameObject.transform.rotation}");
             var r = gameObject.transform.rotation;
             gameObject.transform.rotation= Quaternion.Euler(
                 r.eulerAngles.x,
