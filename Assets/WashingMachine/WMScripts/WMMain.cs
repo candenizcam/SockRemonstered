@@ -232,7 +232,7 @@ public class WMMain : MonoBehaviour
         sps.gameObject.transform.position = Tools.MutateVector3(mainCamera.Camera.ViewportToWorldPoint(viewPortPos), z : 1f);
         
         sps.gameObject.transform.rotation = Quaternion.Euler(x: _random.Next(2)*180f, y: _random.Next(2)*180f, z: _random.Next(4) *90f);
-        
+        sps.gameObject.transform.localScale = new Vector3(Screen.width / 1284f, Screen.width / 1284f, 0f);
         sps.fallSpeed = ((float) s.Speed) / 10f*_wheelSpeed;
 
         sps.no = s.SockNo;
