@@ -33,8 +33,9 @@ public class WMMain : MonoBehaviour
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
-
+    //private int[,,] _collectArray;
     private bool _levelEnd = false;
+    private WMScoreboard _wmScoreboard;
     
     void Awake()
     {
@@ -62,7 +63,7 @@ public class WMMain : MonoBehaviour
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
 
-        _wmHud = new WMHud(mainCamera.topBarRect(), mainCamera.bottomBarRect());
+        _wmHud = new WMHud(mainCamera);
         _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
 
         var left = r.xMin;
@@ -84,6 +85,17 @@ public class WMMain : MonoBehaviour
         sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
         _moveNo = thisLevel.MoveNo;
+
+        //var a = new string[thisLevel.WmSockInfos.Length];
+
+        _wmScoreboard = new WMScoreboard((from t in thisLevel.WmSockInfos
+            where t.LevelCollect > 0
+            select t).ToList());
+        _wmHud.generateSocks(_wmScoreboard.ScoreAddressArray());
+
+        _wmHud.adjustSocks(_wmScoreboard.Collected);
+
+
         //public float SockSpawnTime;
         //public float WheelSpeed;
         //public int MaxSock;
@@ -114,12 +126,16 @@ public class WMMain : MonoBehaviour
                 touched = true;
                 thisTurnTouches.RemoveAt(i);
                 _moveNo -= 1;
+                
                 break;
             }
             if (!touched) continue;
-            Destroy(sockPrefabScript.gameObject);
-            sockPrefabScript.ToBeDestroyed = true;
+            //Destroy(sockPrefabScript.gameObject);
+            
+            _wmScoreboard.IncreseSock( sockPrefabScript.style,sockPrefabScript.no );
+            sockPrefabScript.Kill();
         }
+        _wmHud.adjustSocks(_wmScoreboard.Collected);
     }
     
     
@@ -129,15 +145,27 @@ public class WMMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_moveNo <= 0)
+        if (_moveNo <= 0 && !_levelEnd)
         {
             _levelEnd = true;
             Debug.Log("No more moves");
         }
 
+        if (_wmScoreboard.GameWon()&& !_levelEnd)
+        {
+            _levelEnd = true;
+            Debug.Log("Level Won");
+            
+        }
+
         if (_levelEnd)
         {
             
+            foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
+            {
+                Destroy(sockPrefabScript.gameObject);
+            }
+            _activeSocks.RemoveAll(x => x.ToBeDestroyed);
         }
         else
         {
@@ -165,12 +193,19 @@ public class WMMain : MonoBehaviour
                 var p = mainCamera.Camera.WorldToViewportPoint(sockPrefabScript.gameObject.transform.position);
                 if (p.y <  0f)//mainCamera.playfieldBottom)
                 {
-                    sockPrefabScript.ToBeDestroyed = true;
-                    Destroy(sockPrefabScript.gameObject);
+                    sockPrefabScript.Kill(instantly:true);
+                    //sockPrefabScript.ToBeDestroyed = true;
+                    //Destroy(sockPrefabScript.gameObject);
                 }
             }
         
             HandleTouch();
+            foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
+            {
+                Destroy(sockPrefabScript.gameObject);
+            }
+            
+            
             _activeSocks.RemoveAll(x => x.ToBeDestroyed);
             ArrangeActiveSocks();
         }
@@ -197,9 +232,13 @@ public class WMMain : MonoBehaviour
         sps.gameObject.transform.position = Tools.MutateVector3(mainCamera.Camera.ViewportToWorldPoint(viewPortPos), z : 1f);
         
         sps.gameObject.transform.rotation = Quaternion.Euler(x: _random.Next(2)*180f, y: _random.Next(2)*180f, z: _random.Next(4) *90f);
-        
+        sps.gameObject.transform.localScale = new Vector3(Screen.width / 1284f, Screen.width / 1284f, 0f);
         sps.fallSpeed = ((float) s.Speed) / 10f*_wheelSpeed;
 
+        sps.no = s.SockNo;
+        sps.style = s.SockType;
+        
+        
         return sps;
     }
 
