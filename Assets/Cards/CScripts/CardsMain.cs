@@ -18,6 +18,10 @@ public class CardsMain : MonoBehaviour
     private UnityEngine.Object _sockCardPrefab;
     private List<SockCardPrefabScript> _sockCardPrefabs = new List<SockCardPrefabScript>();
     private int[] _selection;
+
+    private Timer _timer;
+    private bool _touchActive = true;
+    
     void Awake()
     {
         _random = new System.Random();        
@@ -26,7 +30,7 @@ public class CardsMain : MonoBehaviour
         _columns = 3;
         _mainCamera = new CardLayout(Camera.main, _rows, _columns);
         _selection = new int[] {-1,-1};
-
+        _timer = new Timer();
 
         _sockCardPrefab = Resources.Load("prefabs/SockCardPrefab");
         var ssp1 = _sockCardPrefab.GetComponent<SockCardPrefabScript>();
@@ -125,11 +129,13 @@ public class CardsMain : MonoBehaviour
 
         if (thisTurnTouches.Count <= 0) return;
         var firstTouch = thisTurnTouches[0];
-        var counter = 0;
+        var worldPoint = _mainCamera.Camera.ScreenToWorldPoint(firstTouch.position);
+        
+        var counter = -1;
         var broker = false;
         foreach (var sockCardPrefabScript in _sockCardPrefabs)
         {
-            var worldPoint = _mainCamera.Camera.ScreenToWorldPoint(firstTouch.position);
+            counter += 1;
             if(sockCardPrefabScript.sockVisible) continue;
             
 
@@ -159,7 +165,7 @@ public class CardsMain : MonoBehaviour
                 break;
             }
             
-            counter += 1;
+            
         }
         
     }
@@ -167,57 +173,67 @@ public class CardsMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleTouch();
+        _timer.Update(Time.deltaTime);
 
         //Debug.Log($" {_selection[0]}, {_selection[1]}");
         if (_selection[_selection.Length-1] != -1)
         {
-            //_selection[0] = -1;
-            //_selection[1] = -1;
-            
-            var broker = false;
+            var endLoop = false;
             for (int i = 0; i < _selection.Length; i++)
             {
                 for (int j = i+1; j < _selection.Length; j++)
                 {
-                    if (_sockCardPrefabs[_selection[i]].SelectedSockCard ==
-                        _sockCardPrefabs[_selection[j]].SelectedSockCard)
+                    var firstType = _sockCardPrefabs[_selection[i]];
+                    var secondType = _sockCardPrefabs[_selection[j]];
+
+                    if (firstType.SelectedSockCard == secondType.SelectedSockCard)
                     {
-                        Debug.Log($"i: {i}, j: {j}");
-                        _sockCardPrefabs[_selection[i]].DestroyThis();
-                        _sockCardPrefabs[_selection[j]].DestroyThis();
-                        broker = true;
+                        _timer.addEvent(0.4f, () =>
+                        {
+                            firstType.ToBeDestroyed = true;
+                            secondType.ToBeDestroyed = true;
+                        });
+                        endLoop = true;
                         break;
                     }
-                    
                 }
-
-                if (broker)
+                if (endLoop)
                 {
                     break;
                 }
             }
+            _timer.addEvent(0.5f, () =>
+            {
+                _touchActive = true;
+                foreach (var sockCardPrefabScript in _sockCardPrefabs)
+                {
+                    sockCardPrefabScript.SockVisible(false);
+                }
+            });
 
             for (var i = 0; i < _selection.Length; i++)
             {
-
-                if (!_sockCardPrefabs[_selection[i]].ToBeDestroyed)
-                {
-                    _sockCardPrefabs[_selection[i]].SockVisible(false);
-                        
-                }
                 _selection[i] = -1;
             }
-            
-            _sockCardPrefabs.RemoveAll(x => x.ToBeDestroyed);
-            foreach (var sockCardPrefabScript in _sockCardPrefabs)
-            {
-                sockCardPrefabScript.SockVisible(false);
-            }
-            
         }
+        
+        
 
         
+
+        if( _touchActive)
+        {
+            HandleTouch();
+        }
+        
+        foreach (var sockCardPrefabScript in _sockCardPrefabs)
+        {
+            if (sockCardPrefabScript.ToBeDestroyed)
+            {
+                Destroy(sockCardPrefabScript.gameObject);
+            }
+        }
+        _sockCardPrefabs.RemoveAll(x => x.ToBeDestroyed);
 
     }
 }

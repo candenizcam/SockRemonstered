@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 77c83fce49392354c8ce422eff7850fb, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4716981, g: 0.29147384, b: 0.29147384, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -138,6 +138,7 @@ MonoBehaviour:
   - {fileID: 604445185359006537}
   cards:
   - {fileID: 713961840677593177}
+  sockVisible: 0
 --- !u!1 &4583395934541441119
 GameObject:
   m_ObjectHideFlags: 0
