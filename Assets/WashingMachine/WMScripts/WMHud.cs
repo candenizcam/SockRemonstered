@@ -227,6 +227,12 @@ public class WMHud
         }
     }
     
+    public void setVisible(bool b)
+    {
+        _topBar.visible = b;
+        _bottomBar.visible = b;
+    }
+    
     /*
     public void adjustSocks(string[] address, int[] amount)
     {

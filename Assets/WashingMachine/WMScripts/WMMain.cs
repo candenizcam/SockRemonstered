@@ -26,6 +26,7 @@ public class WMMain : MonoBehaviour
 
     private UIDocument _uiDocument;
     private WMHud _wmHud;
+    private WMBetweenLevels _wmBetweenLevels;
     private float _baseWheelHeight;
     private float _wheelSpeed = 1f;
     private float _wheelStartPos;
@@ -33,7 +34,6 @@ public class WMMain : MonoBehaviour
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
-    //private int[,,] _collectArray;
     private bool _levelEnd = false;
     private WMScoreboard _wmScoreboard;
     
@@ -66,6 +66,10 @@ public class WMMain : MonoBehaviour
         _wmHud = new WMHud(mainCamera);
         _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
 
+        _wmBetweenLevels = new WMBetweenLevels(mainCamera);
+        _wmBetweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
+        _wmBetweenLevels.setVisible(false);
+        
         var left = r.xMin;
         var bottom = r.yMax;
         
@@ -145,6 +149,25 @@ public class WMMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _wmBetweenLevels.Update();
+        /*
+        if (Input.touches.Length > 0)
+        {
+            var p = Input.touches[0].position;
+            p = new Vector2(p.x, Screen.height - p.y);
+            if (Input.touches[0].phase == TouchPhase.Began)
+            {
+                
+                
+                _wmBetweenLevels.OnDown(p);
+            }else if (Input.touches[0].phase == TouchPhase.Ended)
+            {
+                _wmBetweenLevels.OnUp(p);
+            }
+        }
+        */
+        
+        
         if (_moveNo <= 0 && !_levelEnd)
         {
             _levelEnd = true;
@@ -166,6 +189,13 @@ public class WMMain : MonoBehaviour
                 Destroy(sockPrefabScript.gameObject);
             }
             _activeSocks.RemoveAll(x => x.ToBeDestroyed);
+
+            if (!_wmBetweenLevels.Active)
+            {
+                _wmBetweenLevels.setVisible(true);
+            }
+            
+            
         }
         else
         {
