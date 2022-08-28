@@ -21,6 +21,8 @@ public class CardsMain : MonoBehaviour
 
     private Timer _timer;
     private bool _touchActive = true;
+    private bool _gameDone = false;
+    private int moves = 10;
     
     void Awake()
     {
@@ -175,65 +177,88 @@ public class CardsMain : MonoBehaviour
     {
         _timer.Update(Time.deltaTime);
 
-        //Debug.Log($" {_selection[0]}, {_selection[1]}");
-        if (_selection[_selection.Length-1] != -1)
-        {
-            var endLoop = false;
-            for (int i = 0; i < _selection.Length; i++)
-            {
-                for (int j = i+1; j < _selection.Length; j++)
-                {
-                    var firstType = _sockCardPrefabs[_selection[i]];
-                    var secondType = _sockCardPrefabs[_selection[j]];
+        
 
-                    if (firstType.SelectedSockCard == secondType.SelectedSockCard)
+        if (!_gameDone)
+        {
+            if (_sockCardPrefabs.Count == 0)
+            {
+                _gameDone = true;
+                Debug.Log("no more cards");
+            
+            }
+
+            if (moves <= 0)
+            {
+                _gameDone = true;
+                Debug.Log("no more moves");
+            }
+            
+            
+            //Debug.Log($" {_selection[0]}, {_selection[1]}");
+            if (_selection[_selection.Length-1] != -1)
+            {
+                var endLoop = false;
+                for (int i = 0; i < _selection.Length; i++)
+                {
+                    for (int j = i+1; j < _selection.Length; j++)
                     {
-                        _timer.addEvent(0.4f, () =>
+                        var firstType = _sockCardPrefabs[_selection[i]];
+                        var secondType = _sockCardPrefabs[_selection[j]];
+
+                        if (firstType.SelectedSockCard == secondType.SelectedSockCard)
                         {
-                            firstType.ToBeDestroyed = true;
-                            secondType.ToBeDestroyed = true;
-                        });
-                        endLoop = true;
+                            _timer.addEvent(0.4f, () =>
+                            {
+                                firstType.ToBeDestroyed = true;
+                                secondType.ToBeDestroyed = true;
+                            });
+                            endLoop = true;
+                            break;
+                        }
+                    }
+                    if (endLoop)
+                    {
                         break;
                     }
                 }
-                if (endLoop)
+                _timer.addEvent(0.5f, () =>
                 {
-                    break;
+                    _touchActive = true;
+                    moves -= 1;
+                    foreach (var sockCardPrefabScript in _sockCardPrefabs)
+                    {
+                        
+                        sockCardPrefabScript.SockVisible(false);
+                    }
+                });
+
+                for (var i = 0; i < _selection.Length; i++)
+                {
+                    _selection[i] = -1;
                 }
             }
-            _timer.addEvent(0.5f, () =>
+        
+        
+
+        
+
+            if( _touchActive)
             {
-                _touchActive = true;
-                foreach (var sockCardPrefabScript in _sockCardPrefabs)
+                HandleTouch();
+            }
+        
+            foreach (var sockCardPrefabScript in _sockCardPrefabs)
+            {
+                if (sockCardPrefabScript.ToBeDestroyed)
                 {
-                    sockCardPrefabScript.SockVisible(false);
+                    Destroy(sockCardPrefabScript.gameObject);
                 }
-            });
-
-            for (var i = 0; i < _selection.Length; i++)
-            {
-                _selection[i] = -1;
             }
+            _sockCardPrefabs.RemoveAll(x => x.ToBeDestroyed);
         }
         
         
-
-        
-
-        if( _touchActive)
-        {
-            HandleTouch();
-        }
-        
-        foreach (var sockCardPrefabScript in _sockCardPrefabs)
-        {
-            if (sockCardPrefabScript.ToBeDestroyed)
-            {
-                Destroy(sockCardPrefabScript.gameObject);
-            }
-        }
-        _sockCardPrefabs.RemoveAll(x => x.ToBeDestroyed);
 
     }
 }
