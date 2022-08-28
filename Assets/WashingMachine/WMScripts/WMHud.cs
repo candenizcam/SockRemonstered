@@ -12,10 +12,10 @@ public class WMHud
     private VisualElement _sockHolder;
     private Vector2[] _smallSockSpots;
 
-    private float[] _pixelPoints = {0, 250, 410, 175, 920, 250};
+    private float[] _pixelPoints = {0, 246, 462, 168, 924, 246};
     private float[] _polynomial;
     private int[] _amounts;
-    private float scale = Screen.width / 1284f;
+    private float scale = Screen.width / 1170f;
     public WMHud(WMLayout wmLayout)
     {
         var topBarRect = wmLayout.topBarRect();
@@ -35,10 +35,10 @@ public class WMHud
         //_topBar.style.backgroundColor = new Color(1f,1f,0f,0.6f);
 
         var pins = new Image();
-        pins.sprite = Resources.Load<Sprite>("ui/pins");
+        pins.sprite = Resources.Load<Sprite>("ui/clothesline");
         pins.style.position = Position.Absolute;
         pins.style.left = 0f;
-        pins.style.bottom = 0f;
+        pins.style.bottom = 168f;
         pins.style.width = pins.sprite.rect.width*scale;
         pins.style.height = pins.sprite.rect.height*scale;
         //pins.style.backgroundColor = Color.blue;
@@ -51,9 +51,20 @@ public class WMHud
         
         _topBar.Add(_sockHolder);
 
-        var w = 356f;
-        var h = 356f;
-        
+        var w = 382f;
+        var h = 284f;
+        //380 veya daha büyük
+
+        var unsafeHeight = (Screen.height - Screen.safeArea.yMax);
+
+        if (unsafeHeight + 284 > 380)
+        {
+            h = 284;
+        }
+        else
+        {
+            h = 380 - unsafeHeight;
+        }
         
         
         var moveBg = new Image();
@@ -185,8 +196,6 @@ public class WMHud
             n.visible = false;
             _sockHolder.Add(n);
         }
-        Debug.Log(_sockHolder.childCount);
-        
     }
 
     public void adjustSocks(int[] amount)
