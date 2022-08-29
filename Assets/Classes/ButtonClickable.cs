@@ -22,6 +22,26 @@ namespace Classes
             
         }
 
+        public ButtonClickable(float scale, string imagePath, Color pressedTint, Action clickAction): this(clickAction)
+        {
+            var s2 = Resources.Load<Sprite>(imagePath);
+            style.width = s2.rect.width * scale;
+            style.height = s2.rect.height * scale;
+            style.backgroundImage = new StyleBackground(s2);
+            style.backgroundColor = Color.clear;
+            
+            onTouchDown = () =>
+            {
+                style.unityBackgroundImageTintColor = Color.gray;
+            };
+            
+            onTouchUp = () =>
+            {
+                style.unityBackgroundImageTintColor = Color.white;
+            };
+            
+        }
+
         public void TouchDown(Vector2 p)
         {
             if (worldBound.Contains(p))

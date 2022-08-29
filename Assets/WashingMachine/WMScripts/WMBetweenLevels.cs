@@ -134,28 +134,16 @@ namespace WashingMachine.WMScripts
                 _bigButton.style.unityBackgroundImageTintColor = Color.white;
             };
             
-            var smallButton = new ButtonClickable(() =>
+            var smallButton = new ButtonClickable(scale,"ui/x",Color.gray,() =>
             {
                 cross();
             });
-            var s2 = Resources.Load<Sprite>("ui/x");
+            
             smallButton.style.position = Position.Absolute;
-            smallButton.style.backgroundImage = new StyleBackground(s2);
-            smallButton.style.backgroundColor = Color.clear;
             smallButton.style.top = 50f*scale;
             smallButton.style.right = 50f*scale;
-            smallButton.style.width= s2.rect.width *scale;
-            smallButton.style.height= s2.rect.height*scale;
             
-            smallButton.onTouchDown = () =>
-            {
-                smallButton.style.unityBackgroundImageTintColor = Color.gray;
-            };
             
-            smallButton.onTouchUp = () =>
-            {
-                smallButton.style.unityBackgroundImageTintColor = Color.white;
-            };
             _buttons.Add(smallButton);
             
             bg.Add(smallButton);

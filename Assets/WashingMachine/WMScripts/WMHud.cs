@@ -123,27 +123,15 @@ public class WMHud
         _bottomBar.style.width = bottomBarRect.width;
         //_bottomBar.style.backgroundColor = new Color(1f,0f,0f,0.6f);
 
-        var s2 = Resources.Load<Sprite>("ui/buttons/Pause");
-        var settingsButton = new ButtonClickable(() =>
+        
+        var settingsButton = new ButtonClickable(scale,"ui/buttons/Pause",Color.gray,() =>
         {
             settingsButtonFunction();
         });
         settingsButton.style.position = Position.Absolute;
         settingsButton.style.left = 32f*scale;
         settingsButton.style.bottom = 32f*scale;
-        settingsButton.style.width = s2.rect.width * scale;
-        settingsButton.style.height = s2.rect.height * scale;
-        settingsButton.style.backgroundImage = new StyleBackground(s2);
-        settingsButton.style.backgroundColor = Color.clear;
-        settingsButton.onTouchDown = () =>
-        {
-            settingsButton.style.unityBackgroundImageTintColor = Color.gray;
-        };
-            
-        settingsButton.onTouchUp = () =>
-        {
-            settingsButton.style.unityBackgroundImageTintColor = Color.white;
-        };
+        
 
         _buttons.Add(settingsButton);
         _bottomBar.Add(settingsButton);
