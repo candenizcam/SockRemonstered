@@ -16,6 +16,7 @@ namespace WashingMachine.WMScripts
         private Label _bigText;
         private Label _smallText;
         private ButtonClickable _bigButton;
+        private VisualElement _pointDisplay;
         private Label _points;
         public WMBetweenLevels(WMLayout wmLayout)
         {
@@ -56,15 +57,31 @@ namespace WashingMachine.WMScripts
             _bigText.style.color = Constants.GameColours[11];
 
 
-            var moneyArea = new VisualElement();
+            _pointDisplay = new VisualElement();
 
-            moneyArea.style.position = Position.Absolute;
-            moneyArea.style.left = 0f;
-            moneyArea.style.width = bg.sprite.rect.width*scale;
-
+            _pointDisplay.style.position = Position.Absolute;
+            _pointDisplay.style.left = 0f;
+            _pointDisplay.style.width = bg.sprite.rect.width*scale;
+            _pointDisplay.style.bottom = 291f * scale;
+            _pointDisplay.style.flexDirection = FlexDirection.Row;
+            _pointDisplay.style.alignContent = new StyleEnum<Align>(Align.Center);
+            _pointDisplay.style.justifyContent = new StyleEnum<Justify>(Justify.Center);
+            _pointDisplay.style.flexBasis = bg.sprite.rect.width * scale;
+            _pointDisplay.style.alignItems = new StyleEnum<Align>(Align.Center);
+            
             var coin = new Image();
             coin.sprite = Resources.Load<Sprite>("ui/x");
-                            
+            coin.style.width = 100f* scale;
+            coin.style.height = 100f* scale;
+            _pointDisplay.Add(coin);
+
+            _points = new Label();
+            _points.style.fontSize = 109*scale;
+            _points.text = "  8888";
+            _points.style.color = Constants.GameColours[11];
+            _pointDisplay.Add(_points);
+            bg.Add(_pointDisplay);
+            
                 _bigButton = new ButtonClickable(() =>
             {
                 
@@ -124,10 +141,25 @@ namespace WashingMachine.WMScripts
             }
         }
 
-        public void UpdateInfo(string bigText, string smallText)
+        public void UpdateInfo(bool levelWon, string bigText, string smallText, string pointsText)
         {
+            if (levelWon)
+            {
+                _bigText.style.bottom = 565f * scale;
+                _smallText.style.bottom = 458f * scale;
+                _pointDisplay.visible = true;
+            }
+            else
+            {
+                _bigText.style.bottom = 312f * scale;
+                _smallText.style.bottom = 419f * scale;
+                _pointDisplay.visible = false;
+            }
+            
+            
             _bigText.text = bigText;
             _smallText.text = smallText;
+            _points.text = pointsText;
         }
         
     }

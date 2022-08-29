@@ -184,11 +184,16 @@ public class WMMain : MonoBehaviour
         return levelWon ? "Yarn-tastic!" : "Level failed!";
     }
 
+    private string getLevelPoints()
+    {
+        return $"  {_moveNo * 10}";
+    }
+
 
     private void levelDone(bool won)
     {
         _levelEnd = true;
-        _wmBetweenLevels.UpdateInfo(bigText: getBigText(), smallText: getSmallText(won));
+        _wmBetweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), getLevelPoints());
     }
     
     
