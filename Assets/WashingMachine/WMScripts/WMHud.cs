@@ -98,7 +98,7 @@ public class WMHud
         _monsterFaces = new MonsterFaces();
         _monsterFaces.Portrait.style.right = 0f;
         _monsterFaces.Portrait.style.top = 0f;
-        frameBg.Add(_monsterFaces.Portrait);
+        frameTop.Add(_monsterFaces.Portrait);
 
         var moveBg = new Image();
         moveBg.style.position = Position.Absolute;
@@ -127,37 +127,10 @@ public class WMHud
         _moveCounter.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
         _moveCounter.style.fontSize = 64f * scale;
         _moveCounter.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
+        _moveCounter.style.color = Constants.GameColours[11];
         moveBg.Add(_moveCounter);
         
-        /*
-        for (int i = 0; i < 6; i++)
-        {
-            var x = i * _pixelPoints[4]/5f;
-            var y = _polynomial[0] * x * x + _polynomial[1] * x + _polynomial[2];
-            Debug.Log($"x: {x}, y: {y}");
-            var n = new Image();
-            n.sprite = Resources.Load<Sprite>("ui/pins");
-            n.style.position = Position.Absolute;
-            n.style.left = x;
-            n.style.bottom = y;
-            n.style.width = 50f;
-            n.style.height = 50f;
-            n.style.backgroundColor = Color.blue;
-            _topBar.Add(n);
-            
-        }
-        */
         
-        /*
-        var thisStar = new Image();
-        thisStar.sprite = Resources.Load<Sprite>(  "<path>"  );
-        thisStar.style.position = Position.Absolute;
-        thisStar.style.right = (j) * (starWidth+10) +20;
-        thisStar.style.bottom = outerHeight*0.2f;
-        thisStar.style.width = starWidth;
-        thisStar.style.height = starWidth * 2;
-        outer.Add(thisStar);
-        */
         
 
         _bottomBar = new VisualElement();

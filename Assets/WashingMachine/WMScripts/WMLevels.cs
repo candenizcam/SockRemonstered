@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Classes;
 using UnityEngine;
 
 namespace WashingMachine.WMScripts
@@ -9,7 +10,7 @@ namespace WashingMachine.WMScripts
     {
         public static readonly WMLevelInfo[] WmLevelInfos =
         {
-            new WMLevelInfo(1f,4f,-1, 25,
+            new WMLevelInfo(1f,4f,-1, 5,
                 new WMSockInfo[]
                 {
                     new WMSockInfo(0,0,1,10),
@@ -183,6 +184,28 @@ namespace WashingMachine.WMScripts
             }
 
             return true;
+        }
+
+        public MonsterMood GetWashingMachineMood(int moveLeft)
+        {
+            var leftMoves = 0;
+            for (var i = 0; i < _scoreSocks.Count; i++)
+            {
+                leftMoves += _scoreSocks[i].LevelCollect - _collected[i];
+            }
+
+            if (leftMoves > moveLeft)
+            {
+                return MonsterMood.Sad;
+            }else if (leftMoves*1.5f > moveLeft )
+            {
+                return MonsterMood.Excited;
+            }
+            else
+            {
+                return MonsterMood.Happy;
+            }
+
         }
         
         

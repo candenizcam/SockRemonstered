@@ -48,7 +48,8 @@ public class WMMain : MonoBehaviour
                 
 
                 var i = value >= 0 ? value : 0;
-                _wmHud.updateInfo($"{i}");
+                var m = _wmScoreboard.GetWashingMachineMood(value);
+                _wmHud.updateInfo($"{i}",m);
             }
             catch
             {
@@ -115,13 +116,14 @@ public class WMMain : MonoBehaviour
         _wheelSpeed = thisLevel.WheelSpeed;
         sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
-        MoveNo = thisLevel.MoveNo;
+        
 
         //var a = new string[thisLevel.WmSockInfos.Length];
 
         _wmScoreboard = new WMScoreboard((from t in thisLevel.WmSockInfos
             where t.LevelCollect > 0
             select t).ToList());
+        MoveNo = thisLevel.MoveNo;
         _wmHud.generateSocks(_wmScoreboard.ScoreAddressArray());
 
         _wmHud.adjustSocks(_wmScoreboard.Collected);
@@ -156,6 +158,7 @@ public class WMMain : MonoBehaviour
                 if (!sockPrefabScript.Collides(worldPoint)) continue; // if no collision continue
                 touched = true;
                 thisTurnTouches.RemoveAt(i);
+                _wmScoreboard.IncreseSock( sockPrefabScript.style,sockPrefabScript.no );
                 MoveNo -= 1;
                 
                 break;
@@ -163,7 +166,7 @@ public class WMMain : MonoBehaviour
             if (!touched) continue;
             //Destroy(sockPrefabScript.gameObject);
             
-            _wmScoreboard.IncreseSock( sockPrefabScript.style,sockPrefabScript.no );
+            
             sockPrefabScript.Kill();
         }
         _wmHud.adjustSocks(_wmScoreboard.Collected);
