@@ -110,6 +110,13 @@ namespace WashingMachine.WMScripts
                 buttonClickable.Update();
             }
         }
+
+        public void UpdateInfo(string bigText, string smallText)
+        {
+            _bigText.text = bigText;
+            _smallText.text = smallText;
+        }
+        
     }
     
 }

@@ -34,6 +34,33 @@ public class WMMain : MonoBehaviour
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
+
+    public int MoveNo
+    {
+        get
+        {
+            return _moveNo;
+        }
+        set
+        {
+            try
+            {
+                
+
+                var i = value >= 0 ? value : 0;
+                _wmHud.updateInfo($"{i}");
+            }
+            catch
+            {
+                
+            }
+
+            _moveNo = value;
+        }
+    }
+    
+    
+    
     private bool _levelEnd = false;
     private WMScoreboard _wmScoreboard;
     
@@ -88,7 +115,7 @@ public class WMMain : MonoBehaviour
         _wheelSpeed = thisLevel.WheelSpeed;
         sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
-        _moveNo = thisLevel.MoveNo;
+        MoveNo = thisLevel.MoveNo;
 
         //var a = new string[thisLevel.WmSockInfos.Length];
 
@@ -129,7 +156,7 @@ public class WMMain : MonoBehaviour
                 if (!sockPrefabScript.Collides(worldPoint)) continue; // if no collision continue
                 touched = true;
                 thisTurnTouches.RemoveAt(i);
-                _moveNo -= 1;
+                MoveNo -= 1;
                 
                 break;
             }
@@ -141,43 +168,40 @@ public class WMMain : MonoBehaviour
         }
         _wmHud.adjustSocks(_wmScoreboard.Collected);
     }
+
+
+    private string getBigText()
+    {
+        return $"Level {levelIndex+1}";
+    }
     
-    
-    
+    private string getSmallText(bool levelWon)
+    {
+
+        return levelWon ? "Yarn-tastic!" : "Level failed!";
+    }
+
+
+    private void levelDone(bool won)
+    {
+        _levelEnd = true;
+        _wmBetweenLevels.UpdateInfo(bigText: getBigText(), smallText: getSmallText(won));
+    }
     
     
     // Update is called once per frame
     void Update()
     {
         _wmBetweenLevels.Update();
-        /*
-        if (Input.touches.Length > 0)
-        {
-            var p = Input.touches[0].position;
-            p = new Vector2(p.x, Screen.height - p.y);
-            if (Input.touches[0].phase == TouchPhase.Began)
-            {
-                
-                
-                _wmBetweenLevels.OnDown(p);
-            }else if (Input.touches[0].phase == TouchPhase.Ended)
-            {
-                _wmBetweenLevels.OnUp(p);
-            }
-        }
-        */
         
-        
-        if (_moveNo <= 0 && !_levelEnd)
+        if (MoveNo <= 0 && !_levelEnd)
         {
-            _levelEnd = true;
-            Debug.Log("No more moves");
+            levelDone(false);
         }
 
         if (_wmScoreboard.GameWon()&& !_levelEnd)
         {
-            _levelEnd = true;
-            Debug.Log("Level Won");
+            levelDone(true);
             
         }
 

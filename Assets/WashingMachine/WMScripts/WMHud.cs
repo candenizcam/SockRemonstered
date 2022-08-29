@@ -10,6 +10,7 @@ public class WMHud
     private VisualElement _topBar;
     private VisualElement _bottomBar;
     private VisualElement _sockHolder;
+    private Label _moveCounter;
     private Vector2[] _smallSockSpots;
 
     private float[] _pixelPoints = {0, 246, 462, 168, 924, 246};
@@ -67,26 +68,11 @@ public class WMHud
         }
         
         
-        var moveBg = new Image();
-        moveBg.style.position = Position.Absolute;
-        moveBg.sprite = Resources.Load<Sprite>("ui/moveframebg");
+        
         //moveBg.scaleMode = ScaleMode.ScaleToFit;
         //moveBg.style.scale = new Scale(new Vector3(0.1f,0.1f,1f));
         
-        moveBg.style.width = scale*moveBg.sprite.rect.width;
-        moveBg.style.height = scale*moveBg.sprite.rect.height;
-        moveBg.style.right = (w -moveBg.sprite.rect.width)*scale;
-        moveBg.style.top = (h-moveBg.sprite.rect.height)*scale;
-        _topBar.Add(moveBg);
         
-        var moveTop = new Image();
-        moveTop.style.position = Position.Absolute;
-        moveTop.sprite = Resources.Load<Sprite>("ui/moveframetop");
-        moveTop.style.width = scale*moveTop.sprite.rect.width;
-        moveTop.style.height = scale*moveTop.sprite.rect.height;
-        moveTop.style.right = (w -moveTop.sprite.rect.width)*scale;
-        moveTop.style.top = (h-moveTop.sprite.rect.height)*scale;
-        _topBar.Add(moveTop);
         
         var frameBg = new Image();
         frameBg.style.position = Position.Absolute;
@@ -105,7 +91,35 @@ public class WMHud
         frameTop.style.right = (w -frameTop.sprite.rect.width)*scale;
         frameTop.style.top = (h-frameTop.sprite.rect.height )*scale;
         _topBar.Add(frameTop);
+
+        var moveBg = new Image();
+        moveBg.style.position = Position.Absolute;
+        moveBg.sprite = Resources.Load<Sprite>("ui/moveframebg");
+        moveBg.style.width = scale*moveBg.sprite.rect.width;
+        moveBg.style.height = scale*moveBg.sprite.rect.height;
+        moveBg.style.right = (w -moveBg.sprite.rect.width)*scale;
+        moveBg.style.top = (h-moveBg.sprite.rect.height)*scale;
+        _topBar.Add(moveBg);
         
+        var moveTop = new Image();
+        moveTop.style.position = Position.Absolute;
+        moveTop.sprite = Resources.Load<Sprite>("ui/moveframetop");
+        moveTop.style.width = scale*moveTop.sprite.rect.width;
+        moveTop.style.height = scale*moveTop.sprite.rect.height;
+        moveTop.style.right = (w -moveTop.sprite.rect.width)*scale;
+        moveTop.style.top = (h-moveTop.sprite.rect.height)*scale;
+        _topBar.Add(moveTop);
+        
+        _moveCounter = new Label();
+        _moveCounter.style.position = Position.Absolute;
+        _moveCounter.style.left = 0f;
+        _moveCounter.style.bottom = 0f;
+        _moveCounter.style.width = scale * 180f;
+        _moveCounter.style.height = scale * 180f;
+        _moveCounter.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
+        _moveCounter.style.fontSize = 64f * scale;
+        _moveCounter.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
+        moveBg.Add(_moveCounter);
         
         /*
         for (int i = 0; i < 6; i++)
@@ -231,6 +245,11 @@ public class WMHud
     {
         _topBar.visible = b;
         _bottomBar.visible = b;
+    }
+
+    public void updateInfo(string moveLeft)
+    {
+        _moveCounter.text = moveLeft;
     }
     
     /*
