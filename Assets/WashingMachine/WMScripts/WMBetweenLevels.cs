@@ -18,6 +18,7 @@ namespace WashingMachine.WMScripts
         private ButtonClickable _bigButton;
         private VisualElement _pointDisplay;
         private Label _points;
+        private MonsterFaces _monsterFaces;
         public WMBetweenLevels(WMLayout wmLayout)
         {
             
@@ -70,7 +71,7 @@ namespace WashingMachine.WMScripts
             _pointDisplay.style.alignItems = new StyleEnum<Align>(Align.Center);
             
             var coin = new Image();
-            coin.sprite = Resources.Load<Sprite>("ui/x");
+            coin.sprite = Resources.Load<Sprite>("ui/buttons/coin");
             coin.style.width = 100f* scale;
             coin.style.height = 100f* scale;
             _pointDisplay.Add(coin);
@@ -82,11 +83,27 @@ namespace WashingMachine.WMScripts
             _pointDisplay.Add(_points);
             bg.Add(_pointDisplay);
             
-                _bigButton = new ButtonClickable(() =>
+            
+            
+            _monsterFaces = new MonsterFaces(scale);
+            _monsterFaces.Portrait.style.left = 260f*scale;
+            _monsterFaces.Portrait.style.bottom = (805f) * scale;
+            bg.Add(_monsterFaces.Portrait);
+            
+            
+            
+            
+            
+            
+            _bigButton = new ButtonClickable(() =>
             {
                 
             });
 
+                
+                
+                
+                
             var s = Resources.Load<Sprite>("ui/button");
 
             _bigButton.style.backgroundImage = new StyleBackground(s);
@@ -101,7 +118,6 @@ namespace WashingMachine.WMScripts
             _bigButton.text = "CONTINUE";
             
             _buttons.Add(_bigButton);
-            var l = new Label();
             _bigButton.onTouchDown = () =>
             {
                 _bigButton.style.unityBackgroundImageTintColor = Color.gray;
@@ -112,9 +128,30 @@ namespace WashingMachine.WMScripts
                 _bigButton.style.unityBackgroundImageTintColor = Color.white;
             };
             
+            var smallButton = new ButtonClickable(() =>
+            {
+                
+            });
+            var s2 = Resources.Load<Sprite>("ui/x");
+            smallButton.style.position = Position.Absolute;
+            smallButton.style.backgroundImage = new StyleBackground(s2);
+            smallButton.style.top = 50f*scale;
+            smallButton.style.right = 50f*scale;
+            smallButton.style.width= s2.rect.width *scale;
+            smallButton.style.height= s2.rect.height*scale;
+            smallButton.style.backgroundColor = Color.clear;
+            smallButton.onTouchDown = () =>
+            {
+                smallButton.style.unityBackgroundImageTintColor = Color.gray;
+            };
             
+            smallButton.onTouchUp = () =>
+            {
+                smallButton.style.unityBackgroundImageTintColor = Color.white;
+            };
+            _buttons.Add(smallButton);
             
-            
+            bg.Add(smallButton);
             bg.Add(_bigButton);
             bg.Add(_smallText);
             bg.Add(_bigText);
@@ -147,12 +184,18 @@ namespace WashingMachine.WMScripts
             {
                 _bigText.style.bottom = 565f * scale;
                 _smallText.style.bottom = 458f * scale;
+                _monsterFaces.Portrait.style.bottom = (805f) * scale;
+                _monsterFaces.ChangeMood(MonsterMood.Happy);
+                _bigButton.text = "NEXT";
                 _pointDisplay.visible = true;
             }
             else
             {
-                _bigText.style.bottom = 312f * scale;
-                _smallText.style.bottom = 419f * scale;
+                _bigText.style.bottom =  419f* scale;
+                _smallText.style.bottom = 312f * scale;
+                _monsterFaces.Portrait.style.bottom = (606f) * scale;
+                _monsterFaces.ChangeMood(MonsterMood.Sad);
+                _bigButton.text = "RETRY";
                 _pointDisplay.visible = false;
             }
             

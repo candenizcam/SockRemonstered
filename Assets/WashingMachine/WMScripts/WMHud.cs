@@ -72,33 +72,10 @@ public class WMHud
         
         
         
-        //moveBg.scaleMode = ScaleMode.ScaleToFit;
-        //moveBg.style.scale = new Scale(new Vector3(0.1f,0.1f,1f));
-        
-        
-        
-        var frameBg = new Image();
-        frameBg.style.position = Position.Absolute;
-        frameBg.sprite = Resources.Load<Sprite>("ui/framebg");
-        frameBg.style.width = scale*frameBg.sprite.rect.width;
-        frameBg.style.height = scale*frameBg.sprite.rect.height;
-        frameBg.style.right = (w -frameBg.sprite.rect.width)*scale;
-        frameBg.style.top = (h-frameBg.sprite.rect.height)*scale;
-        _topBar.Add(frameBg);
-        
-        var frameTop = new Image();
-        frameTop.style.position = Position.Absolute;
-        frameTop.sprite = Resources.Load<Sprite>("ui/frametop");
-        frameTop.style.width = scale*frameTop.sprite.rect.width;
-        frameTop.style.height = scale*frameTop.sprite.rect.height;
-        frameTop.style.right = (w -frameTop.sprite.rect.width)*scale;
-        frameTop.style.top = (h-frameTop.sprite.rect.height )*scale;
-        _topBar.Add(frameTop);
-
-        _monsterFaces = new MonsterFaces();
-        _monsterFaces.Portrait.style.right = 0f;
-        _monsterFaces.Portrait.style.top = 0f;
-        frameTop.Add(_monsterFaces.Portrait);
+        _monsterFaces = new MonsterFaces(scale);
+        _monsterFaces.Portrait.style.right = 306*scale- _monsterFaces.ScaledWidth;
+        _monsterFaces.Portrait.style.top = (h-64f)*scale - _monsterFaces.ScaledHeight;
+        _topBar.Add(_monsterFaces.Portrait);
 
         var moveBg = new Image();
         moveBg.style.position = Position.Absolute;
@@ -125,7 +102,7 @@ public class WMHud
         _moveCounter.style.width = scale * 180f;
         _moveCounter.style.height = scale * 180f;
         _moveCounter.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
-        _moveCounter.style.fontSize = 64f * scale;
+        _moveCounter.style.fontSize = 86f * scale;
         _moveCounter.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
         _moveCounter.style.color = Constants.GameColours[11];
         moveBg.Add(_moveCounter);
