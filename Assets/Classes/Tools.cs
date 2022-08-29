@@ -145,4 +145,21 @@ public static class Tools
             float[] a = {A, B, C};
             return a;
         }
+
+        /** returns the weight that fits in a width, height size with the given scale w/h
+         * 
+         */
+        public static float WidthThatFitsToSize(float width, float height, float scale)
+        {
+            var otherH = width / scale;
+            if (otherH > height)
+            {
+                return height * scale;
+            }
+            else
+            {
+                return width;
+            }
+
+        }
 }

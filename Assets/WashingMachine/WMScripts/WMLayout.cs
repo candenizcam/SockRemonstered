@@ -35,7 +35,10 @@ namespace WashingMachine.WMScripts
         {
             get
             {
-                return _unsafeTop+_safeHeight*(_playfieldXMax);
+                //Debug.Log($"unsafe top: {_unsafeTop}, other: {_safeHeight*(_playfieldXMax)}, {Screen.safeArea.height} ");
+                
+                //return _unsafeTop+_safeHeight*(_playfieldXMax);
+                return _unsafeTop+_safeHeight-220f/Screen.safeArea.height;
             }
         }
         
