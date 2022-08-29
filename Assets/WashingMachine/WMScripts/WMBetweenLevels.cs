@@ -16,6 +16,8 @@ namespace WashingMachine.WMScripts
         private Label _bigText;
         private Label _smallText;
         private ButtonClickable _bigButton;
+        private VisualElement _pointDisplay;
+        private Label _points;
         public WMBetweenLevels(WMLayout wmLayout)
         {
             
@@ -35,23 +37,51 @@ namespace WashingMachine.WMScripts
             _bigText = new Label();
             _smallText = new Label();
 
-            _smallText.style.bottom = 312f * scale;
+            _smallText.style.bottom = 458f * scale;
             _smallText.style.position = Position.Absolute;
             _smallText.style.left = 0f;
             _smallText.style.width = bg.sprite.rect.width*scale;
             _smallText.style.fontSize = 64f * scale;
             _smallText.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
             _smallText.text = "Level failed!";
+            _smallText.style.color = Constants.GameColours[11];
             
             
-            _bigText.style.bottom = 419f * scale;
+            _bigText.style.bottom = 565f * scale;
             _bigText.style.position = Position.Absolute;
             _bigText.style.fontSize = 109f * scale;
             _bigText.style.left = 0f;
             _bigText.style.width = bg.sprite.rect.width*scale;
             _bigText.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
             _bigText.text = "LEVEL 320";
+            _bigText.style.color = Constants.GameColours[11];
 
+
+            _pointDisplay = new VisualElement();
+
+            _pointDisplay.style.position = Position.Absolute;
+            _pointDisplay.style.left = 0f;
+            _pointDisplay.style.width = bg.sprite.rect.width*scale;
+            _pointDisplay.style.bottom = 291f * scale;
+            _pointDisplay.style.flexDirection = FlexDirection.Row;
+            _pointDisplay.style.alignContent = new StyleEnum<Align>(Align.Center);
+            _pointDisplay.style.justifyContent = new StyleEnum<Justify>(Justify.Center);
+            _pointDisplay.style.flexBasis = bg.sprite.rect.width * scale;
+            _pointDisplay.style.alignItems = new StyleEnum<Align>(Align.Center);
+            
+            var coin = new Image();
+            coin.sprite = Resources.Load<Sprite>("ui/x");
+            coin.style.width = 100f* scale;
+            coin.style.height = 100f* scale;
+            _pointDisplay.Add(coin);
+
+            _points = new Label();
+            _points.style.fontSize = 109*scale;
+            _points.text = "  8888";
+            _points.style.color = Constants.GameColours[11];
+            _pointDisplay.Add(_points);
+            bg.Add(_pointDisplay);
+            
                 _bigButton = new ButtonClickable(() =>
             {
                 
@@ -66,7 +96,7 @@ namespace WashingMachine.WMScripts
             _bigButton.style.width= s.rect.width*scale;
             _bigButton.style.height= s.rect.height*scale;
             _bigButton.style.backgroundColor = Color.clear;
-            
+            _bigButton.style.color = Constants.GameColours[11];
             _bigButton.style.fontSize = 80f*scale;
             _bigButton.text = "CONTINUE";
             
@@ -111,10 +141,25 @@ namespace WashingMachine.WMScripts
             }
         }
 
-        public void UpdateInfo(string bigText, string smallText)
+        public void UpdateInfo(bool levelWon, string bigText, string smallText, string pointsText)
         {
+            if (levelWon)
+            {
+                _bigText.style.bottom = 565f * scale;
+                _smallText.style.bottom = 458f * scale;
+                _pointDisplay.visible = true;
+            }
+            else
+            {
+                _bigText.style.bottom = 312f * scale;
+                _smallText.style.bottom = 419f * scale;
+                _pointDisplay.visible = false;
+            }
+            
+            
             _bigText.text = bigText;
             _smallText.text = smallText;
+            _points.text = pointsText;
         }
         
     }
