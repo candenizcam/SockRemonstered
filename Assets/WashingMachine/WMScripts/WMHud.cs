@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Classes;
@@ -14,18 +15,21 @@ public class WMHud
     private VisualElement _sockHolder;
     private Label _moveCounter;
     private Vector2[] _smallSockSpots;
-
+    private List<ButtonClickable> _buttons = new List<ButtonClickable>();
     private float[] _pixelPoints = {0, 246, 462, 168, 924, 246};
     private float[] _polynomial;
     private int[] _amounts;
-    private float scale = Screen.width / 1170f;
+    
     private MonsterFaces _monsterFaces;
+    private float scale;
+    public Action SettingsButtonAction = () => {};
+    
     public WMHud(WMLayout wmLayout)
     {
         var topBarRect = wmLayout.topBarRect();
-        var bottomBarRect = wmLayout.topBarRect();
+        var bottomBarRect = wmLayout.bottomBarRect();
 
-        
+        scale = wmLayout.Scale;
         
         _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
             _pixelPoints[4], _pixelPoints[5]);
@@ -118,6 +122,32 @@ public class WMHud
         _bottomBar.style.height = bottomBarRect.height;
         _bottomBar.style.width = bottomBarRect.width;
         //_bottomBar.style.backgroundColor = new Color(1f,0f,0f,0.6f);
+
+        var s2 = Resources.Load<Sprite>("ui/buttons/Pause");
+        var settingsButton = new ButtonClickable(() =>
+        {
+            settingsButtonFunction();
+        });
+        settingsButton.style.position = Position.Absolute;
+        settingsButton.style.left = 32f*scale;
+        settingsButton.style.bottom = 32f*scale;
+        settingsButton.style.width = s2.rect.width * scale;
+        settingsButton.style.height = s2.rect.height * scale;
+        settingsButton.style.backgroundImage = new StyleBackground(s2);
+        settingsButton.style.backgroundColor = Color.clear;
+        settingsButton.onTouchDown = () =>
+        {
+            settingsButton.style.unityBackgroundImageTintColor = Color.gray;
+        };
+            
+        settingsButton.onTouchUp = () =>
+        {
+            settingsButton.style.unityBackgroundImageTintColor = Color.white;
+        };
+
+        _buttons.Add(settingsButton);
+        _bottomBar.Add(settingsButton);
+
     }
 
 
@@ -218,6 +248,20 @@ public class WMHud
         }
         
     }
+    
+    void settingsButtonFunction()
+    {
+        SettingsButtonAction();
+    }
+    
+    public void Update()
+    {
+        foreach (var buttonClickable in _buttons)
+        {
+            buttonClickable.Update();
+        }
+    }
+
     
     /*
     public void adjustSocks(string[] address, int[] amount)

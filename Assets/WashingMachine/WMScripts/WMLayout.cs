@@ -30,6 +30,7 @@ namespace WashingMachine.WMScripts
         private Rect _bottomBarRectScreen;
         private Rect _bottomBarRectViewport;
         
+        public  float Scale = Screen.width / 1170f;
         
         public float playfieldTop // from unsafe top
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Classes;
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 using WashingMachine.WMScripts;
@@ -27,6 +28,7 @@ public class WMMain : MonoBehaviour
     private UIDocument _uiDocument;
     private WMHud _wmHud;
     private WMBetweenLevels _wmBetweenLevels;
+    private WMQuickSettings _wmQuickSettings;
     private float _baseWheelHeight;
     private float _wheelSpeed = 1f;
     private float _wheelStartPos;
@@ -34,6 +36,7 @@ public class WMMain : MonoBehaviour
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
+    private int gameState = 0; //0 runs, 1 pause, 2 lost, 3 won
 
     public int MoveNo
     {
@@ -93,11 +96,36 @@ public class WMMain : MonoBehaviour
 
         _wmHud = new WMHud(mainCamera);
         _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
+        _wmHud.SettingsButtonAction = () =>
+        {
+            Debug.Log("kedi olalı");
+            gameState = 1;
+        };
 
+        
+        
         _wmBetweenLevels = new WMBetweenLevels(mainCamera);
         _wmBetweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
         _wmBetweenLevels.setVisible(false);
-        
+        _wmBetweenLevels.OnCross = () =>
+        {
+            ToHQ();
+        };
+        _wmBetweenLevels.OnBigButton = () =>
+        {
+        };
+
+
+        _wmQuickSettings = new WMQuickSettings(mainCamera);
+        _wmQuickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
+        _wmQuickSettings.setVisible(false);
+        _wmQuickSettings.SettingsButtonAction = () =>
+        {
+            _wmQuickSettings.setVisible(false);
+            gameState = 0;
+        };
+            
+            
         var left = r.xMin;
         var bottom = r.yMax;
         
@@ -134,6 +162,21 @@ public class WMMain : MonoBehaviour
         //public int MaxSock;
     }
 
+    private void ToHQ()
+    {
+        
+    }
+    
+    private void Restart()
+    {
+        
+    }
+    
+    private void NextLevel()
+    {
+        
+    }
+    
     
     private void HandleTouch()
     {
@@ -192,7 +235,24 @@ public class WMMain : MonoBehaviour
 
     private void levelDone(bool won)
     {
-        _levelEnd = true;
+        if (won)
+        {
+            gameState = 3;
+            _wmBetweenLevels.OnBigButton = () =>
+            {
+                NextLevel();
+
+            };
+        }
+        else
+        {
+            gameState = 2;
+            _wmBetweenLevels.OnBigButton = () =>
+            {
+                Restart();
+            };
+        }
+        
         _wmBetweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), getLevelPoints());
     }
     
@@ -201,19 +261,24 @@ public class WMMain : MonoBehaviour
     void Update()
     {
         _wmBetweenLevels.Update();
+        _wmQuickSettings.Update();
+        _wmHud.Update();
         
-        if (MoveNo <= 0 && !_levelEnd)
+        if (MoveNo <= 0 && gameState==0)
         {
+            
+            gameState = 2;
             levelDone(false);
         }
 
-        if (_wmScoreboard.GameWon()&& !_levelEnd)
+        if (_wmScoreboard.GameWon()&& gameState==0)
         {
+            gameState = 3;
             levelDone(true);
             
         }
 
-        if (_levelEnd)
+        if (gameState==2 || gameState==3)
         {
             
             foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
@@ -228,8 +293,15 @@ public class WMMain : MonoBehaviour
             }
             
             
+        }else if (gameState == 1)
+        {
+            if (!_wmQuickSettings.Active)
+            {
+                _wmQuickSettings.setVisible(true);
+            }
+            
         }
-        else
+        else if(gameState==0)
         {
             Tools.TranslatePosition(wheel,y: -Time.deltaTime*_wheelSpeed );
             if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
@@ -270,6 +342,10 @@ public class WMMain : MonoBehaviour
             
             _activeSocks.RemoveAll(x => x.ToBeDestroyed);
             ArrangeActiveSocks();
+        }
+        else
+        {
+            
         }
         
         

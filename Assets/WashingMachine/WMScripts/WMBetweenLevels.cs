@@ -19,12 +19,18 @@ namespace WashingMachine.WMScripts
         private VisualElement _pointDisplay;
         private Label _points;
         private MonsterFaces _monsterFaces;
+        public Action OnCross;
+        public Action OnBigButton;
+        
         public WMBetweenLevels(WMLayout wmLayout)
         {
             
             _betweenElement = new VisualElement();
             _betweenElement.style.width = Screen.width;
             _betweenElement.style.height = Screen.height;
+            _betweenElement.style.backgroundColor = new Color(0.102f, 0.024f, 0.071f,0.84f);
+            
+            
             var bg = new Image();
             bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
             bg.style.position = Position.Absolute;
@@ -97,7 +103,7 @@ namespace WashingMachine.WMScripts
             
             _bigButton = new ButtonClickable(() =>
             {
-                
+                bigButton();
             });
 
                 
@@ -130,16 +136,17 @@ namespace WashingMachine.WMScripts
             
             var smallButton = new ButtonClickable(() =>
             {
-                
+                cross();
             });
             var s2 = Resources.Load<Sprite>("ui/x");
             smallButton.style.position = Position.Absolute;
             smallButton.style.backgroundImage = new StyleBackground(s2);
+            smallButton.style.backgroundColor = Color.clear;
             smallButton.style.top = 50f*scale;
             smallButton.style.right = 50f*scale;
             smallButton.style.width= s2.rect.width *scale;
             smallButton.style.height= s2.rect.height*scale;
-            smallButton.style.backgroundColor = Color.clear;
+            
             smallButton.onTouchDown = () =>
             {
                 smallButton.style.unityBackgroundImageTintColor = Color.gray;
@@ -205,6 +212,22 @@ namespace WashingMachine.WMScripts
             _points.text = pointsText;
         }
         
+        void cross()
+        {
+            OnCross();
+
+        }
+
+        void bigButton()
+        {
+            OnBigButton();
+
+        }
+        
+        
+        
     }
+
+    
     
 }
