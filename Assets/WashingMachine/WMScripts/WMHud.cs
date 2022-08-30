@@ -23,7 +23,7 @@ public class WMHud
     private int[] _amounts;
     private float[] _handTimer;
     private float[] _handYTargets;
-    private float _handTime = 0.6f;
+    private float _handTime = 1f;
     private float _handPickTime = 0.4f;
     private float _handMoveHeight;
     private MonsterFaces _monsterFaces;

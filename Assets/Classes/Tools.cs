@@ -162,4 +162,19 @@ public static class Tools
             }
 
         }
+
+        public static List<int> IntRange(int to)
+        {
+            return IntRange(0, to);
+        }
+        
+        public static List<int> IntRange(int from, int to)
+        {
+            var l = new List<int>();
+            for (int i = from; i < to; i++)
+            {
+                l.Add(i);
+            }
+            return l;
+        }
 }

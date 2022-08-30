@@ -8,6 +8,7 @@ public class SockCardPrefabScript : MonoBehaviour
 {
     public List<SpriteRenderer> socks;
     public List<SpriteRenderer> cards;
+    public SpriteRenderer CardLayout;
     
     [NonSerialized]
     public int SelectedSockCard = 0;
@@ -21,10 +22,19 @@ public class SockCardPrefabScript : MonoBehaviour
     private float borderPixel =10f;    
     
     // Start is called before the first frame update
+
+    public void ChangeCardSprite(float csd)
+    {
+        ChangeCardSprite(((int)(cards.Count*csd))%cards.Count);
+    }
     
     public void ChangeCardSprite(int cs)
     {
         _selectedCardSprite = cs;
+        
+
+        
+        
         for (int i = 0; i < cards.Count; i++)
         {
             cards[i].gameObject.SetActive(i == _selectedCardSprite);

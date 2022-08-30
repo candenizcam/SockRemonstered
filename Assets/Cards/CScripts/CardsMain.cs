@@ -8,9 +8,14 @@ using UnityEngine;
 
 public class CardsMain : MonoBehaviour
 {
+    public SpriteRenderer bg;
+    public SpriteRenderer topWater;
+    public SpriteRenderer bottomWater;
+    public int LevelNo=-1;
     
     private System.Random _random;
     private CardLayout _mainCamera;
+    private int _levelNo;
 
     private int _columns;
     private int _rows;
@@ -26,10 +31,24 @@ public class CardsMain : MonoBehaviour
     
     void Awake()
     {
-        _random = new System.Random();        
+
+
+        if (LevelNo > 0)
+        {
+            _levelNo = LevelNo - 1;
+        }
+
+        _levelNo = 1;
         
-        _rows = 4;
-        _columns = 3;
+        _random = new System.Random();
+        var thisLevel = CardLevels.CardLevelInfos[_levelNo];
+            
+        _rows = thisLevel.Row;
+        _columns = thisLevel.Column;
+
+       
+        
+        
         _mainCamera = new CardLayout(Camera.main, _rows, _columns);
         _selection = new int[] {-1,-1};
         _timer = new Timer();
@@ -37,9 +56,36 @@ public class CardsMain : MonoBehaviour
         _sockCardPrefab = Resources.Load("prefabs/SockCardPrefab");
         var ssp1 = _sockCardPrefab.GetComponent<SockCardPrefabScript>();
 
-        var cardTypeList = generateCardList(ssp1.socks.Count);
+        List<int> cardTypeList;
+        if (thisLevel.CardTypes > 0)
+        {
+            var ctl = generateCardList(thisLevel.CardTypes,thisLevel.CardTypes);
+            var r = new List<int>();
+            for (int j = 0; j <ssp1.socks.Count; j++)
+            {
+                r.Add(j);
+            }
+            var shuffledSocks = r.OrderBy(_ => _random.Next()).ToList();
+
+            cardTypeList = new List<int>();
+            foreach (var i in ctl)
+            {
+                
+                cardTypeList.Add(shuffledSocks[i]);
+                
+            }
+
+
+        }
+        else
+        {
+            cardTypeList = generateCardList(ssp1.socks.Count,thisLevel.CardTypes);
+        }
         
         
+        
+
+        var v = (float)_random.NextDouble();
         
         for (var i = 0; i < cardTypeList.Count; i++)
         {
@@ -49,12 +95,22 @@ public class CardsMain : MonoBehaviour
             var s = (GameObject)Instantiate(_sockCardPrefab);
             var sc = s.GetComponent<SockCardPrefabScript>();
             sc.SelectedSockCard = cardTypeList[i];
+            sc.ChangeCardSprite(v);
             sc.Resize(_mainCamera.Centres[r,c], _mainCamera.SingleScale);
             //s.transform.position = _mainCamera.Centres[r,c];
             //s.transform.localScale = _mainCamera.SingleScale;
             _sockCardPrefabs.Add(sc);
         }
         
+        
+        var pfr = _mainCamera.playfieldRect();
+        var left = pfr.xMin;
+        var bottom = pfr.yMax;
+        var tw = topWater.size;
+        var bw = bottomWater.size;
+
+        topWater.gameObject.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
+        bottomWater.gameObject.transform.position = new Vector3(left + bw.x / 2f, pfr.yMin - bw.y / 2f, 0f);
 
 
         //var r = new Range(0, ssp1.socks.Count);
@@ -88,8 +144,11 @@ public class CardsMain : MonoBehaviour
     }
 
 
-    private List<int> generateCardList(int socksCount)
+    private List<int> generateCardList(int totalSocksCount, int sockNeeded)
     {
+        var socksCount = sockNeeded < 0 ? totalSocksCount : sockNeeded;
+
+        
         var totalCards =( _rows * _columns)/2;
         if ((_rows * _columns) % 2 != 0)
         {
@@ -97,12 +156,10 @@ public class CardsMain : MonoBehaviour
         }
         var fullTurns = totalCards / socksCount;
         var missing = totalCards % socksCount;
-        var r = new List<int>();
-        for (int j = 0; j <socksCount; j++)
-        {
-            r.Add(j);
-        }
-        var m = r.OrderBy(_ => _random.Next()).ToList();
+        
+
+        
+        var m = Tools.IntRange(socksCount).OrderBy(_ => _random.Next()).ToList();
         var extra = m.Take(missing);
 
         var r2 = new List<int>();
@@ -121,7 +178,21 @@ public class CardsMain : MonoBehaviour
         }
         var m2 = r2.OrderBy(_ => _random.Next()).ToList();
         
-        return m2;
+        if (sockNeeded < 0) return m2;
+
+        
+        var shuffledSocks = Tools.IntRange(totalSocksCount).OrderBy(_ => _random.Next()).ToList();
+        var cardTypeList = new List<int>();
+        foreach (var i in m2)
+        {
+                
+            cardTypeList.Add(shuffledSocks[i]);
+                
+        }
+
+        return cardTypeList;
+        
+        
     }
 
     private void HandleTouch()
