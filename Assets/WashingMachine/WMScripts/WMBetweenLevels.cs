@@ -18,12 +18,19 @@ namespace WashingMachine.WMScripts
         private ButtonClickable _bigButton;
         private VisualElement _pointDisplay;
         private Label _points;
+        private MonsterFaces _monsterFaces;
+        public Action OnCross;
+        public Action OnBigButton;
+        
         public WMBetweenLevels(WMLayout wmLayout)
         {
             
             _betweenElement = new VisualElement();
             _betweenElement.style.width = Screen.width;
             _betweenElement.style.height = Screen.height;
+            _betweenElement.style.backgroundColor = new Color(0.102f, 0.024f, 0.071f,0.84f);
+            
+            
             var bg = new Image();
             bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
             bg.style.position = Position.Absolute;
@@ -70,7 +77,7 @@ namespace WashingMachine.WMScripts
             _pointDisplay.style.alignItems = new StyleEnum<Align>(Align.Center);
             
             var coin = new Image();
-            coin.sprite = Resources.Load<Sprite>("ui/x");
+            coin.sprite = Resources.Load<Sprite>("ui/buttons/coin");
             coin.style.width = 100f* scale;
             coin.style.height = 100f* scale;
             _pointDisplay.Add(coin);
@@ -82,11 +89,27 @@ namespace WashingMachine.WMScripts
             _pointDisplay.Add(_points);
             bg.Add(_pointDisplay);
             
-                _bigButton = new ButtonClickable(() =>
+            
+            
+            _monsterFaces = new MonsterFaces(scale);
+            _monsterFaces.Portrait.style.left = 260f*scale;
+            _monsterFaces.Portrait.style.bottom = (805f) * scale;
+            bg.Add(_monsterFaces.Portrait);
+            
+            
+            
+            
+            
+            
+            _bigButton = new ButtonClickable(() =>
             {
-                
+                bigButton();
             });
 
+                
+                
+                
+                
             var s = Resources.Load<Sprite>("ui/button");
 
             _bigButton.style.backgroundImage = new StyleBackground(s);
@@ -101,7 +124,6 @@ namespace WashingMachine.WMScripts
             _bigButton.text = "CONTINUE";
             
             _buttons.Add(_bigButton);
-            var l = new Label();
             _bigButton.onTouchDown = () =>
             {
                 _bigButton.style.unityBackgroundImageTintColor = Color.gray;
@@ -112,9 +134,19 @@ namespace WashingMachine.WMScripts
                 _bigButton.style.unityBackgroundImageTintColor = Color.white;
             };
             
+            var smallButton = new ButtonClickable(scale,"ui/x",Color.gray,() =>
+            {
+                cross();
+            });
+            
+            smallButton.style.position = Position.Absolute;
+            smallButton.style.top = 50f*scale;
+            smallButton.style.right = 50f*scale;
             
             
+            _buttons.Add(smallButton);
             
+            bg.Add(smallButton);
             bg.Add(_bigButton);
             bg.Add(_smallText);
             bg.Add(_bigText);
@@ -147,12 +179,18 @@ namespace WashingMachine.WMScripts
             {
                 _bigText.style.bottom = 565f * scale;
                 _smallText.style.bottom = 458f * scale;
+                _monsterFaces.Portrait.style.bottom = (805f) * scale;
+                _monsterFaces.ChangeMood(MonsterMood.Happy);
+                _bigButton.text = "NEXT";
                 _pointDisplay.visible = true;
             }
             else
             {
-                _bigText.style.bottom = 312f * scale;
-                _smallText.style.bottom = 419f * scale;
+                _bigText.style.bottom =  419f* scale;
+                _smallText.style.bottom = 312f * scale;
+                _monsterFaces.Portrait.style.bottom = (606f) * scale;
+                _monsterFaces.ChangeMood(MonsterMood.Sad);
+                _bigButton.text = "RETRY";
                 _pointDisplay.visible = false;
             }
             
@@ -162,6 +200,22 @@ namespace WashingMachine.WMScripts
             _points.text = pointsText;
         }
         
+        void cross()
+        {
+            OnCross();
+
+        }
+
+        void bigButton()
+        {
+            OnBigButton();
+
+        }
+        
+        
+        
     }
+
+    
     
 }
