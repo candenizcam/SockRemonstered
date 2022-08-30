@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Schema;
 using Classes;
 using JetBrains.Annotations;
 using UnityEditor.UIElements;
@@ -13,6 +14,7 @@ public class WMHud
     private VisualElement _topBar;
     private VisualElement _bottomBar;
     private VisualElement _sockHolder;
+    private Image _hand;
     private Label _moveCounter;
     private Vector2[] _smallSockSpots;
     private List<ButtonClickable> _buttons = new List<ButtonClickable>();
@@ -20,8 +22,10 @@ public class WMHud
     private float[] _polynomial;
     private int[] _amounts;
     private float[] _handTimer;
-    private float _handTime = 0.5f;
-    private float _handPickTime = 0.35f;
+    private float[] _handYTargets;
+    private float _handTime = 0.6f;
+    private float _handPickTime = 0.4f;
+    private float _handMoveHeight;
     private MonsterFaces _monsterFaces;
     private float scale;
     public Action SettingsButtonAction = () => {};
@@ -30,7 +34,7 @@ public class WMHud
     {
         var topBarRect = wmLayout.topBarRect();
         var bottomBarRect = wmLayout.bottomBarRect();
-
+        _handMoveHeight = topBarRect.height*1.5f;
         scale = wmLayout.Scale;
         
         _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
@@ -138,6 +142,13 @@ public class WMHud
         _buttons.Add(settingsButton);
         _bottomBar.Add(settingsButton);
 
+
+        _hand = new Image();
+        _hand.sprite = Resources.Load<Sprite>("ui/hand");
+        _hand.style.width = _hand.sprite.rect.width * scale;
+        _hand.style.height = _hand.sprite.rect.height * scale;
+        _hand.style.position = Position.Absolute;
+        //_sockHolder.Add(_hand);
     }
 
 
@@ -158,6 +169,7 @@ public class WMHud
     public void generateSocks(string[] address)
     {
         _handTimer = new float[address.Length];
+        _handYTargets = new float[address.Length];
         var totalSize = address.Length + 1;
         var xStep = _pixelPoints[4]/totalSize;
         _sockHolder.Clear();
@@ -172,6 +184,7 @@ public class WMHud
             n.style.height = scale*n.sprite.rect.height;
             n.style.left = (x - n.sprite.rect.width/2f)*scale;
             n.style.bottom = (y- n.sprite.rect.height)*scale;
+            _handYTargets[i] = (y- n.sprite.rect.height)*scale;
             _sockHolder.Add(n);
         }
         
@@ -230,7 +243,17 @@ public class WMHud
 
     public void HandSock(int index, int number)
     {
+        
+        _handTimer = new float[_handTimer.Length];
         _handTimer[index] = _handTime;
+
+        _hand.style.left = _sockHolder[index].style.left;
+        if (!_sockHolder.Contains(_hand))
+        {
+            _sockHolder.Add(_hand);
+        }
+        
+
     }
     
     public void setVisible(bool b)
@@ -268,6 +291,22 @@ public class WMHud
 
             _handTimer[i] -= Time.deltaTime;
 
+            if (_handTimer[i] > _handPickTime)
+            {
+                var normalDifference = (_handTimer[i] - _handPickTime) / (_handTime - _handPickTime);
+                _hand.style.bottom = _handYTargets[i] + normalDifference * _handMoveHeight;
+            }
+            else if (_handTimer[i] <= 0f)
+            {
+                _sockHolder.Remove(_hand);
+            }else
+            {
+                
+                var normalDifference = 1f - (_handTimer[i]) / (_handPickTime);
+                _hand.style.bottom = _handYTargets[i] +normalDifference * _handMoveHeight;
+            }
+            
+            //_hand.style.bottom = _handYTargets[i] + 
 
             if (_handTimer[i] <= _handPickTime && emptyMark) 
             {
