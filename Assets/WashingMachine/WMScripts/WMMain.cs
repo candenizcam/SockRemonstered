@@ -238,7 +238,20 @@ public class WMMain : MonoBehaviour
             
             sockPrefabScript.Kill();
         }
-        _wmHud.adjustSocks(_wmScoreboard.Collected);
+
+        var c = _wmScoreboard.GetCollected();
+        for (var i = 0; i < _wmScoreboard.Collected.Length; i++)
+        {
+            if (c[i] < 0)
+            {
+                _wmHud.HandSock(i,c[i]);
+                _wmScoreboard.Collected[i] = 0;
+                
+            }
+        }
+        
+        
+        _wmHud.adjustSocks(_wmScoreboard.GetCollected());
     }
 
 

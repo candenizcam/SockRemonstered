@@ -19,7 +19,9 @@ public class WMHud
     private float[] _pixelPoints = {0, 246, 462, 168, 924, 246};
     private float[] _polynomial;
     private int[] _amounts;
-    
+    private float[] _handTimer;
+    private float _handTime = 0.5f;
+    private float _handPickTime = 0.35f;
     private MonsterFaces _monsterFaces;
     private float scale;
     public Action SettingsButtonAction = () => {};
@@ -155,6 +157,7 @@ public class WMHud
 
     public void generateSocks(string[] address)
     {
+        _handTimer = new float[address.Length];
         var totalSize = address.Length + 1;
         var xStep = _pixelPoints[4]/totalSize;
         _sockHolder.Clear();
@@ -193,6 +196,14 @@ public class WMHud
         for (int i = 0; i < amount.Length; i++)
         {
             var sh = _sockHolder[i];
+            if (_handTimer[i] > _handPickTime)
+            {
+                ((Image)sh).tintColor = Color.gray;
+                _sockHolder[i + amount.Length].visible = true;
+                
+                continue;
+            }
+            
             
             switch(amount[i]) 
             {
@@ -215,6 +226,11 @@ public class WMHud
             
 
         }
+    }
+
+    public void HandSock(int index, int number)
+    {
+        _handTimer[index] = _handTime;
     }
     
     public void setVisible(bool b)
@@ -244,6 +260,26 @@ public class WMHud
     
     public void Update()
     {
+        for (var i = 0; i < _handTimer.Length; i++)
+        {
+            if (_handTimer[i]<=0f) continue;
+
+            bool emptyMark = _handTimer[i] > _handPickTime;
+
+            _handTimer[i] -= Time.deltaTime;
+
+
+            if (_handTimer[i] <= _handPickTime && emptyMark) 
+            {
+                
+                
+                ((Image) _sockHolder[i]).tintColor = Color.gray;
+                _sockHolder[i + _handTimer.Length].visible = false;
+            }
+            
+        }
+
+
         foreach (var buttonClickable in _buttons)
         {
             buttonClickable.Update();
