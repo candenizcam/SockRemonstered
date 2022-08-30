@@ -37,5 +37,38 @@ namespace Classes
 
         };
 
-}
+        public static NextLevelData GetNextLevel(int bigNumber)
+        {
+            if (bigNumber % 5==0)
+            {
+                return new NextLevelData("CardsScene",bigNumber / 5 - 1);
+            }
+
+            var l = (bigNumber / 10) * 4;
+            if (bigNumber % 10 > 5)
+            {
+                return new NextLevelData("WashingMachineScene",l+bigNumber % 5 - 1);
+            }
+            else
+            {
+                return new NextLevelData("WashingMachineScene",l + bigNumber % 5 - 1);
+            }
+
+        }
+        
+
+    }
+
+    public class NextLevelData
+    {
+        public string SceneName;
+        public int LevelNo;
+        public NextLevelData(string sceneName, int levelNo)
+        {
+            SceneName = sceneName;
+            LevelNo = levelNo;
+
+        }
+    }
+    
 }

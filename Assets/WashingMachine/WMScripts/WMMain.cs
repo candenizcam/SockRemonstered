@@ -72,6 +72,20 @@ public class WMMain : MonoBehaviour
     {
 
         
+        var sgd = SerialGameData.LoadOrGenerate();
+
+        var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
+
+        if (levelInfo.SceneName != "WashingMachineScene")
+        {
+            throw new Exception("there is a problem");
+        }
+
+        levelIndex = levelInfo.LevelNo;
+        if (LevelIndex > 0)
+        {
+            levelIndex = LevelIndex;
+        }
         
         _random = new System.Random();        
         
@@ -98,7 +112,6 @@ public class WMMain : MonoBehaviour
         _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
         _wmHud.SettingsButtonAction = () =>
         {
-            Debug.Log("kedi olalı");
             gameState = 1;
         };
 
@@ -116,13 +129,29 @@ public class WMMain : MonoBehaviour
         };
 
 
-        _wmQuickSettings = new WMQuickSettings(mainCamera);
+        
+        _wmQuickSettings = new WMQuickSettings(mainCamera, sgd.sound, sgd.music);
         _wmQuickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
         _wmQuickSettings.setVisible(false);
         _wmQuickSettings.SettingsButtonAction = () =>
         {
             _wmQuickSettings.setVisible(false);
             gameState = 0;
+        };
+
+        _wmQuickSettings.MusicButtonAction = (bool b) =>
+        {
+            Debug.Log("music cancelled");
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.music = b ? 0 : 1;
+            sgd.Save();
+        };
+        
+        _wmQuickSettings.SoundButtonAction = (bool b) =>
+        {
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.sound = b ? 0 : 1;
+            sgd.Save();
         };
             
             
@@ -135,10 +164,7 @@ public class WMMain : MonoBehaviour
         topWater.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
         bottomWater.transform.position = new Vector3(left + bw.x / 2f, r.yMin - bw.y / 2f, 0f);
 
-        if (LevelIndex > 0)
-        {
-            levelIndex = LevelIndex;
-        }
+        
 
         var thisLevel = WMLevels.WmLevelInfos[levelIndex];
         _wheelSpeed = thisLevel.WheelSpeed;
@@ -291,15 +317,12 @@ public class WMMain : MonoBehaviour
             {
                 _wmBetweenLevels.setVisible(true);
             }
-            
-            
         }else if (gameState == 1)
         {
             if (!_wmQuickSettings.Active)
             {
                 _wmQuickSettings.setVisible(true);
             }
-            
         }
         else if(gameState==0)
         {
@@ -328,8 +351,6 @@ public class WMMain : MonoBehaviour
                 if (p.y <  0f)//mainCamera.playfieldBottom)
                 {
                     sockPrefabScript.Kill(instantly:true);
-                    //sockPrefabScript.ToBeDestroyed = true;
-                    //Destroy(sockPrefabScript.gameObject);
                 }
             }
         

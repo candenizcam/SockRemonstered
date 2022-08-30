@@ -26,7 +26,7 @@ namespace WashingMachine.WMScripts
         private ButtonClickable _returnButton;
         
         
-        public WMQuickSettings(WMLayout wmLayout)
+        public WMQuickSettings(WMLayout wmLayout, int sound, int music)
         {
             scale = wmLayout.Scale;
             _qsElements = new VisualElement();
@@ -62,7 +62,7 @@ namespace WashingMachine.WMScripts
             _soundButtons[0].style.left = 32f*scale;
             _soundButtons[0].style.bottom = 250f*scale;
             _buttons.Add(_soundButtons[0]);
-            _qsElements.Add(_soundButtons[0]);
+            
             
             _soundButtons[1] = new ButtonClickable(scale,"ui/buttons/sound_off",Color.gray,() =>
             {
@@ -72,11 +72,12 @@ namespace WashingMachine.WMScripts
             _soundButtons[1].style.position = Position.Absolute;
             _soundButtons[1].style.left = 32f*scale;
             _soundButtons[1].style.bottom = 250f*scale;
-            _soundButtons[1].visible = false;
+            _qsElements.Add(_soundButtons[sound>0 ? 0: 1]);
+            //_soundButtons[1].visible = false;
             
 
             _buttons.Add(_soundButtons[1]);
-            _qsElements.Add(_soundButtons[1]);
+            //_qsElements.Add(_soundButtons[1]);
             
             _musicButtons = new ButtonClickable[2];
             _musicButtons[0] = new ButtonClickable(scale,"ui/buttons/music_on",Color.gray,() =>
@@ -91,7 +92,7 @@ namespace WashingMachine.WMScripts
             
 
             _buttons.Add(_musicButtons[0]);
-            _qsElements.Add(_musicButtons[0]);
+            
             //_musicButtons[0].
             //_musicButtons[0].visible = true;
             _musicButtons[1] = new ButtonClickable(scale,"ui/buttons/music_off",Color.gray,() =>
@@ -102,12 +103,12 @@ namespace WashingMachine.WMScripts
             _musicButtons[1].style.position = Position.Absolute;
             _musicButtons[1].style.left = 32f*scale;
             _musicButtons[1].style.bottom = 482f*scale;
-            
+            _qsElements.Add(_musicButtons[music>0 ? 0: 1]);
             
 
             _buttons.Add(_musicButtons[1]);
-            _qsElements.Add(_musicButtons[1]);
-            _musicButtons[1].visible = false;
+            //_qsElements.Add(_musicButtons[1]);
+            //_musicButtons[1].visible = false;
             
             
             _returnButton = new ButtonClickable(scale,"ui/buttons/leave_merged",Color.gray,() =>
@@ -135,16 +136,33 @@ namespace WashingMachine.WMScripts
         
         private void musicButtonFunction(bool on)
         {
-            _musicButtons[0].visible = !on;
-            _musicButtons[1].visible = on;
+            if (on)
+            {
+                _qsElements.Remove(_musicButtons[0]);
+                _qsElements.Add(_musicButtons[1]);
+            }
+            else
+            {
+                _qsElements.Remove(_musicButtons[1]);
+                _qsElements.Add(_musicButtons[0]);
+            }
             
             MusicButtonAction(on);
         }
         
         private void soundButtonFunction(bool on)
         {
-            _soundButtons[0].visible = !on;
-            _soundButtons[1].visible = on;
+            if (on)
+            {
+                _qsElements.Remove(_soundButtons[0]);
+                _qsElements.Add(_soundButtons[1]);
+            }
+            else
+            {
+                _qsElements.Remove(_soundButtons[1]);
+                _qsElements.Add(_soundButtons[0]);
+            }
+            
             SoundButtonAction(on);
         }
         
