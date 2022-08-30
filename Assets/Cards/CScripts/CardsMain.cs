@@ -28,7 +28,7 @@ public class CardsMain : MonoBehaviour
 
     private Timer _timer;
     private bool _touchActive = true;
-    private bool _gameDone = false;
+    //private bool _gameDone = false;
     private int moves = 10;
     private int gameState = 0; //0 runs, 1 pause, 2 lost, 3 won
     
@@ -49,8 +49,21 @@ public class CardsMain : MonoBehaviour
                 
 
                 var i = value >= 0 ? value : 0;
+                var c = _sockCardPrefabs.Count / 2;
+                MonsterMood mm;
+                if (c>i)
+                {
+                    mm = MonsterMood.Sad;
+                }else if (c * 1.5f > i)
+                {
+                    mm = MonsterMood.Excited;
+                }
+                else
+                {
+                    mm = MonsterMood.Happy;
+                }
                 //var m = _wmScoreboard.GetWashingMachineMood(value);
-                _cardHud.updateInfo($"{i}",MonsterMood.Happy);
+                _cardHud.updateInfo($"{i}",mm);
             }
             catch
             {
@@ -170,7 +183,7 @@ public class CardsMain : MonoBehaviour
         _betweenLevels.setVisible(false);
         _betweenLevels.OnCross = () =>
         {
-            //ToHQ();
+            ToHQ();
         };
         _betweenLevels.OnBigButton = () =>
         {
@@ -332,6 +345,62 @@ public class CardsMain : MonoBehaviour
         
     }
     
+    
+    private void ToHQ()
+    {
+        
+    }
+    
+    private void Restart()
+    {
+        
+    }
+    
+    private void NextLevel()
+    {
+        
+    }
+    
+    
+    private string getBigText()
+    {
+        return $"Level {LevelNo+1}";
+    }
+    
+    private string getSmallText(bool levelWon)
+    {
+
+        return levelWon ? "Yarn-tastic!" : "Level failed!";
+    }
+
+    private string getLevelPoints()
+    {
+        return $"  {MoveNo * 10}";
+    }
+    
+    private void levelDone(bool won)
+    {
+        if (won)
+        {
+            gameState = 3;
+            _betweenLevels.OnBigButton = () =>
+            {
+                NextLevel();
+
+            };
+        }
+        else
+        {
+            gameState = 2;
+            _betweenLevels.OnBigButton = () =>
+            {
+                Restart();
+            };
+        }
+        
+        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), getLevelPoints());
+    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -345,15 +414,14 @@ public class CardsMain : MonoBehaviour
         {
             if (_sockCardPrefabs.Count == 0)
             {
-                _gameDone = true;
-                Debug.Log("no more cards");
-            
+                gameState = 3;
+                levelDone(true);
             }
 
             if (MoveNo <= 0)
             {
-                _gameDone = true;
-                Debug.Log("no more moves");
+                gameState = 2;
+                levelDone(false);
             }
             
             
@@ -423,6 +491,13 @@ public class CardsMain : MonoBehaviour
             if (!_quickSettings.Active)
             {
                 _quickSettings.setVisible(true);
+            }
+        }
+        else
+        {
+            if (!_betweenLevels.Active)
+            {
+                _betweenLevels.setVisible(true);
             }
         }
         
