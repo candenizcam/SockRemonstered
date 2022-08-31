@@ -15,6 +15,7 @@ namespace Classes
         public int nextLevel;
         public int music;
         public int sound;
+        public int hearts;
         private const string Location = "/sockMonsterData.dat";
 
 
@@ -31,6 +32,7 @@ namespace Classes
             sgd.nextLevel = 1;
             sgd.music = 1;
             sgd.sound = 1;
+            sgd.hearts = 3;
             //sgd.activeLevel = 0;
             //sgd.activeSceneId = "LevelSet";
             //sgd.levelSetInfoList = new List<LevelSetMain.LevelSetSerialInfo>();

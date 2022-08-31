@@ -10,6 +10,9 @@ namespace Classes
     {
         public Action onTouchDown = () => {};
         public Action onTouchUp = () => {};
+
+        protected float width;
+        protected float height;
         
         public ButtonClickable(Action clickAction) : base(clickAction)
         {
@@ -25,8 +28,10 @@ namespace Classes
         public ButtonClickable(float scale, string imagePath, Color pressedTint, Action clickAction): this(clickAction)
         {
             var s2 = Resources.Load<Sprite>(imagePath);
-            style.width = s2.rect.width * scale;
-            style.height = s2.rect.height * scale;
+            width = s2.rect.width * scale;
+            height = s2.rect.height * scale;
+            style.width = width;
+            style.height = height;
             style.backgroundImage = new StyleBackground(s2);
             style.backgroundColor = Color.clear;
             
