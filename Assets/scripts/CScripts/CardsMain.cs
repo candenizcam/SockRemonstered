@@ -217,6 +217,13 @@ public class CardsMain : MonoBehaviour
             sgd.sound = b ? 0 : 1;
             sgd.Save();
         };
+        _quickSettings.ReturnButtonAction = () =>
+        {
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.changeHearts(-1);
+            sgd.Save();
+            ToHQ();
+        };
 
         //var r = new Range(0, ssp1.socks.Count);
 

@@ -153,6 +153,14 @@ public class WMMain : MonoBehaviour
             sgd.sound = b ? 0 : 1;
             sgd.Save();
         };
+
+        _quickSettings.ReturnButtonAction = () =>
+        {
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.changeHearts(-1);
+            sgd.Save();
+            ToHQ();
+        };
             
             
         var left = r.xMin;
