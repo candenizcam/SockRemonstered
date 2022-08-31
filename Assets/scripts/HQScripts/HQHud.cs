@@ -66,9 +66,9 @@ namespace HQScripts
 
         }
 
-        public void UpdateInfo(int coins, int hearts)
+        public void UpdateInfo(int coins, int hearts, float remFloat)
         {
-            _livesButton.UpdateHeartNo(hearts);
+            _livesButton.UpdateHeartNo(hearts,remFloat);
 
             string[] l = {"","k","M","B","T","Q","S"};
             var c = coins;
@@ -171,6 +171,10 @@ namespace HQScripts
             {
                 buttonClickable.Update();
             }
+            
+            
+            
+            
         }
         
         public void AddToVisualElement(VisualElement ve)

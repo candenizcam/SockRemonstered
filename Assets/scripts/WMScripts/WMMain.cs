@@ -301,8 +301,7 @@ public class WMMain : MonoBehaviour
         {
             gameState = 2;
             var sgd = SerialGameData.LoadOrGenerate();
-            sgd.hearts -= 1;
-            if (sgd.hearts > 0)
+            if (sgd.changeHearts(-1) > 0)
             {
                 buttonText = "RETRY";
                 _betweenLevels.OnBigButton = () =>

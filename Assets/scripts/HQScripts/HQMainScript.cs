@@ -12,7 +12,8 @@ public class HQMainScript : MonoBehaviour
     private System.Random _random;
     private HQLayout _mainCamera;
     private UIDocument _uiDocument;
-
+    private Timer _timer;
+    private float _timeHolder;
     private HQHud _hqHud;
     public bool ResetSaves = false;
     // Start is called before the first frame update
@@ -25,7 +26,7 @@ public class HQMainScript : MonoBehaviour
         }
         
         _random = new System.Random();
-        
+        _timer = new Timer();
         var sgd = SerialGameData.LoadOrGenerate();
         
         
@@ -37,18 +38,31 @@ public class HQMainScript : MonoBehaviour
 
         _hqHud = new HQHud(_mainCamera);
         _hqHud.AddToVisualElement(_uiDocument.rootVisualElement);
-        _hqHud.UpdateInfo(sgd.coins,sgd.hearts);
+        var h = sgd.getHeartsAndRem();
+        _hqHud.UpdateInfo(sgd.coins,h.hearts,h.rem);
         _hqHud.PlayButtonAction = () =>
         {
             var sgd = SerialGameData.LoadOrGenerate();
             var nl = Constants.GetNextLevel(sgd.nextLevel);
             SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
         };
+        
+        _timer.addEvent(1f, () =>
+        {
+            var sgd = SerialGameData.Load();
+            var h = sgd.getHeartsAndRem();
+            _hqHud.UpdateInfo(sgd.coins,h.hearts,h.rem);
+        },true);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+        _timer.Update(Time.deltaTime);
         _hqHud.Update();
+
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Classes
 {
@@ -36,6 +37,9 @@ namespace Classes
             new Color(0.10f, 0.10f, 0.10f), //191a19
 
         };
+
+        public const int MaxHearts = 3;
+        public const int BetweenHeartsTime = 60; // in secs
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {
