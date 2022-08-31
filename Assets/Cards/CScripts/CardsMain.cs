@@ -109,6 +109,9 @@ public class CardsMain : MonoBehaviour
         _selection = new int[] {-1,-1};
         _timer = new Timer();
 
+        var littleS = _mainCamera.playfieldRect().width / bg.sprite.rect.width*100f;
+        bg.gameObject.transform.localScale = new Vector3(littleS, littleS, 1f);
+        
         _sockCardPrefab = Resources.Load("prefabs/SockCardPrefab");
         var ssp1 = _sockCardPrefab.GetComponent<SockCardPrefabScript>();
 
