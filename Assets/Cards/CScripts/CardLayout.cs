@@ -1,9 +1,10 @@
-﻿using Classes;
+﻿using System;
+using Classes;
 using UnityEngine;
 
 namespace Cards.CScripts
 {
-    public class CardLayout: CameraTools
+    public class CardLayout: GameLayout
     {
 
         private int _cols;
@@ -13,18 +14,18 @@ namespace Cards.CScripts
         
         public CardLayout(Camera c, int rows, int cols) : base(c)
         {
-            
             _cols = cols;
             _rows = rows;
-
+            
             var cardScale = 1f; // w/h
             Centres = new Vector3[_rows,_cols];
 
-            var w = Tools.WidthThatFitsToSize(Screen.width, Screen.height, ((float) _cols) /( (float) _rows));
+            var w = Tools.WidthThatFitsToSize(_playfieldRectWorld.width,_playfieldRectWorld.height, ((float) _cols) /( (float) _rows));
             var h = w / _cols * _rows;
             
-            var singleWidth = w / cols/ 100f;
-            var singleHeight = h / _rows / 100f;
+            var singleWidth = w / cols;
+            var singleHeight = h / _rows;
+            Debug.Log($"prw: {_playfieldRectWorld.width}, prwh: {_playfieldRectWorld.height}, sw: {singleWidth}");
             SingleScale = new Vector3(singleWidth, singleHeight, 1f);
             
             for(int i=0;i<rows;i++)
@@ -34,10 +35,9 @@ namespace Cards.CScripts
                 {
                     
                     var x = (j - (cols-1f) * 0.5f) * singleWidth;
-                    Centres[i, j] = new Vector3(x, y, 1f);
+                    Centres[i, j] = new Vector3(_playfieldRectWorld.center.x+x,_playfieldRectWorld.center.y+ y, 1f);
                 }
             }
-
 
         }
 
@@ -46,6 +46,8 @@ namespace Cards.CScripts
             
             
         }
+        
+        
         
     }
 }

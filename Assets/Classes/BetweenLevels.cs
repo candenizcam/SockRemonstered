@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Classes;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WashingMachine.WMScripts;
 
-namespace WashingMachine.WMScripts
+namespace Classes
 {
-    public class WMBetweenLevels
+    public class BetweenLevels
     {
         private VisualElement _betweenElement;
         private float scale = Screen.width / 1170f;
@@ -22,7 +21,7 @@ namespace WashingMachine.WMScripts
         public Action OnCross;
         public Action OnBigButton;
         
-        public WMBetweenLevels(WMLayout wmLayout)
+        public BetweenLevels(GameLayout wmLayout)
         {
             
             _betweenElement = new VisualElement();

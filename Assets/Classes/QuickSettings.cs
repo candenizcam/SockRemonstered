@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Classes;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.VFX;
+using WashingMachine.WMScripts;
 
-namespace WashingMachine.WMScripts
+namespace Classes
 {
-    public class WMQuickSettings
+    public class QuickSettings
     {
         private List<ButtonClickable> _buttons = new List<ButtonClickable>();
         private VisualElement _qsElements;
@@ -26,9 +25,9 @@ namespace WashingMachine.WMScripts
         private ButtonClickable _returnButton;
         
         
-        public WMQuickSettings(WMLayout wmLayout, int sound, int music)
+        public QuickSettings(GameLayout gameLayout, int sound, int music)
         {
-            scale = wmLayout.Scale;
+            scale = gameLayout.Scale;
             _qsElements = new VisualElement();
             _qsElements.style.position = Position.Absolute;
             _qsElements.style.width = Screen.width;
@@ -44,7 +43,7 @@ namespace WashingMachine.WMScripts
             });
             settingsButton.style.position = Position.Absolute;
             settingsButton.style.left = 32f*scale;
-            settingsButton.style.bottom = 32f*scale;
+            settingsButton.style.bottom = gameLayout.bottomBarRect().yMin + 32f*scale;
             
             
 
@@ -60,7 +59,7 @@ namespace WashingMachine.WMScripts
             });
             _soundButtons[0].style.position = Position.Absolute;
             _soundButtons[0].style.left = 32f*scale;
-            _soundButtons[0].style.bottom = 250f*scale;
+            _soundButtons[0].style.bottom = gameLayout.bottomBarRect().yMin+ 250f*scale;
             _buttons.Add(_soundButtons[0]);
             
             
@@ -71,7 +70,7 @@ namespace WashingMachine.WMScripts
             });
             _soundButtons[1].style.position = Position.Absolute;
             _soundButtons[1].style.left = 32f*scale;
-            _soundButtons[1].style.bottom = 250f*scale;
+            _soundButtons[1].style.bottom = gameLayout.bottomBarRect().yMin + 250f*scale;
             _qsElements.Add(_soundButtons[sound>0 ? 0: 1]);
             //_soundButtons[1].visible = false;
             
@@ -87,7 +86,7 @@ namespace WashingMachine.WMScripts
             });
             _musicButtons[0].style.position = Position.Absolute;
             _musicButtons[0].style.left = 32f*scale;
-            _musicButtons[0].style.bottom = 482f*scale;
+            _musicButtons[0].style.bottom = gameLayout.bottomBarRect().yMin+ 482f*scale;
             
             
 
@@ -102,7 +101,7 @@ namespace WashingMachine.WMScripts
             });
             _musicButtons[1].style.position = Position.Absolute;
             _musicButtons[1].style.left = 32f*scale;
-            _musicButtons[1].style.bottom = 482f*scale;
+            _musicButtons[1].style.bottom = gameLayout.bottomBarRect().yMin+482f*scale;
             _qsElements.Add(_musicButtons[music>0 ? 0: 1]);
             
 
@@ -118,7 +117,7 @@ namespace WashingMachine.WMScripts
             });
             _returnButton.style.position = Position.Absolute;
             _returnButton.style.left = 32f*scale;
-            _returnButton.style.bottom = 714f*scale;
+            _returnButton.style.bottom = gameLayout.bottomBarRect().yMin+714f*scale;
             
             
 

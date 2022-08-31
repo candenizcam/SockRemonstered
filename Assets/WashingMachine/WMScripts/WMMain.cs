@@ -13,7 +13,6 @@ public class WMMain : MonoBehaviour
     //public List<Prefab> 
     
     public GameObject playfield;
-    public WMHud hudScript;
     public GameObject wheel;
     public GameObject bottomWater;
     public GameObject topWater;
@@ -27,8 +26,8 @@ public class WMMain : MonoBehaviour
 
     private UIDocument _uiDocument;
     private WMHud _wmHud;
-    private WMBetweenLevels _wmBetweenLevels;
-    private WMQuickSettings _wmQuickSettings;
+    private BetweenLevels _betweenLevels;
+    private QuickSettings _quickSettings;
     private float _baseWheelHeight;
     private float _wheelSpeed = 1f;
     private float _wheelStartPos;
@@ -117,29 +116,29 @@ public class WMMain : MonoBehaviour
 
         
         
-        _wmBetweenLevels = new WMBetweenLevels(mainCamera);
-        _wmBetweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
-        _wmBetweenLevels.setVisible(false);
-        _wmBetweenLevels.OnCross = () =>
+        _betweenLevels = new BetweenLevels(mainCamera);
+        _betweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
+        _betweenLevels.setVisible(false);
+        _betweenLevels.OnCross = () =>
         {
             ToHQ();
         };
-        _wmBetweenLevels.OnBigButton = () =>
+        _betweenLevels.OnBigButton = () =>
         {
         };
 
 
         
-        _wmQuickSettings = new WMQuickSettings(mainCamera, sgd.sound, sgd.music);
-        _wmQuickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
-        _wmQuickSettings.setVisible(false);
-        _wmQuickSettings.SettingsButtonAction = () =>
+        _quickSettings = new QuickSettings(mainCamera, sgd.sound, sgd.music);
+        _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
+        _quickSettings.setVisible(false);
+        _quickSettings.SettingsButtonAction = () =>
         {
-            _wmQuickSettings.setVisible(false);
+            _quickSettings.setVisible(false);
             gameState = 0;
         };
 
-        _wmQuickSettings.MusicButtonAction = (bool b) =>
+        _quickSettings.MusicButtonAction = (bool b) =>
         {
             Debug.Log("music cancelled");
             var sgd = SerialGameData.LoadOrGenerate();
@@ -147,7 +146,7 @@ public class WMMain : MonoBehaviour
             sgd.Save();
         };
         
-        _wmQuickSettings.SoundButtonAction = (bool b) =>
+        _quickSettings.SoundButtonAction = (bool b) =>
         {
             var sgd = SerialGameData.LoadOrGenerate();
             sgd.sound = b ? 0 : 1;
@@ -277,7 +276,7 @@ public class WMMain : MonoBehaviour
         if (won)
         {
             gameState = 3;
-            _wmBetweenLevels.OnBigButton = () =>
+            _betweenLevels.OnBigButton = () =>
             {
                 NextLevel();
 
@@ -286,21 +285,21 @@ public class WMMain : MonoBehaviour
         else
         {
             gameState = 2;
-            _wmBetweenLevels.OnBigButton = () =>
+            _betweenLevels.OnBigButton = () =>
             {
                 Restart();
             };
         }
         
-        _wmBetweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), getLevelPoints());
+        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), getLevelPoints());
     }
     
     
     // Update is called once per frame
     void Update()
     {
-        _wmBetweenLevels.Update();
-        _wmQuickSettings.Update();
+        _betweenLevels.Update();
+        _quickSettings.Update();
         _wmHud.Update();
         
         if (MoveNo <= 0 && gameState==0)
@@ -326,15 +325,15 @@ public class WMMain : MonoBehaviour
             }
             _activeSocks.RemoveAll(x => x.ToBeDestroyed);
 
-            if (!_wmBetweenLevels.Active)
+            if (!_betweenLevels.Active)
             {
-                _wmBetweenLevels.setVisible(true);
+                _betweenLevels.setVisible(true);
             }
         }else if (gameState == 1)
         {
-            if (!_wmQuickSettings.Active)
+            if (!_quickSettings.Active)
             {
-                _wmQuickSettings.setVisible(true);
+                _quickSettings.setVisible(true);
             }
         }
         else if(gameState==0)
