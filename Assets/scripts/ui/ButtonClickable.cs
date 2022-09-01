@@ -37,7 +37,7 @@ namespace Classes
             
             onTouchDown = () =>
             {
-                style.unityBackgroundImageTintColor = Color.gray;
+                style.unityBackgroundImageTintColor = pressedTint;
             };
             
             onTouchUp = () =>
@@ -47,6 +47,12 @@ namespace Classes
             
         }
 
+        public void Scale(float scale)
+        {
+            style.width = width * scale;
+            style.height = height * scale;
+        }
+        
         public void TouchDown(Vector2 p)
         {
             if (worldBound.Contains(p))

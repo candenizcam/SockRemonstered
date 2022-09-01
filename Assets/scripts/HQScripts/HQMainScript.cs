@@ -15,6 +15,7 @@ public class HQMainScript : MonoBehaviour
     private Timer _timer;
     private float _timeHolder;
     private HQHud _hqHud;
+    private Shop _shop;
     public bool ResetSaves = false;
     // Start is called before the first frame update
     void Awake()
@@ -53,6 +54,21 @@ public class HQMainScript : MonoBehaviour
             var h = sgd.getHeartsAndRem();
             _hqHud.UpdateInfo(sgd.coins,h.hearts,h.rem);
         },true);
+
+
+        _shop = new Shop(_mainCamera);
+
+
+        _hqHud.ShopButtonAction = () =>
+        {
+            _shop.AddToVisualElement(_uiDocument.rootVisualElement);
+        };
+
+
+        _shop.BgButtonAction = () =>
+        {
+            _shop.RemoveFromVisualElement(_uiDocument.rootVisualElement);
+        };
     }
 
     // Update is called once per frame
@@ -61,8 +77,11 @@ public class HQMainScript : MonoBehaviour
         
         _timer.Update(Time.deltaTime);
         _hqHud.Update();
+        _shop.Update();
 
 
 
     }
+    
+    
 }

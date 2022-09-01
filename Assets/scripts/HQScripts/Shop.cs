@@ -1,0 +1,216 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Classes;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace HQScripts
+{
+    public class Shop
+    {
+        public Image _mainHolder;
+        public VisualElement _bgButton;
+        private HQLayout _layout;
+        public Action BgButtonAction;
+        private ShopTabs _shopTabs;
+        private ClosetTab _closetTab;
+        private PurchaseTab _purchaseTab;
+        private CoinTab _coinTab;
+        private List<ButtonClickable> _buttons = new List<ButtonClickable>();
+        public Shop(HQLayout hqLayout)
+        {
+            _layout = hqLayout;
+
+            _bgButton = new Button(BgButtonFunction);
+            _bgButton.style.position = Position.Absolute;
+            _bgButton.style.left =0f;
+            _bgButton.style.bottom = 0f;
+            _bgButton.style.height = Screen.height;
+            _bgButton.style.width = Screen.width;
+            _bgButton.style.backgroundColor = new Color(0.05f, 0.05f, 0.05f, 0.5f);
+            _bgButton.style.borderBottomColor = Color.clear;
+            _bgButton.style.borderTopColor = Color.clear;
+            _bgButton.style.borderRightColor = Color.clear;
+            _bgButton.style.borderLeftColor = Color.clear;
+
+            
+            
+            
+            _mainHolder = new Image();
+            _mainHolder.sprite = Resources.Load<Sprite>("ui/shop/ShopBackground");
+            _mainHolder.style.position = Position.Absolute;
+            _mainHolder.style.height = _mainHolder.sprite.rect.height*hqLayout.Scale;
+            _mainHolder.style.width = _mainHolder.sprite.rect.width*hqLayout.Scale;
+            _mainHolder.style.left = (Screen.width - (_mainHolder.sprite.rect.width * hqLayout.Scale))*0.5f;
+            _mainHolder.style.bottom = hqLayout.UnsafeBottom + 167f * hqLayout.Scale;
+            
+
+            var tabHolder = new VisualElement();
+            
+            
+            
+            _shopTabs = new ShopTabs(hqLayout.Scale, (x) =>
+            {
+                // 0: closet, 1: shop, 2: coin
+                tabHolder.Clear();
+                switch (x)
+                {
+                    case 0:
+                    {
+                        tabHolder.Add(_closetTab);
+                        break;
+                    }
+                    case 1:
+                    {
+                        tabHolder.Add(_purchaseTab);
+                        break;
+                    }
+                    case 2:
+                    {
+                        tabHolder.Add(_coinTab);
+                        break;
+                    }
+                }
+                
+                
+                
+            });
+            _mainHolder.Add(_shopTabs);
+            _mainHolder.Add(tabHolder);
+
+            _closetTab = new ClosetTab(hqLayout.Scale,
+                _mainHolder.sprite.rect.width*hqLayout.Scale,
+                _mainHolder.sprite.rect.width*hqLayout.Scale
+                );
+            _closetTab.closetAction = thisItem =>
+            {
+
+            }; 
+            //_closetTab.UpdateShopItems(ShopItems.ShopItemsArray);
+
+            _coinTab = new CoinTab(hqLayout.Scale,_mainHolder.sprite.rect.width*hqLayout.Scale,_mainHolder.sprite.rect.width*hqLayout.Scale);
+            _coinTab.coinAction = thisItem =>
+            {
+                var sgd = SerialGameData.LoadOrGenerate();
+                sgd.coins += thisItem.Price;
+                sgd.Save();
+            };
+            //_coinTab.UpdateShopItems(ShopItems.ShopItemsArray);
+            
+            _purchaseTab = new PurchaseTab(hqLayout.Scale,_mainHolder.sprite.rect.width*hqLayout.Scale,_mainHolder.sprite.rect.width*hqLayout.Scale);
+            _purchaseTab.purchaseAction = thisItem =>
+            {
+                var sgd = SerialGameData.LoadOrGenerate();
+                if (sgd.coins > thisItem.Price)
+                {
+
+                    sgd.coins -= thisItem.Price;
+                    sgd.purchased.Add(thisItem.ID);
+
+                }
+                else
+                {
+                    Debug.Log("not enough coin");
+                }
+
+                sgd.Save();
+                UpdateShopItems();
+            };
+            //_purchaseTab.UpdateShopItems(ShopItems.ShopItemsArray);
+            UpdateShopItems();
+        }
+
+
+        void UpdateShopItems()
+        {
+            var sgd = SerialGameData.LoadOrGenerate();
+
+
+            var bought = new List<ShopItem>();
+            var notBought = new List<ShopItem>();
+            foreach (var shopItem in ShopItems.GetNotCoinsArray())
+            {
+                if(sgd.purchased.Contains(shopItem.ID))
+                {
+                    bought.Add(shopItem);
+                }
+                else
+                {
+                    notBought.Add(shopItem);
+                }
+            }
+            
+            _closetTab.UpdateShopItems(bought.ToArray());
+            _coinTab.UpdateShopItems(ShopItems.GetCoinsArray());
+            _purchaseTab.UpdateShopItems(notBought.ToArray());
+        }
+
+/*
+        private VisualElement shopTabs(float scale)
+        {
+            var items = new VisualElement();
+            var clothButton = new MultiButtonClickable((x) =>
+            {
+
+            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray);
+            clothButton.Scale(scale);
+            
+
+            var furniButton = new MultiButtonClickable((x) =>
+            {
+
+            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray);
+            furniButton.Scale(scale);
+            
+            var coinsButton = new MultiButtonClickable((x) =>
+            {
+
+            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray);
+            coinsButton.Scale(scale);
+            items.Add(clothButton);
+            items.Add(furniButton);
+            items.Add(coinsButton);
+
+            items.style.flexDirection = FlexDirection.Row;
+            items.style.alignContent = Align.Center;
+            items.style.justifyContent = Justify.SpaceAround;
+            return items;
+        }
+        
+*/
+
+        public void Update()
+        {
+            foreach (var buttonClickable in _buttons)
+            {
+                buttonClickable.Update();
+            }
+            
+            _shopTabs.Update();
+            _closetTab.Update();
+            _purchaseTab.Update();
+            _coinTab.Update();
+            
+        }
+
+
+        private void BgButtonFunction()
+        {
+            BgButtonAction();
+        }
+        
+        
+        public void AddToVisualElement(VisualElement ve)
+        {
+            ve.Add(_bgButton);
+            ve.Add(_mainHolder);
+        }
+        
+        public void RemoveFromVisualElement(VisualElement ve)
+        {
+            ve.Remove(_bgButton);
+            ve.Remove(_mainHolder);
+        }
+    }
+}
