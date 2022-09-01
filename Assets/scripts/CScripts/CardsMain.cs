@@ -79,18 +79,22 @@ public class CardsMain : MonoBehaviour
     void Awake()
     {
         var sgd = SerialGameData.LoadOrGenerate();
-
-        var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
-
-        if (levelInfo.SceneName != "Cards")
-        {
-            throw new Exception("there is a problem");
-        }
-        
-        _levelNo = levelInfo.LevelNo;
         if (LevelNo > 0)
         {
             _levelNo = LevelNo - 1;
+        }
+        else
+        {
+            
+
+            var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
+
+            if (levelInfo.SceneName != "Cards")
+            {
+                throw new Exception("there is a problem");
+            }
+        
+            _levelNo = levelInfo.LevelNo;
         }
 
         
@@ -145,6 +149,7 @@ public class CardsMain : MonoBehaviour
         
 
         var v = (float)_random.NextDouble();
+        var v2 = (float)_random.NextDouble();
         
         for (var i = 0; i < cardTypeList.Count; i++)
         {
@@ -154,7 +159,7 @@ public class CardsMain : MonoBehaviour
             var s = (GameObject)Instantiate(_sockCardPrefab);
             var sc = s.GetComponent<SockCardPrefabScript>();
             sc.SelectedSockCard = cardTypeList[i];
-            sc.ChangeCardSprite(v);
+            sc.ChangeCardBackSprite(v, v2);
             sc.Resize(_mainCamera.Centres[r,c], _mainCamera.SingleScale);
             //s.transform.position = _mainCamera.Centres[r,c];
             //s.transform.localScale = _mainCamera.SingleScale;
