@@ -172,7 +172,7 @@ namespace Classes
             }
         }
 
-        public void UpdateInfo(bool levelWon, string bigText, string smallText, string pointsText)
+        public void UpdateInfo(bool levelWon, string bigText, string smallText, string pointsText, string buttonText)
         {
             if (levelWon)
             {
@@ -180,7 +180,7 @@ namespace Classes
                 _smallText.style.bottom = 458f * scale;
                 _monsterFaces.Portrait.style.bottom = (805f) * scale;
                 _monsterFaces.ChangeMood(MonsterMood.Happy);
-                _bigButton.text = "NEXT";
+                _bigButton.text = buttonText;
                 _pointDisplay.visible = true;
             }
             else
@@ -189,7 +189,7 @@ namespace Classes
                 _smallText.style.bottom = 312f * scale;
                 _monsterFaces.Portrait.style.bottom = (606f) * scale;
                 _monsterFaces.ChangeMood(MonsterMood.Sad);
-                _bigButton.text = "RETRY";
+                _bigButton.text = buttonText;
                 _pointDisplay.visible = false;
             }
             

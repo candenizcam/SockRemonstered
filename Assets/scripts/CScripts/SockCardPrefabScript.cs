@@ -9,44 +9,52 @@ public class SockCardPrefabScript : MonoBehaviour
     public List<SpriteRenderer> socks;
     public List<SpriteRenderer> cards;
     public SpriteRenderer CardLayout;
+    public List<SpriteRenderer> cardBacks;
     
     [NonSerialized]
     public int SelectedSockCard = 0;
+    //[NonSerialized]
+    //public int SelectedCard = 0;
     [NonSerialized]
     public bool ToBeDestroyed = false;
 
     public bool sockVisible = false;
     private int _selectedCardSprite = 0;
     private int _selectedSockSprite = 0;
+    private int _selectedCardBackSprite = 0;
     private Rect _hitboxRect;
     private float borderPixel =10f;    
     
     // Start is called before the first frame update
 
-    public void ChangeCardSprite(float csd)
+    public void ChangeCardBackSprite(float csd, float cfd)
     {
-        ChangeCardSprite(((int)(cards.Count*csd))%cards.Count);
+        ChangeCardBackSprite(((int)(cardBacks.Count*csd))%cardBacks.Count);
+        _selectedCardSprite = ((int) (cards.Count * cfd)) % cards.Count;
     }
-    
-    public void ChangeCardSprite(int cs)
-    {
-        _selectedCardSprite = cs;
-        
 
-        
-        
-        for (int i = 0; i < cards.Count; i++)
+
+    public void ChangeCardBackSprite(int cs)
+    {
+        _selectedCardBackSprite = cs;
+        for (int i = 0; i < cardBacks.Count; i++)
         {
-            cards[i].gameObject.SetActive(i == _selectedCardSprite);
+            cardBacks[i].gameObject.SetActive(i == _selectedCardBackSprite);
         }
     }
     
+
+    
     void Awake()
     {
-        ChangeCardSprite(0);
+        ChangeCardBackSprite(0);
         for (int i = 0; i < socks.Count; i++)
         {
             socks[i].gameObject.SetActive(false);
+        }
+        for (int i = 0; i < cards.Count; i++)
+        {
+            cards[i].gameObject.SetActive(false);
         }
     }
 
@@ -62,6 +70,8 @@ public class SockCardPrefabScript : MonoBehaviour
     public void SockVisible(bool b)
     {
         socks[SelectedSockCard].gameObject.SetActive(b);
+        cards[_selectedCardSprite].gameObject.SetActive(b);
+        cardBacks[_selectedCardBackSprite].gameObject.SetActive(!b);
         sockVisible = b;
     }
 

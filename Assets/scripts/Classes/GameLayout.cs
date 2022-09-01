@@ -5,8 +5,8 @@ namespace Classes
 {
     public class GameLayout: CameraTools
     {
-        protected const float _playfieldXMax = 0.85f;
-        protected const float _playfieldXMin = 0.1f;
+        protected readonly float _playfieldXMax;
+        protected readonly float _playfieldXMin;
 
         protected float _unsafeLeft;
         protected float _unsafeRight;
@@ -37,7 +37,7 @@ namespace Classes
                 //Debug.Log($"unsafe top: {_unsafeTop}, other: {_safeHeight*(_playfieldXMax)}, {Screen.safeArea.height} ");
                 
                 //return _unsafeTop+_safeHeight*(_playfieldXMax);
-                return _unsafeTop+_safeHeight-220f/Screen.safeArea.height;
+                return _unsafeTop+_safeHeight-_playfieldXMax/Screen.safeArea.height;
             }
         }
         
@@ -45,12 +45,16 @@ namespace Classes
         {
             get
             {
-                return _unsafeTop+_safeHeight*(_playfieldXMin);
+                return _unsafeTop+_playfieldXMin/Screen.safeArea.height;
             }
         }
         
-        public GameLayout(Camera c) : base(c)
+        public GameLayout(Camera c, float topBar=220f, float bottomBar = 200f) : base(c)
         {
+
+            _playfieldXMax = topBar;
+            _playfieldXMin = bottomBar;
+
             _unsafeLeft = Screen.safeArea.xMin/ Screen.width;
             _unsafeRight = (Screen.width -  Screen.safeArea.xMax)/ Screen.width;
             _unsafeBottom = Screen.safeArea.yMin/ Screen.height;

@@ -5,6 +5,7 @@ using Classes;
 using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using WashingMachine.WMScripts;
 
@@ -152,6 +153,14 @@ public class WMMain : MonoBehaviour
             sgd.sound = b ? 0 : 1;
             sgd.Save();
         };
+
+        _quickSettings.ReturnButtonAction = () =>
+        {
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.changeHearts(-1);
+            sgd.Save();
+            ToHQ();
+        };
             
             
         var left = r.xMin;
@@ -187,19 +196,25 @@ public class WMMain : MonoBehaviour
         //public int MaxSock;
     }
 
+    
     private void ToHQ()
     {
-        
+        SceneManager.LoadScene("HQ", LoadSceneMode.Single);
     }
     
     private void Restart()
     {
-        
+        var sgd = SerialGameData.LoadOrGenerate();
+        var nl = Constants.GetNextLevel(sgd.nextLevel);
+        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
     }
     
     private void NextLevel()
     {
+        var sgd = SerialGameData.LoadOrGenerate();
         
+        var nl = Constants.GetNextLevel(sgd.nextLevel);
+        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
     }
     
     
@@ -265,17 +280,25 @@ public class WMMain : MonoBehaviour
         return levelWon ? "Yarn-tastic!" : "Level failed!";
     }
 
-    private string getLevelPoints()
+    private (int number, string text)  getLevelPoints()
     {
-        return $"  {_moveNo * 10}";
+        return (_moveNo * 10,$"  {_moveNo * 10}");
     }
+    
+    
 
 
     private void levelDone(bool won)
     {
+        var lp = getLevelPoints();
+        var buttonText = "NEXT";
         if (won)
         {
             gameState = 3;
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.nextLevel += 1;
+            sgd.coins += lp.number;
+            sgd.Save();
             _betweenLevels.OnBigButton = () =>
             {
                 NextLevel();
@@ -285,13 +308,29 @@ public class WMMain : MonoBehaviour
         else
         {
             gameState = 2;
-            _betweenLevels.OnBigButton = () =>
+            var sgd = SerialGameData.LoadOrGenerate();
+            if (sgd.changeHearts(-1) > 0)
             {
-                Restart();
-            };
+                buttonText = "RETRY";
+                _betweenLevels.OnBigButton = () =>
+                {
+                    Restart();
+                };
+            }
+            else
+            {
+                buttonText = "RETURN";
+                _betweenLevels.OnBigButton = () =>
+                {
+                    ToHQ();
+                };
+            }
+            
+            sgd.Save();
+            
         }
         
-        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), getLevelPoints());
+        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
     }
     
     

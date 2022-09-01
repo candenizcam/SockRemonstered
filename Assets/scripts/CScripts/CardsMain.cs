@@ -6,6 +6,7 @@ using Cards.CScripts;
 using Classes;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class CardsMain : MonoBehaviour
@@ -78,21 +79,24 @@ public class CardsMain : MonoBehaviour
     void Awake()
     {
         var sgd = SerialGameData.LoadOrGenerate();
-
-        var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
-
-        if (levelInfo.SceneName != "WashingMachineScene")
-        {
-            throw new Exception("there is a problem");
-        }
-        
-        _levelNo = levelInfo.LevelNo;
         if (LevelNo > 0)
         {
             _levelNo = LevelNo - 1;
         }
+        else
+        {
+            
 
-        _levelNo = 1;
+            var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
+
+            if (levelInfo.SceneName != "Cards")
+            {
+                throw new Exception("there is a problem");
+            }
+        
+            _levelNo = levelInfo.LevelNo;
+        }
+
         
         _random = new System.Random();
         var thisLevel = CardLevels.CardLevelInfos[_levelNo];
@@ -109,6 +113,9 @@ public class CardsMain : MonoBehaviour
         _selection = new int[] {-1,-1};
         _timer = new Timer();
 
+        var littleS = _mainCamera.playfieldRect().width / bg.sprite.rect.width*100f;
+        bg.gameObject.transform.localScale = new Vector3(littleS, littleS, 1f);
+        
         _sockCardPrefab = Resources.Load("prefabs/SockCardPrefab");
         var ssp1 = _sockCardPrefab.GetComponent<SockCardPrefabScript>();
 
@@ -142,6 +149,7 @@ public class CardsMain : MonoBehaviour
         
 
         var v = (float)_random.NextDouble();
+        var v2 = (float)_random.NextDouble();
         
         for (var i = 0; i < cardTypeList.Count; i++)
         {
@@ -151,7 +159,7 @@ public class CardsMain : MonoBehaviour
             var s = (GameObject)Instantiate(_sockCardPrefab);
             var sc = s.GetComponent<SockCardPrefabScript>();
             sc.SelectedSockCard = cardTypeList[i];
-            sc.ChangeCardSprite(v);
+            sc.ChangeCardBackSprite(v, v2);
             sc.Resize(_mainCamera.Centres[r,c], _mainCamera.SingleScale);
             //s.transform.position = _mainCamera.Centres[r,c];
             //s.transform.localScale = _mainCamera.SingleScale;
@@ -213,6 +221,13 @@ public class CardsMain : MonoBehaviour
             var sgd = SerialGameData.LoadOrGenerate();
             sgd.sound = b ? 0 : 1;
             sgd.Save();
+        };
+        _quickSettings.ReturnButtonAction = () =>
+        {
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.changeHearts(-1);
+            sgd.Save();
+            ToHQ();
         };
 
         //var r = new Range(0, ssp1.socks.Count);
@@ -348,23 +363,28 @@ public class CardsMain : MonoBehaviour
     
     private void ToHQ()
     {
-        
+        SceneManager.LoadScene("HQ", LoadSceneMode.Single);
     }
     
     private void Restart()
     {
-        
+        var sgd = SerialGameData.LoadOrGenerate();
+        var nl = Constants.GetNextLevel(sgd.nextLevel);
+        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
     }
     
     private void NextLevel()
     {
+        var sgd = SerialGameData.LoadOrGenerate();
         
+        var nl = Constants.GetNextLevel(sgd.nextLevel);
+        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
     }
     
     
     private string getBigText()
     {
-        return $"Level {LevelNo+1}";
+        return $"Level {_levelNo+1}";
     }
     
     private string getSmallText(bool levelWon)
@@ -373,16 +393,22 @@ public class CardsMain : MonoBehaviour
         return levelWon ? "Yarn-tastic!" : "Level failed!";
     }
 
-    private string getLevelPoints()
+    private (int number, string text)  getLevelPoints()
     {
-        return $"  {MoveNo * 10}";
+        return (MoveNo * 10,$"  {MoveNo * 10}");
     }
     
     private void levelDone(bool won)
     {
+        var lp = getLevelPoints();
+        var buttonText = "NEXT";
         if (won)
         {
             gameState = 3;
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.nextLevel += 1;
+            sgd.coins += lp.number;
+            sgd.Save();
             _betweenLevels.OnBigButton = () =>
             {
                 NextLevel();
@@ -392,13 +418,29 @@ public class CardsMain : MonoBehaviour
         else
         {
             gameState = 2;
-            _betweenLevels.OnBigButton = () =>
+            var sgd = SerialGameData.LoadOrGenerate();
+            if (sgd.changeHearts(-1) > 0)
             {
-                Restart();
-            };
+                buttonText = "RETRY";
+                _betweenLevels.OnBigButton = () =>
+                {
+                    Restart();
+                };
+            }
+            else
+            {
+                buttonText = "RETURN";
+                _betweenLevels.OnBigButton = () =>
+                {
+                    ToHQ();
+                };
+            }
+            
+            sgd.Save();
+            
         }
         
-        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), getLevelPoints());
+        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
     }
     
     // Update is called once per frame

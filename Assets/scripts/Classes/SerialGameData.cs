@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 namespace Classes
 {
@@ -15,9 +16,62 @@ namespace Classes
         public int nextLevel;
         public int music;
         public int sound;
+        private int hearts;
+        public long heartTimeBinary; // use with DateTime.FromBinary()
         private const string Location = "/sockMonsterData.dat";
 
 
+        public int getHearts()
+        {
+            if (hearts == Constants.MaxHearts)
+            {
+                return hearts;
+            }
+
+            var pastTime = DateTime.FromBinary(heartTimeBinary);
+            var dt = DateTime.Now;
+            var delta = dt - pastTime;
+            hearts = Math.Min(hearts + (int)delta.TotalSeconds / Constants.BetweenHeartsTime, Constants.MaxHearts);
+            var rem = (int)delta.TotalSeconds % Constants.BetweenHeartsTime;
+            var newPast = dt.Subtract(TimeSpan.FromSeconds(rem));
+            heartTimeBinary = newPast.ToBinary();
+            Save();
+            return hearts;
+        }
+        
+        public (int hearts, float rem) getHeartsAndRem()
+        {
+            if (hearts == Constants.MaxHearts)
+            {
+                return (hearts,1f);
+            }
+
+            var pastTime = DateTime.FromBinary(heartTimeBinary);
+            var dt = DateTime.Now;
+            var delta = dt - pastTime;
+            hearts = Math.Min(hearts + (int)delta.TotalSeconds / Constants.BetweenHeartsTime, Constants.MaxHearts);
+            var rem = (int)delta.TotalSeconds % Constants.BetweenHeartsTime;
+            var newPast = dt.Subtract(TimeSpan.FromSeconds(rem));
+            heartTimeBinary = newPast.ToBinary();
+            Save();
+            //return hearts;
+            return (hearts, (float)rem/(float)Constants.BetweenHeartsTime);
+        }
+
+        public int changeHearts(int delta)
+        {
+            var h = getHearts();
+            bool b = h == Constants.MaxHearts;
+            h = Math.Min(h+delta,Constants.MaxHearts);
+            if (h < Constants.MaxHearts && b)
+            {
+                heartTimeBinary = DateTime.Now.ToBinary();
+            }
+            hearts = h;
+            Save();
+            return hearts; 
+        }
+        
         public static void ResetSaves()
         {
             var sgd = SerialGameData.DefaultData();
@@ -31,6 +85,7 @@ namespace Classes
             sgd.nextLevel = 1;
             sgd.music = 1;
             sgd.sound = 1;
+            sgd.hearts = 3;
             //sgd.activeLevel = 0;
             //sgd.activeSceneId = "LevelSet";
             //sgd.levelSetInfoList = new List<LevelSetMain.LevelSetSerialInfo>();
