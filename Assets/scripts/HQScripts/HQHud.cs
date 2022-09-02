@@ -46,6 +46,14 @@ namespace HQScripts
             _topBar.style.flexBasis = topBarRect.width;
             _topBar.style.alignItems= Align.Center;
             _topBar.style.justifyContent = Justify.SpaceAround;
+
+            var topVisual = new Image();
+            topVisual.sprite  = Resources.Load<Sprite>("ui/top");
+            topVisual.style.position = Position.Absolute;
+            topVisual.style.bottom = -70f*hqLayout.Scale;
+            topVisual.style.left = (Screen.width-topVisual.sprite.rect.width)*hqLayout.Scale*0.5f;
+            _topBar.Add(topVisual);
+            
             generateTopBarElements(_topBar);
 
             _bottomBar = new VisualElement();
@@ -60,6 +68,14 @@ namespace HQScripts
             _bottomBar.style.flexBasis = topBarRect.width;
             _bottomBar.style.alignItems= Align.Center;
             _bottomBar.style.justifyContent = Justify.SpaceAround;
+            
+            var bottomVisual = new Image();
+            bottomVisual.sprite  = Resources.Load<Sprite>("ui/bottom");
+            bottomVisual.style.position = Position.Absolute;
+            bottomVisual.style.top = -20f*hqLayout.Scale;
+            bottomVisual.style.left = (Screen.width-bottomVisual.sprite.rect.width)*hqLayout.Scale*0.5f;
+            _bottomBar.Add(bottomVisual);
+            
             generateBottomBarElements(_bottomBar);
 
             

@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Schema;
 using Classes;
-using JetBrains.Annotations;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using WashingMachine.WMScripts;

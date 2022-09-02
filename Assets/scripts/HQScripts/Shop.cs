@@ -24,10 +24,10 @@ namespace HQScripts
 
             _bgButton = new Button(BgButtonFunction);
             _bgButton.style.position = Position.Absolute;
-            _bgButton.style.left =0f;
-            _bgButton.style.bottom = 0f;
-            _bgButton.style.height = Screen.height;
-            _bgButton.style.width = Screen.width;
+            _bgButton.style.left =-10f;
+            _bgButton.style.bottom = -10f;
+            _bgButton.style.height = Screen.height+20f;
+            _bgButton.style.width = Screen.width+20f;
             _bgButton.style.backgroundColor = new Color(0.05f, 0.05f, 0.05f, 0.5f);
             _bgButton.style.borderBottomColor = Color.clear;
             _bgButton.style.borderTopColor = Color.clear;

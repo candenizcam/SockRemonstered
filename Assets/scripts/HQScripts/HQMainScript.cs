@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Classes;
@@ -17,6 +18,8 @@ public class HQMainScript : MonoBehaviour
     private HQHud _hqHud;
     private Shop _shop;
     public bool ResetSaves = false;
+
+    public SpriteRenderer bg;
     // Start is called before the first frame update
     void Awake()
     {
@@ -25,6 +28,9 @@ public class HQMainScript : MonoBehaviour
             Debug.LogWarning("warning, saves are reset");
             SerialGameData.ResetSaves();
         }
+
+        
+        Application.targetFrameRate = 60;
         
         _random = new System.Random();
         _timer = new Timer();
@@ -35,7 +41,7 @@ public class HQMainScript : MonoBehaviour
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
         
-        _mainCamera = new HQLayout(Camera.main,190f,220f);
+        _mainCamera = new HQLayout(Camera.main,190f,200f);
 
         _hqHud = new HQHud(_mainCamera);
         _hqHud.AddToVisualElement(_uiDocument.rootVisualElement);
@@ -78,6 +84,19 @@ public class HQMainScript : MonoBehaviour
         _timer.Update(Time.deltaTime);
         _hqHud.Update();
         _shop.Update();
+
+
+        if (Input.touches.Length > 0)
+        {
+            var thisTouch = Input.touches[0];
+            if (thisTouch.deltaPosition.x != 0)
+            {
+                var cx2 = _mainCamera.Camera.transform.position.x -1f * _mainCamera.screen2wpWidth(thisTouch.deltaPosition.x);
+                var halfWidth = _mainCamera.screen2wpWidth(Screen.width) * 0.5f;
+                Tools.MutatePosition(_mainCamera.Camera.transform, x:  Math.Clamp(cx2, bg.bounds.min.x+halfWidth, bg.bounds.max.x-halfWidth));
+            }
+            
+        }
 
 
 
