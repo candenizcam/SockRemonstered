@@ -19,30 +19,30 @@ namespace Classes
             _clothButton = new MultiButtonClickable((x) =>
             {
                 TabFunc(0);
-            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray, changeOnClick: false);
+            }, new string[] {"ui/shop/ClosetIcon-a","ui/shop/ClosetIcon-i" }, Color.gray, changeOnClick: false);
             _clothButton.Scale(scale);
             
 
             _furniButton = new MultiButtonClickable((x) =>
             {
                 TabFunc(1);
-            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray, changeOnClick: false);
+            }, new string[] {"ui/shop/ShopIcon-a","ui/shop/ShopIcon-i" }, Color.gray, changeOnClick: false);
             _furniButton.Scale(scale);
             
             _coinsButton = new MultiButtonClickable((x) =>
             {
                 TabFunc(2);
-            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray, changeOnClick: false);
+            }, new string[] {"ui/shop/BankIcon-a","ui/shop/BankIcon-i" }, Color.gray, changeOnClick: false);
             _coinsButton.Scale(scale);
 
 
             style.flexDirection = FlexDirection.Row;
             style.alignContent = Align.Center;
             style.justifyContent = Justify.SpaceBetween;
-            style.marginBottom = 32f * scale;
-            style.marginTop= 32f * scale;
-            style.marginLeft = 32f * scale;
-            style.marginRight = 32f * scale;
+            style.paddingBottom = 32f * scale;
+            style.paddingTop= 32f * scale;
+            style.paddingLeft = 32f * scale;
+            style.paddingRight = 32f * scale;
             
             Add(_clothButton);
             Add(_furniButton);

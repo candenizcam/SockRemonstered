@@ -7,44 +7,12 @@ using UnityEngine.UIElements;
 
 namespace HQScripts
 {
-    public class ClosetTab: VisualElement
+    public class ClosetTab: ShopTab
     {
-
-        private ScrollView _scrollView;
-        private float _scale;
-        private List<ButtonClickable> _buttons = new List<ButtonClickable>();
-        public Action<ShopItem> closetAction;
-        public ClosetTab(float scale, float width, float height)
+        
+        public ClosetTab(float scale, float width, float height): base(scale,width, height)
         {
-            style.backgroundColor = Color.magenta;
-            style.width = width;
-            //style.height = height;
-            _scale = scale;
-            _scrollView= new ScrollView();
-            Add(_scrollView);
-
-
-            //_scrollView.style.height = style.height;
-            _scrollView.style.width = style.width;
-
-            _scrollView.mode = ScrollViewMode.Vertical;
-            _scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
-            _scrollView.scrollDecelerationRate = 0f;
-            _scrollView.style.paddingLeft = 43f * scale;
-            _scrollView.style.paddingRight = 43f * scale;
-            _scrollView.style.paddingTop = 43f * scale;
-
-            /*
-            for (int i = 0; i < 20; i++)
-            {
-                var a = new VisualElement();
-                a.style.width = style.width;
-                a.style.height = 100f;
-                a.style.backgroundColor = new Color(0f,i/20f,0f);
-                _scrollView.Add(a);
-            }
-            */
-
+            
         }
 
         public void UpdateShopItems(ShopItem[] shopItems)
@@ -64,15 +32,22 @@ namespace HQScripts
                 a.style.justifyContent = Justify.SpaceBetween;
                 a.style.alignContent = Align.Center;
                 a.style.marginBottom = 43f * _scale;
+                a.style.paddingLeft = 23f * _scale;
+                a.style.paddingRight = 23f * _scale;
                 a.style.flexWrap = Wrap.Wrap;
                 
                 for (int j = 0; j < colCount; j++)
                 {
-                    if(n>shopItems.Length-1) break;
-                    var thisItem = shopItems[n];
-                    var b = new ClosetItem(_scale, () =>
+                    if (n > shopItems.Length - 1)
                     {
-                        ClosetFunction(thisItem);
+                        a.style.justifyContent = Justify.FlexStart;
+                        break;
+                        
+                    }
+                    var thisItem = shopItems[n];
+                    var b = new ClosetItem(_scale,thisItem, () =>
+                    {
+                        ItemFunction(thisItem);
                     });
                     a.Add(b);
                     _buttons.Add(b);
@@ -86,18 +61,7 @@ namespace HQScripts
          
         }
 
-        void ClosetFunction(ShopItem thisItem)
-        {
-            closetAction(thisItem);
-        }
         
         
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-        }
     }
 }

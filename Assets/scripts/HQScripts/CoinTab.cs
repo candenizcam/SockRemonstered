@@ -6,30 +6,12 @@ using UnityEngine.UIElements;
 
 namespace HQScripts
 {
-    public class CoinTab: VisualElement
+    public class CoinTab: ShopTab
     {
-        private ScrollView _scrollView;
-        private float _scale;
-        private List<ButtonClickable> _buttons = new List<ButtonClickable>();
-        public Action<ShopItem> coinAction;
-        public CoinTab(float scale, float width, float height)
+        
+        public CoinTab(float scale, float width, float height): base(scale,width,height)
         {
-            style.width = width;
-            //style.height = height;
-            _scale = scale;
-            _scrollView= new ScrollView();
-            Add(_scrollView);
-
-
-            //_scrollView.style.height = style.height;
-            _scrollView.style.width = style.width;
-
-            _scrollView.mode = ScrollViewMode.Vertical;
-            _scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
-            _scrollView.scrollDecelerationRate = 0f;
-            _scrollView.style.paddingLeft = 43f * scale;
-            _scrollView.style.paddingRight = 43f * scale;
-            _scrollView.style.paddingTop = 43f * scale;
+            
         }
         
         
@@ -45,28 +27,17 @@ namespace HQScripts
                 var thisItem = shopItems[i];
                 var b = new CoinItem(_scale, () =>
                 {
-                    CoinFunction(thisItem);
+                    ItemFunction(thisItem);
                     
                 });
-                b.style.paddingBottom = 43f * _scale;
+                b.style.marginBottom = 43f * _scale;
                 _buttons.Add(b);
                 _scrollView.Add(b);
             }
          
         }
 
-        void CoinFunction(ShopItem shopItem)
-        {
-            coinAction(shopItem);
-        }
         
         
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-        }
     }
 }
