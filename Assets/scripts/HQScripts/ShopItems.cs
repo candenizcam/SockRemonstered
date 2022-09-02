@@ -11,9 +11,9 @@ namespace HQScripts
             new ShopItem("lamp","ui/shop/items/Lamp-s", 1000, "Sock Lamp","No real socks were harmed while making this lamp shade.",ShopItemType.Furniture),
             new ShopItem("sleepper","ui/shop/items/Slipper-s", 1500,"Sleepper Bed","Sleeps right in.",ShopItemType.Furniture),
             new ShopItem("carpet","ui/shop/items/Carpet-s", 2500,"Fuzzy Carpet","Really brings the room together.",ShopItemType.Furniture),
-            new ShopItem("thousand","ui/shop/PileOfCoins", 1000,"Wool","44.99 TRY",ShopItemType.GameCoin),
-            new ShopItem("thousand","ui/shop/PileOfCoins", 3000,"Silk","109.99 TRY",ShopItemType.GameCoin),
-            new ShopItem("thousand","ui/shop/PileOfCoins", 55000,"Cashmere","1299.99 TRY",ShopItemType.GameCoin)
+            new ShopItem("1000","ui/shop/items/PileOfCoins", 1000,"Wool","44.99 TRY",ShopItemType.GameCoin),
+            new ShopItem("3000","ui/shop/items/PileOfCoins-2", 3000,"Silk","109.99 TRY",ShopItemType.GameCoin),
+            new ShopItem("55000","ui/shop/items/PileOfCoins-3", 55000,"Cashmere","1299.99 TRY",ShopItemType.GameCoin)
 
         };
 

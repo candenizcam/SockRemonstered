@@ -25,7 +25,7 @@ namespace HQScripts
             for (int i = 0; i < shopItems.Length; i++)
             {
                 var thisItem = shopItems[i];
-                var b = new CoinItem(_scale, () =>
+                var b = new CoinItem(_scale,thisItem, () =>
                 {
                     ItemFunction(thisItem);
                     

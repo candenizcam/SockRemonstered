@@ -64,7 +64,7 @@ namespace Classes
             
             var price = new Label();
             price.style.fontSize = 64f * scale;
-            price.text =  StringTools.NumberToThreeDigits(thisItem.Price);
+            price.text =  StringTools.NumberToThreeDigits(thisItem.Price, start: " ");
             moneyZone.Add(price);
             
             

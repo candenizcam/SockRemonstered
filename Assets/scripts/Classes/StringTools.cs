@@ -2,7 +2,7 @@
 {
     public static class StringTools
     {
-        public static string NumberToThreeDigits(int v)
+        public static string NumberToThreeDigits(int v, string start="", string end="")
         {
             string[] l = {"","k","M","B","T","Q","S"};
             var c = v;
@@ -32,7 +32,7 @@
                 }
             }
 
-            return s;
+            return start+ s+end;
         }
         
     }
