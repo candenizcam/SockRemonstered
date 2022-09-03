@@ -96,6 +96,36 @@ namespace HQScripts
                 );
             _closetTab.ItemAction = thisItem =>
             {
+                if (thisItem.ShopItemType == ShopItemType.Cloth)
+                {
+                    var sgd = SerialGameData.LoadOrGenerate();
+                    var itemType = thisItem.ID.Split("_")[0];
+                    for (var i = 0; i < sgd.lineup.Length; i++)
+                    {
+                        if (sgd.lineup[i].Split("_")[0] == itemType)
+                        {
+                            if (sgd.lineup[i] == thisItem.ID)
+                            {
+                                sgd.lineup[i] = $"{itemType}_Raw";
+                            }
+                            else
+                            {
+                                sgd.lineup[i] = thisItem.ID;
+                            }
+                            
+                            break;
+                        }
+
+                        if (i + 1 == sgd.lineup.Length)
+                        {
+                            Debug.LogWarning("dress prefix not found");
+                        }
+                    }
+                    sgd.Save();
+                    
+                    
+                    
+                }
 
             }; 
             //_closetTab.UpdateShopItems(ShopItems.ShopItemsArray);
@@ -156,40 +186,7 @@ namespace HQScripts
             _coinTab.UpdateShopItems(ShopItems.GetCoinsArray());
             _purchaseTab.UpdateShopItems(notBought.ToArray());
         }
-
-/*
-        private VisualElement shopTabs(float scale)
-        {
-            var items = new VisualElement();
-            var clothButton = new MultiButtonClickable((x) =>
-            {
-
-            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray);
-            clothButton.Scale(scale);
-            
-
-            var furniButton = new MultiButtonClickable((x) =>
-            {
-
-            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray);
-            furniButton.Scale(scale);
-            
-            var coinsButton = new MultiButtonClickable((x) =>
-            {
-
-            }, new string[] {"ui/shop/BankIcon","ui/shop/ClosetIcon" }, Color.gray);
-            coinsButton.Scale(scale);
-            items.Add(clothButton);
-            items.Add(furniButton);
-            items.Add(coinsButton);
-
-            items.style.flexDirection = FlexDirection.Row;
-            items.style.alignContent = Align.Center;
-            items.style.justifyContent = Justify.SpaceAround;
-            return items;
-        }
         
-*/
 
         public void Update()
         {

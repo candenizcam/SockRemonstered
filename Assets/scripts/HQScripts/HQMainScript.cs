@@ -18,6 +18,7 @@ public class HQMainScript : MonoBehaviour
     private HQHud _hqHud;
     private Shop _shop;
     public bool ResetSaves = false;
+    public MonsterPrefabScript MonsterPrefabScript;
 
     public SpriteRenderer bg;
     // Start is called before the first frame update
@@ -74,6 +75,8 @@ public class HQMainScript : MonoBehaviour
         _shop.BgButtonAction = () =>
         {
             _shop.RemoveFromVisualElement(_uiDocument.rootVisualElement);
+            var sgd = SerialGameData.LoadOrGenerate();
+            MonsterPrefabScript.UpdateDress(sgd.lineup);
         };
     }
 

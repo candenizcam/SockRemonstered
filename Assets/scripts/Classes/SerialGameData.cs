@@ -19,8 +19,10 @@ namespace Classes
         private int hearts;
         public long heartTimeBinary; // use with DateTime.FromBinary()
         public List<string> purchased; // maybe this will be server one day...
+        public string[] lineup;
         private const string Location = "/sockMonsterData.dat";
-
+        
+        
 
         public int getHearts()
         {
@@ -87,6 +89,7 @@ namespace Classes
             sgd.music = 1;
             sgd.sound = 1;
             sgd.hearts = 3;
+            sgd.lineup = new[] {"Body_Raw","LArm_Raw","RArm_Raw","LLeg_Raw","RLeg_Raw" };
             sgd.purchased = new List<string>();
             //sgd.activeLevel = 0;
             //sgd.activeSceneId = "LevelSet";

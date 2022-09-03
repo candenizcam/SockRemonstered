@@ -38,7 +38,6 @@ public class WMMain : MonoBehaviour
     private int _moveNo = 0;
     private int gameState = -1; //-1 initialize, 0 runs, 1 pause, 2 lost, 3 won
     private Timer _timer;
-    private string display = "";
     private float firstStop = 1f;
     private List<GameObject> _starters = new List<GameObject>();
     
@@ -223,12 +222,6 @@ public class WMMain : MonoBehaviour
         //public float SockSpawnTime;
         //public float WheelSpeed;
         //public int MaxSock;
-        Debug.Log("wm main awake done");
-        
-        _timer.addEvent(1f, () =>
-        {
-            Debug.Log(display);
-        },true);
         
     }
 
@@ -483,7 +476,6 @@ public class WMMain : MonoBehaviour
             ArrangeActiveSocks();
 
 
-            display += $"{i}:{Time.deltaTime * _wheelSpeed:0.000}, ";
         }
         else if(gameState==-1)
         {
