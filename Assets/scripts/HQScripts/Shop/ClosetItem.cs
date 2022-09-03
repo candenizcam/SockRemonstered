@@ -5,10 +5,16 @@ using UnityEngine.UIElements;
 
 namespace Classes
 {
-    public class ClosetItem: ButtonClickable
+    public class ClosetItem: MultiButtonClickable
     {
         private ShopItem _thisItem;
-        public ClosetItem(float scale, ShopItem thisItem, Action clickAction): base(scale,"ui/shop/ClosetItem",Color.gray,clickAction)
+
+
+        public ClosetItem(float scale, ShopItem thisItem, Action<int> clickAction, int state, bool changeOnClick) : base(scale, clickAction, 
+        new []{
+            "ui/shop/ClosetItem","ui/shop/ClosetItem_pressed"
+        },
+            Color.gray,state,changeOnClick)
         {
             _thisItem = thisItem;
 

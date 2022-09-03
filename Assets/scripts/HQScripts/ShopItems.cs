@@ -6,7 +6,7 @@ namespace HQScripts
     {
         public static ShopItem[] ShopItemsArray =
         {
-            new ShopItem("basket","ui/shop/items/Basket-s", 200,"Laundry Basket","Best way to carry socks around.",ShopItemType.Furniture),
+            new ShopItem("basket","ui/shop/items/Basket-s", 200,"Sock Basket","Best way to carry socks around.",ShopItemType.Furniture),
             new ShopItem("clock","ui/shop/items/Clock-s", 500, "Button Clock","Has an alarm and cufflinks to home wifi.",ShopItemType.Furniture),
             new ShopItem("LArm_S3","ui/shop/items/LArm-s3_shop", 500,"Striped Glove","Vertical lines make your arm look longer.",ShopItemType.Cloth),
             new ShopItem("lamp","ui/shop/items/Lamp-s", 1000, "Sock Lamp","No real socks were harmed while making this lamp shade.",ShopItemType.Furniture),

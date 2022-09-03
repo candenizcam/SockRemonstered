@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Classes;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -20,7 +21,8 @@ namespace HQScripts
             _scrollView.Clear();
             _buttons.Clear();
 
-
+            var sgd = SerialGameData.LoadOrGenerate();
+            
             var colCount = 2;
             var n = 0;
             var rowCount = shopItems.Length / 2;
@@ -45,10 +47,18 @@ namespace HQScripts
                         
                     }
                     var thisItem = shopItems[n];
-                    var b = new ClosetItem(_scale,thisItem, () =>
+
+                    var pressed = thisItem.ShopItemType switch
+                    {
+                        ShopItemType.Cloth => sgd.lineup.Contains(thisItem.ID) ? 1 : 0,
+                        ShopItemType.Furniture => sgd.activeFurnitures.Contains(thisItem.ID) ? 1 : 0,
+                        _ => 0
+                    };
+
+                    var b = new ClosetItem(_scale,thisItem, (x) =>
                     {
                         ItemFunction(thisItem);
-                    });
+                    },pressed, true );
                     a.Add(b);
                     _buttons.Add(b);
                     n += 1;

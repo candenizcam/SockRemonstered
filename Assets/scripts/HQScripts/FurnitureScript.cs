@@ -7,6 +7,8 @@ public class FurnitureScript : MonoBehaviour
 {
     public SpriteRenderer NoMonster;
     public SpriteRenderer YesMonster;
+
+    public string ID;
     // Start is called before the first frame update
     [NonSerialized]
     public bool ThereIsMonster=true;

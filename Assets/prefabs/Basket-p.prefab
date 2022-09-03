@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoMonster: {fileID: 2678550409418169824}
   YesMonster: {fileID: 7242560695318338935}
+  ID: basket
 --- !u!1 &8121874837178192553
 GameObject:
   m_ObjectHideFlags: 0

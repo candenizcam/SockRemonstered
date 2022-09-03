@@ -20,7 +20,7 @@ namespace HQScripts
             _scrollView.Clear();
             _buttons.Clear();
 
-
+            
             
             for (int i = 0; i < shopItems.Length; i++)
             {

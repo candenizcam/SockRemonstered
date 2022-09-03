@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoMonster: {fileID: 5446355655469482051}
   YesMonster: {fileID: 3082972997615174271}
+  ID: clock
 --- !u!1 &8550951760972770843
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,20 +16,20 @@ namespace Classes
         public ShopTabs( float scale, Action<int> tabAction)
         {
             TabAction = tabAction;
-            _clothButton = new MultiButtonClickable((x) =>
+            _clothButton = new MultiButtonClickable(scale,(x) =>
             {
                 TabFunc(0);
             }, new string[] {"ui/shop/ClosetIcon-a","ui/shop/ClosetIcon-i" }, Color.gray, changeOnClick: false);
             _clothButton.Scale(scale);
             
 
-            _furniButton = new MultiButtonClickable((x) =>
+            _furniButton = new MultiButtonClickable(scale,(x) =>
             {
                 TabFunc(1);
             }, new string[] {"ui/shop/ShopIcon-a","ui/shop/ShopIcon-i" }, Color.gray, changeOnClick: false);
             _furniButton.Scale(scale);
             
-            _coinsButton = new MultiButtonClickable((x) =>
+            _coinsButton = new MultiButtonClickable(scale,(x) =>
             {
                 TabFunc(2);
             }, new string[] {"ui/shop/BankIcon-a","ui/shop/BankIcon-i" }, Color.gray, changeOnClick: false);

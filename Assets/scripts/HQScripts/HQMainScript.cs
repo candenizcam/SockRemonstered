@@ -19,6 +19,7 @@ public class HQMainScript : MonoBehaviour
     private Shop _shop;
     public bool ResetSaves = false;
     public MonsterPrefabScript MonsterPrefabScript;
+    public List<FurnitureScript> Furnitures;
 
     public SpriteRenderer bg;
     // Start is called before the first frame update
@@ -36,7 +37,10 @@ public class HQMainScript : MonoBehaviour
         _random = new System.Random();
         _timer = new Timer();
         var sgd = SerialGameData.LoadOrGenerate();
-        
+        foreach (var furnitureScript in Furnitures)
+        {
+            furnitureScript.gameObject.SetActive(sgd.activeFurnitures.Contains(furnitureScript.ID));
+        }
         
         _uiDocument = gameObject.GetComponent<UIDocument>();
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
@@ -77,6 +81,10 @@ public class HQMainScript : MonoBehaviour
             _shop.RemoveFromVisualElement(_uiDocument.rootVisualElement);
             var sgd = SerialGameData.LoadOrGenerate();
             MonsterPrefabScript.UpdateDress(sgd.lineup);
+            foreach (var furnitureScript in Furnitures)
+            {
+                furnitureScript.gameObject.SetActive(sgd.activeFurnitures.Contains(furnitureScript.ID));
+            }
         };
     }
 

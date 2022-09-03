@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoMonster: {fileID: 5784207517167961224}
   YesMonster: {fileID: 470124034088652400}
+  ID: sleepper
 --- !u!1 &1300681288418569905
 GameObject:
   m_ObjectHideFlags: 0

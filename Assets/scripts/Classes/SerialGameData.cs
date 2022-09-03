@@ -20,6 +20,7 @@ namespace Classes
         public long heartTimeBinary; // use with DateTime.FromBinary()
         public List<string> purchased; // maybe this will be server one day...
         public string[] lineup;
+        public List<string> activeFurnitures; // maybe this will be server one day...
         private const string Location = "/sockMonsterData.dat";
         
         
@@ -91,6 +92,7 @@ namespace Classes
             sgd.hearts = 3;
             sgd.lineup = new[] {"Body_Raw","LArm_Raw","RArm_Raw","LLeg_Raw","RLeg_Raw" };
             sgd.purchased = new List<string>();
+            sgd.activeFurnitures = new List<string>();
             //sgd.activeLevel = 0;
             //sgd.activeSceneId = "LevelSet";
             //sgd.levelSetInfoList = new List<LevelSetMain.LevelSetSerialInfo>();
@@ -145,6 +147,16 @@ namespace Classes
             FileStream file = File.Create(UnityEngine.Application.persistentDataPath + Location); 
             bf.Serialize(file, this);
             file.Close();
+        }
+
+        public static void Apply(Action<SerialGameData> a, bool andSave=true)
+        {
+            var sgd = LoadOrGenerate();
+            a(sgd);
+            if (andSave)
+            {
+                sgd.Save();
+            }
         }
         
         

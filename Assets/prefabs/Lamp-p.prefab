@@ -216,3 +216,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoMonster: {fileID: 3691241925050880171}
   YesMonster: {fileID: 768288085181499697}
+  ID: lamp

@@ -131,3 +131,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoMonster: {fileID: 9214306983320960721}
   YesMonster: {fileID: 0}
+  ID: carpet

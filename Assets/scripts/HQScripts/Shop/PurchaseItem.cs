@@ -13,6 +13,8 @@ namespace Classes
             _thisItem = thisItem;
             style.alignItems = Align.Center;
             
+            
+            
             var frame = new VisualElement();
             frame.style.position = Position.Absolute;
             frame.style.left = 0f * scale;

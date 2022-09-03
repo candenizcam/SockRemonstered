@@ -12,7 +12,7 @@ namespace Classes
         private int _index;
         private List<StyleBackground> _sprites = new List<StyleBackground>();
         public bool ChangeOnClick = true;
-        public MultiButtonClickable(Action<int> clickAction, string[] imagePaths, Color pressedTint,int startIndex=0, bool changeOnClick=true) : base(() => { })
+        public MultiButtonClickable(float scale, Action<int> clickAction, string[] imagePaths, Color pressedTint,int startIndex=0, bool changeOnClick=true) : base(() => { })
         {
             ChangeOnClick = changeOnClick;
             _clickAction = clickAction;
@@ -27,8 +27,8 @@ namespace Classes
                 _sprites.Add( new StyleBackground(Resources.Load<Sprite>(imagePath)));
             }
 
-            width = _sprites[0].value.sprite.rect.width;
-            height = _sprites[0].value.sprite.rect.height;
+            width = _sprites[0].value.sprite.rect.width*scale;
+            height = _sprites[0].value.sprite.rect.height*scale;
             style.backgroundImage = _sprites[_index];
 
             

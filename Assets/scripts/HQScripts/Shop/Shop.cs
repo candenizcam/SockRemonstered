@@ -122,7 +122,21 @@ namespace HQScripts
                         }
                     }
                     sgd.Save();
+                }else if (thisItem.ShopItemType == ShopItemType.Furniture)
+                {
                     
+                    SerialGameData.Apply(sgd =>
+                    {
+                        if (sgd.activeFurnitures.Contains(thisItem.ID))
+                        {
+                            sgd.activeFurnitures.Remove(thisItem.ID);
+                        }
+                        else
+                        {
+                            sgd.activeFurnitures.Add(thisItem.ID);
+                        }
+                        
+                    }) ;
                     
                     
                 }
