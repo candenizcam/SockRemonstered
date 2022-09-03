@@ -97,6 +97,19 @@ namespace WashingMachine.WMScripts
 
         }
 
+
+        public void InitializeLevel(Action<int, GameObject> also)
+        {
+            for (var i = 0; i < WmSockInfos.Length; i++)
+            {
+                var r = WmSockInfos[i].Resource();
+                also(i,r);
+            }
+
+        }
+
+        
+        
         /** Returns a randomly picked sock, bias is introduced here if needed
          * random not included and must be inserted from outside
          */
@@ -128,6 +141,7 @@ namespace WashingMachine.WMScripts
         public readonly byte LevelCollect; // the number of this sock that needs to be collected
         public readonly byte Speed; // the fall speed where 10 is the bg speed
         public readonly byte Bias; // the partial summed bias
+        private GameObject _resource;
         public WMSockInfo(byte sockType, byte sockNo, byte levelCollect, byte speed, byte bias=1)
         {
             SockType = sockType;
@@ -135,6 +149,21 @@ namespace WashingMachine.WMScripts
             LevelCollect = levelCollect;
             Speed = speed;
             Bias = bias;
+        }
+
+        public GameObject Resource()
+        {
+            try
+            {
+                var a = _resource.gameObject.transform;
+                return _resource;
+            }
+            catch(NullReferenceException)
+            {
+                _resource = (GameObject) Resources.Load(WMLevels.WmSockTypeLookup[SockType]);
+                return _resource;
+            }
+            
         }
         
         
