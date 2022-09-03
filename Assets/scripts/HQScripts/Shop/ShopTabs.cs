@@ -49,7 +49,7 @@ namespace Classes
             Add(_coinsButton);
         }
 
-        private void TabFunc(int i)
+        public void TabFunc(int i)
         {
             _clothButton.ChangeIndex(i==0 ? 1 : 0);
             _furniButton.ChangeIndex(i==1 ? 1 : 0);

@@ -40,6 +40,7 @@ namespace Classes
 
         public const int MaxHearts = 3;
         public const int BetweenHeartsTime = 60; // in secs
+        public const float FurnitureChance = 0.1f;
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {

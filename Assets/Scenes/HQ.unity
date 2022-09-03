@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eb7219c826cf484c95b11872978cf8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ResetSaves: 1
+  ResetSaves: 0
   MonsterPrefabScript: {fileID: 1933768040}
   Furnitures:
   - {fileID: 286405335}

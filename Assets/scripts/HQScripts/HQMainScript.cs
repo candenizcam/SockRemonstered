@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Classes;
 using HQScripts;
 using Unity.VisualScripting;
@@ -37,10 +38,6 @@ public class HQMainScript : MonoBehaviour
         _random = new System.Random();
         _timer = new Timer();
         var sgd = SerialGameData.LoadOrGenerate();
-        foreach (var furnitureScript in Furnitures)
-        {
-            furnitureScript.gameObject.SetActive(sgd.activeFurnitures.Contains(furnitureScript.ID));
-        }
         
         _uiDocument = gameObject.GetComponent<UIDocument>();
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
@@ -79,13 +76,57 @@ public class HQMainScript : MonoBehaviour
         _shop.BgButtonAction = () =>
         {
             _shop.RemoveFromVisualElement(_uiDocument.rootVisualElement);
-            var sgd = SerialGameData.LoadOrGenerate();
-            MonsterPrefabScript.UpdateDress(sgd.lineup);
+            UpdateStuff();
+
+        };
+        UpdateStuff();
+    }
+
+
+
+    private void UpdateStuff()
+    {
+        var furnTheWitch = _random.NextDouble() < Constants.FurnitureChance;
+        
+        SerialGameData.Apply(sgd =>
+        {
+            var l = new List<FurnitureScript>();
             foreach (var furnitureScript in Furnitures)
             {
-                furnitureScript.gameObject.SetActive(sgd.activeFurnitures.Contains(furnitureScript.ID));
+                var isActive = sgd.activeFurnitures.Contains(furnitureScript.ID);
+                furnitureScript.gameObject.SetActive(isActive);
+                
+                if (furnitureScript.ThereIsMonster && isActive)
+                {
+                    furnitureScript.MonsterEnabled(false);
+                    l.Add(furnitureScript);
+                }
+                
+                    
             }
-        };
+
+            
+            if (l.Count > 0&& furnTheWitch)
+            {
+                MonsterPrefabScript.gameObject.SetActive(false);
+                if (l.Count > 0)
+                {
+                    var t = _random.Next(l.Count );
+                    l[t].MonsterEnabled(true);
+                }
+            }
+            else
+            {
+                MonsterPrefabScript.gameObject.SetActive(true);
+                MonsterPrefabScript.UpdateDress(sgd.lineup);
+            }
+            
+            
+           
+            
+            
+            
+        });
     }
 
     // Update is called once per frame

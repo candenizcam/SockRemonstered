@@ -30,6 +30,21 @@ public class FurnitureScript : MonoBehaviour
 
     }
 
+    public void MonsterEnabled(bool b)
+    {
+        Debug.LogWarning($"id: {ID}, b: {b}");
+        if (ThereIsMonster)
+        {
+            NoMonster.enabled = !b;
+            YesMonster.enabled = b;
+        }
+        else
+        {
+            Debug.LogWarning("you fucked up, there is no monster");
+        }
+            
+    }
+
     // Update is called once per frame
     void Update()
     {

@@ -85,6 +85,7 @@ namespace HQScripts
                 
                 
             });
+            _shopTabs.TabFunc(0);
             _mainHolder.Add(_shopTabs);
             _mainHolder.Add(tabHolder);
             
@@ -162,6 +163,27 @@ namespace HQScripts
 
                     sgd.coins -= thisItem.Price;
                     sgd.purchased.Add(thisItem.ID);
+                    if (thisItem.ShopItemType == ShopItemType.Furniture)
+                    {
+                        sgd.activeFurnitures.Add(thisItem.ID);
+                        
+                    }else if (thisItem.ShopItemType == ShopItemType.Cloth)
+                    {
+                        var type = thisItem.ID.Split("_")[0];
+                        for (var i = 0; i < sgd.lineup.Length; i++)
+                        {
+                            if (type == sgd.lineup[i].Split("_")[0])
+                            {
+                                sgd.lineup[i] = thisItem.ID;
+                                break;
+                            }
+
+                            if (i == sgd.lineup.Length)
+                            {
+                                Debug.LogWarning("cloth id invalid");
+                            }
+                        }
+                    }
 
                 }
                 else
