@@ -15,7 +15,8 @@ public class CardsMain : MonoBehaviour
     public SpriteRenderer topWater;
     public SpriteRenderer bottomWater;
     public int LevelNo=-1;
-    
+
+    private TweenHolder _tweenHolder;
     private System.Random _random;
     private CardLayout _mainCamera;
     private int _levelNo;
@@ -97,7 +98,7 @@ public class CardsMain : MonoBehaviour
             _levelNo = levelInfo.LevelNo;
         }
 
-        
+        _tweenHolder = new TweenHolder();
         _random = new System.Random();
         var thisLevel = CardLevels.CardLevelInfos[_levelNo];
             
@@ -163,6 +164,12 @@ public class CardsMain : MonoBehaviour
             sc.Resize(_mainCamera.Centres[r,c], _mainCamera.SingleScale);
             //s.transform.position = _mainCamera.Centres[r,c];
             //s.transform.localScale = _mainCamera.SingleScale;
+            _tweenHolder.newTween(0.6f, alpha =>
+            {
+                var v = (float)Math.Sin(2 * Math.PI * (1f-alpha))*15f*alpha;
+                var t = sc.gameObject.transform; 
+                t.rotation = Quaternion.Euler(t.rotation.eulerAngles.x,t.rotation.eulerAngles.y,v);
+            });
             _sockCardPrefabs.Add(sc);
         }
         
@@ -451,6 +458,7 @@ public class CardsMain : MonoBehaviour
         _cardHud.Update();
         _betweenLevels.Update();
         _quickSettings.Update();
+        _tweenHolder.Update(0.02f);
 
         if (gameState==0)
         {
