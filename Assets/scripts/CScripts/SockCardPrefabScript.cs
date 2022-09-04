@@ -7,7 +7,7 @@ using UnityEngine;
 public class SockCardPrefabScript : MonoBehaviour
 {
     public List<SpriteRenderer> socks;
-    public List<SpriteRenderer> cards;
+    //public List<SpriteRenderer> cards;
     public SpriteRenderer CardLayout;
     public List<SpriteRenderer> cardBacks;
     
@@ -19,18 +19,18 @@ public class SockCardPrefabScript : MonoBehaviour
     public bool ToBeDestroyed = false;
 
     public bool sockVisible = false;
-    private int _selectedCardSprite = 0;
+    //private int _selectedCardSprite = 0;
     private int _selectedSockSprite = 0;
     private int _selectedCardBackSprite = 0;
     private Rect _hitboxRect;
-    private float borderPixel =10f;    
+    private float borderPixel =0f;    
     
     // Start is called before the first frame update
 
     public void ChangeCardBackSprite(float csd, float cfd)
     {
         ChangeCardBackSprite(((int)(cardBacks.Count*csd))%cardBacks.Count);
-        _selectedCardSprite = ((int) (cards.Count * cfd)) % cards.Count;
+        //_selectedCardSprite = ((int) (cards.Count * cfd)) % cards.Count;
     }
 
 
@@ -52,10 +52,10 @@ public class SockCardPrefabScript : MonoBehaviour
         {
             socks[i].gameObject.SetActive(false);
         }
-        for (int i = 0; i < cards.Count; i++)
-        {
-            cards[i].gameObject.SetActive(false);
-        }
+        //for (int i = 0; i < cards.Count; i++)
+        //{
+        //    cards[i].gameObject.SetActive(false);
+        //}
     }
 
     public void Resize(Vector3 position, Vector3 scale)
@@ -64,13 +64,13 @@ public class SockCardPrefabScript : MonoBehaviour
         _hitboxRect = Rect.MinMaxRect(
             position.x - scale.x * 0.5f, position.y - scale.y * 0.5f,
             position.x + scale.x * 0.5f, position.y + scale.y * 0.5f);
-        gameObject.transform.localScale = Tools.Vector3Add(Tools.vector3Div(scale,new Vector3(cards[0].size.x, cards[0].size.y, 1f)),new Vector3(-borderPixel/100f,-borderPixel/100f,0f));
+        gameObject.transform.localScale = Tools.Vector3Add(Tools.vector3Div(scale,new Vector3(cardBacks[0].size.x, cardBacks[0].size.y, 1f)),new Vector3(-borderPixel/100f,-borderPixel/100f,0f));
     }
 
     public void SockVisible(bool b)
     {
         socks[SelectedSockCard].gameObject.SetActive(b);
-        cards[_selectedCardSprite].gameObject.SetActive(b);
+        //cards[_selectedCardSprite].gameObject.SetActive(b);
         cardBacks[_selectedCardBackSprite].gameObject.SetActive(!b);
         sockVisible = b;
     }

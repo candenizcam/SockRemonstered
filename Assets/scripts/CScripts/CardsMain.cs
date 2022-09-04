@@ -361,6 +361,7 @@ public class CardsMain : MonoBehaviour
                     
                 },endAction: () =>
                 {
+                    sockCardPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
                     for (int i = 0; i < _selection.Length; i++)
                     {
                         if (_selection[i] == -1)
