@@ -408,7 +408,7 @@ MonoBehaviour:
   bg: {fileID: 1787316894}
   topWater: {fileID: 838841705}
   bottomWater: {fileID: 304229433}
-  LevelNo: 1
+  LevelNo: -1
 --- !u!4 &1314649975
 Transform:
   m_ObjectHideFlags: 0

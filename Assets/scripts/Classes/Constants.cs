@@ -44,6 +44,18 @@ namespace Classes
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {
+
+            var l = (bigNumber / 10)*5;
+            if (bigNumber % 10 >= 5)
+            {
+                return new NextLevelData("Cards",l + bigNumber % 5 + 1);
+            }
+            else
+            {
+                return new NextLevelData("WashingMachineScene",l + bigNumber % 5 + 1);
+            }
+            
+            /*
             if (bigNumber % 5==0)
             {
                 return new NextLevelData("Cards",bigNumber / 5 - 1);
@@ -58,6 +70,7 @@ namespace Classes
             {
                 return new NextLevelData("WashingMachineScene",l + bigNumber % 5 - 1);
             }
+            */
 
         }
         
