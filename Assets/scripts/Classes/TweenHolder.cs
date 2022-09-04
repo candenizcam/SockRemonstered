@@ -20,9 +20,9 @@ namespace Classes
             _tweens.Add(t);
         }
         
-        public void newTween(float totalTime, Action<float> tweenAction, int repeat = 1, List<string> tags = null )
+        public void newTween(float totalTime, Action<float> tweenAction, Action endAction = null, int repeat = 1, List<string> tags = null )
         {
-            var t = new Tween(totalTime, tweenAction,repeat, tags);
+            var t = new Tween(totalTime, tweenAction ,endAction: endAction ??= () => {},repeat:repeat, tags:tags);
             _tweens.Add(t);
             //_tweens.Add(t);
         }

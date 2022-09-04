@@ -11,13 +11,14 @@ public class FurnitureScript : MonoBehaviour
     public string ID;
     // Start is called before the first frame update
     [NonSerialized]
-    public bool ThereIsMonster=true;
+    public bool ThereIsMonster=false;
     void Awake()
     {
         
         try
         {
             YesMonster.enabled = false;
+            ThereIsMonster = true;
         }
         catch (UnassignedReferenceException e)
         {

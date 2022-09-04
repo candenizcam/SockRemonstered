@@ -21,7 +21,6 @@ public class MonsterPrefabScript : MonoBehaviour
     public void UpdateDress(string[] a)
     {
         _dressArray = a;
-        Debug.Log($"im updating {_dressArray[0]}, {_dressArray[1]}, {_dressArray[2]}, {_dressArray[3]}, {_dressArray[4]}");
         UpdateDress();
     }
     

@@ -164,7 +164,7 @@ public class CardsMain : MonoBehaviour
             sc.Resize(_mainCamera.Centres[r,c], _mainCamera.SingleScale);
             //s.transform.position = _mainCamera.Centres[r,c];
             //s.transform.localScale = _mainCamera.SingleScale;
-            _tweenHolder.newTween(0.6f, alpha =>
+            _tweenHolder.newTween(0.3f, alpha =>
             {
                 var v = (float)Math.Sin(2 * Math.PI * (1f-alpha))*15f*alpha;
                 var t = sc.gameObject.transform; 
@@ -340,20 +340,37 @@ public class CardsMain : MonoBehaviour
             {
                 
                 broker = true;
-                sockCardPrefabScript.SockVisible(true);
                 
-                
-                
-                
-                for (int i = 0; i < _selection.Length; i++)
+                _tweenHolder.newTween(0.5f, alpha =>
                 {
-                    if (_selection[i] == -1)
+                    var t = sockCardPrefabScript.gameObject.transform;
+                    var x = (float)Math.Sin(alpha * Math.PI)*90;
+                    t.rotation = Quaternion.Euler(t.eulerAngles.x,x,t.eulerAngles.z);
+                    
+                    if (alpha > 0.5f)
                     {
-                        _selection[i] = counter;
-                        
-                        break;
+                        if (!sockCardPrefabScript.sockVisible)
+                        {
+                            sockCardPrefabScript.SockVisible(true);
+                            
+                        }
                     }
-                }
+                    
+                    
+                    
+                    
+                },endAction: () =>
+                {
+                    for (int i = 0; i < _selection.Length; i++)
+                    {
+                        if (_selection[i] == -1)
+                        {
+                            _selection[i] = counter;
+                            break;
+                        }
+                    }
+                });
+                
 
                 
             }
@@ -488,11 +505,21 @@ public class CardsMain : MonoBehaviour
 
                         if (firstType.SelectedSockCard == secondType.SelectedSockCard)
                         {
-                            _timer.addEvent(0.4f, () =>
+                            _timer.addEvent(0.1f, () =>
                             {
-                                firstType.ToBeDestroyed = true;
-                                secondType.ToBeDestroyed = true;
+                                _tweenHolder.newTween(0.3f, alpha =>
+                                {
+                                    var v = -alpha * alpha + 1;
+                                    firstType.gameObject.transform.localScale = new Vector3(v,v,firstType.gameObject.transform.localScale.z);
+                                    secondType.gameObject.transform.localScale = new Vector3(v,v,secondType.gameObject.transform.localScale.z);
+                                }, endAction: () =>
+                                {
+                                    firstType.ToBeDestroyed = true;
+                                    secondType.ToBeDestroyed = true;
+                                });
                             });
+                            
+                            
                             endLoop = true;
                             break;
                         }
