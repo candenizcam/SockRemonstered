@@ -86,8 +86,6 @@ public class CardsMain : MonoBehaviour
         }
         else
         {
-            
-
             var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
 
             if (levelInfo.SceneName != "Cards")
