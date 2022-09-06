@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Classes;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace MatchDots
 {
@@ -11,6 +12,11 @@ namespace MatchDots
         public List<DotsPrefabScript> Selections => _selectionList;
 
 
+        public (int type, int amount) Score()
+        {
+            return (LineType(), _selectionList.Count);
+
+        }
         
         public bool IsLatestPick(DotsPrefabScript p)
         {
@@ -72,13 +78,22 @@ namespace MatchDots
             }
             else
             {
-                _selectionList.RemoveRange(i+1,_selectionList.Count-i-2);
+                foreach (var dotsPrefabScript in _selectionList)
+                {
+                    dotsPrefabScript.TweenEffect(1f);
+                }
+
+                _selectionList.RemoveRange(i+1,_selectionList.Count-i-1);
             }
             
         }
 
         public void Clear()
         {
+            foreach (var dotsPrefabScript in _selectionList)
+            {
+                dotsPrefabScript.TweenEffect(1f);
+            }
             _selectionList.Clear();
         }
 

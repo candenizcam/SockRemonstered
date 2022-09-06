@@ -78,9 +78,10 @@ public class DotsMain : MonoBehaviour
         
         _tweenHolder.newTween(0.3f, alpha =>
         {
+            var a = (float)Math.Sin(alpha * Math.PI * 2)*.2f;
             foreach (var selectionListSelection in _selectionList.Selections)
             {
-                selectionListSelection.TweenEffect(alpha*0.4f+0.8f);
+                selectionListSelection.TweenEffect(a+1f);
             }
         },repeat:-1);
 
@@ -375,6 +376,8 @@ public class DotsMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _tweenHolder.Update(Time.deltaTime);
+        
         if (_gameState == DotsGameState.StandBy)
         {
             
