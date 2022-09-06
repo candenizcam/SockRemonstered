@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Classes;
 using UnityEngine;
 
 public class DotsPrefabScript : MonoBehaviour
 {
     public List<SpriteRenderer> dotSprites;
 
-    public float width = 100f;
-    public float height = 100f;
-    
+    private float width = 1f;// in world coordinates
+    public float height = 1f; // in world coordinates
+    private float _hitboxCoeff = 0.8f;
+    private Rect _hitbox;
     
     public bool InTheRightPlace { get; set; } = false;
     public int Column { get; private set; } = -1;
@@ -16,7 +18,12 @@ public class DotsPrefabScript : MonoBehaviour
     public int Row{ get; private set; } = -1;
 
     public int DotType { get; private set; } = -1;
-    
+
+
+    public void TweenEffect(float scale)
+    {
+        
+    }
     
     public void setColumn(int c)
     {
@@ -28,21 +35,28 @@ public class DotsPrefabScript : MonoBehaviour
         Row = r;
     }
 
-    public void SetInfo(int? dt, float scaledSize, Vector2 gridCentre)
+    public void SetInfo(int? dt, float scaledSize, Rect gridRect)
     {
         
-        transform.position = new Vector3(gridCentre.x, gridCentre.y, -1f);
+        transform.position = new Vector3(gridRect.center.x, gridRect.center.y, -1f);
 
-        var coeffW = scaledSize / (width / 100f);
-        var coeffH = scaledSize / (height / 100f);
-        //t.SetDotType();
+        var coeffW = scaledSize / (width);
+        var coeffH = scaledSize / (height);
         transform.localScale = new Vector3(coeffW, coeffH, 1f);
         if (dt != null)
         {
             SetDotType((int)dt);
         }
-        
+
+        _hitbox = RectTools.ScaleByCentre(gridRect, _hitboxCoeff, _hitboxCoeff);
     }
+
+    public bool ContainsPoint(Vector2 p)
+    {
+        return _hitbox.Contains(p);
+    }
+    
+    
     
     
     public void SetDotType(int dt)

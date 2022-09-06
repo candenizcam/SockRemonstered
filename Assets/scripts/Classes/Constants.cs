@@ -41,18 +41,20 @@ namespace Classes
         public const int MaxHearts = 3;
         public const int BetweenHeartsTime = 60; // in secs
         public const float FurnitureChance = 0.1f;
+        public const bool MatchDiagonal = true;
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {
 
+            Debug.Log($"big number {bigNumber}");
             var l = (bigNumber / 10)*5;
             if (bigNumber % 10 >= 5)
             {
-                return new NextLevelData("Cards",l + bigNumber % 5 + 1);
+                return new NextLevelData("Cards",l + bigNumber % 5 -1);
             }
             else
             {
-                return new NextLevelData("WashingMachineScene",l + bigNumber % 5 + 1);
+                return new NextLevelData("WashingMachineScene",l + bigNumber % 5-1 );
             }
             
             /*

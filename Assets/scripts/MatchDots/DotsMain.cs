@@ -21,9 +21,12 @@ public class DotsMain : MonoBehaviour
     private int _rows;
     private int _cols;
     private List<DotsPrefabScript> _dotsList = new List<DotsPrefabScript>();
+    private SelectionList _selectionList = new SelectionList();
+    
     private DotGrid _dotGrid;
-    private DotsGameState _gameState = DotsGameState.StuffMoves;
+    private DotsGameState _gameState = DotsGameState.StandBy;
     private DotsLevelsInfo _dotsLevelsInfo;
+    
     
     void Awake()
     {
@@ -72,7 +75,13 @@ public class DotsMain : MonoBehaviour
 
         
         fillPhase();
+        
+        _tweenHolder.newTween(0.3f, alpha =>
+        {
+            
+        },repeat:-1);
 
+        /*
         var removeList = _dotsList.Where(x => x.DotType == 0);
 
         foreach (var dotsPrefabScript in removeList)
@@ -84,6 +93,7 @@ public class DotsMain : MonoBehaviour
         moveDown();
         
         fillPhase();
+        */
         
     }
 
@@ -120,11 +130,10 @@ public class DotsMain : MonoBehaviour
         {
             if (dotsPrefabScript.TargetRow != -1)
             {
-                Debug.Log("something");
                 dotsPrefabScript.setRow(dotsPrefabScript.TargetRow);
                 
                 var gridRect =  _mainCamera.GetGridRect(dotsPrefabScript.Row,dotsPrefabScript.Column);
-                dotsPrefabScript.SetInfo(null, _mainCamera.ScaledSingleSize,gridRect.center);
+                dotsPrefabScript.SetInfo(null, _mainCamera.ScaledSingleSize,gridRect);
                 dotsPrefabScript.TargetRow = -1;
             }
         }
@@ -141,7 +150,6 @@ public class DotsMain : MonoBehaviour
         {
             s += $"{i},";
         }
-        Debug.Log(s);
         fillGrid(cn);
     }
 
@@ -162,7 +170,7 @@ public class DotsMain : MonoBehaviour
                 var gridRect = _mainCamera.GetGridRect(r,j+1);
                 t.setRow(r);
                 t.setColumn(j+1);
-                t.SetInfo(_lineRandom.Next(0, _dotsLevelsInfo.DotTypes), _mainCamera.ScaledSingleSize,gridRect.center);
+                t.SetInfo(_lineRandom.Next(0, _dotsLevelsInfo.DotTypes), _mainCamera.ScaledSingleSize,gridRect);
                 t.gameObject.SetActive(true);
                 t.InTheRightPlace = true;
                 unstable.Remove(t);
@@ -186,16 +194,204 @@ public class DotsMain : MonoBehaviour
         return a;
     }
 
+
+    void TerminateTouch()
+    {
+        if (_selectionList.Selections.Count > 2)
+        {
+            foreach (var dotsPrefabScript in _selectionList.Selections)
+            {
+                dotsPrefabScript.InTheRightPlace = false;
+                dotsPrefabScript.gameObject.SetActive(false);
+            }
+            moveDown();
+        
+            fillPhase();
+        }
+        
+        
+        _selectionList.Clear();
+    }
+    
+    private void HandleTouch()
+    {
+        if (Input.touches.Length == 0)
+        {
+            return;
+        }
+        
+        var thisTurnEnders = Array
+            .FindAll(Input.touches, x => x.phase == TouchPhase.Ended).ToList();
+
+
+        Touch thisTouch;
+        try
+        {
+            thisTouch = Input.touches.First(x => x.phase != TouchPhase.Ended);
+        }
+        catch (InvalidOperationException)
+        {
+            TerminateTouch();
+            return;
+        }
+
+
+        var touchWp = _mainCamera.Camera.ScreenToWorldPoint(thisTouch.position);
+        var p = _mainCamera.WorldToGridPos(touchWp);
+
+        if (p.r == -1)
+        {
+            return;
+        }
+        
+        var thisDot = _dotsList.Find(x => x.Row == p.r && x.Column == p.c);
+
+        if (_selectionList.IsLatestPick(thisDot))
+        {
+            return;
+        }
+
+        
+        if(!thisDot.ContainsPoint(touchWp))
+        {
+            return;
+        }
+
+        var lineType = _selectionList.LineType();
+
+        if (lineType == -1)
+        {
+            _selectionList.AddDot(thisDot);
+        }
+        else
+        {
+            if (lineType == thisDot.DotType)
+            {
+                if (_selectionList.IsAdjacent(thisDot) || _selectionList.ListContains(thisDot))
+                {
+                    _selectionList.AddDot(thisDot);
+                }
+            }
+        }
+        
+        //if (_selectionList.LineType() == thisDot.DotType || _selectionList.LineType() == -1)
+        //{
+            
+        //}
+        
+        
+        
+        
+        
+        
+        
+        
+
+        //var thisTurTouches = Array
+        //    .FindAll(Input.touches, x => x.phase == TouchPhase.Moved).ToList();
+
+        //var movingTouch = thisTurTouches[0];
+
+
+
+
+
+        //var firstTouch = thisTurnTouches[0];
+
+
+        //var worldPoint = _mainCamera.Camera.ScreenToWorldPoint(firstTouch.position);
+
+
+
+        /*
+        var counter = -1;
+        var broker = false;
+        foreach (var sockCardPrefabScript in _sockCardPrefabs)
+        {
+            counter += 1;
+            if(sockCardPrefabScript.sockVisible) continue;
+            
+
+            if (sockCardPrefabScript.Collides(worldPoint))
+            {
+                
+                broker = true;
+                
+                _tweenHolder.newTween(0.5f, alpha =>
+                {
+                    var t = sockCardPrefabScript.gameObject.transform;
+                    var x = (float)Math.Sin(alpha * Math.PI)*90;
+                    t.rotation = Quaternion.Euler(t.eulerAngles.x,x,t.eulerAngles.z);
+                    
+                    if (alpha > 0.5f)
+                    {
+                        if (!sockCardPrefabScript.sockVisible)
+                        {
+                            sockCardPrefabScript.SockVisible(true);
+                            
+                        }
+                    }
+                    
+                    
+                    
+                    
+                },endAction: () =>
+                {
+                    sockCardPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    for (int i = 0; i < _selection.Length; i++)
+                    {
+                        if (_selection[i] == -1)
+                        {
+                            _selection[i] = counter;
+                            break;
+                        }
+                    }
+                });
+                
+
+                
+            }
+            if (broker)
+            {
+                break;
+            }
+            
+            
+        }
+        */
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     // Update is called once per frame
     void Update()
     {
-        
+        if (_gameState == DotsGameState.StandBy)
+        {
+            
+            if (_dotsList.All(x => x.InTheRightPlace))
+            {
+                _gameState = DotsGameState.Game;
+            }
+            
+            
+            
+        }else if (_gameState == DotsGameState.Game)
+        {
+            HandleTouch();
+        }
     }
 
 
 
     enum DotsGameState
     {
-        Loading, Game, StuffMoves, GameLost, GameWon 
+        Loading, Game, StuffMoves, StandBy, GameLost, GameWon 
     };
 }

@@ -86,11 +86,7 @@ public static class Tools
             g.position = MutateVector3(g.position, p.x+x, p.y+y, p.z+z);
         }
 
-        public static Color MutateColour(Color c, float? r = null, float? g= null, float? b = null, float? a= null)
-        {
-            return new Color(r ??= c.r, g ??= c.g, b ??= c.b, a ??= c.a);
-
-        }
+        
 
         
         
@@ -121,29 +117,7 @@ public static class Tools
             return lineDistanceToPoint(lineOther - lineBase, point - lineBase);
         }
 
-        public static Color Vector3ToColour(Vector3 v)
-        {
-            return new Color(v.x, v.y, v.z);
-        }
         
-        public static Vector3 ColourToVector3(Color c)
-        {
-            return new Vector3(c.r,c.g,c.b);
-        }
-
-        public static string ColourToHex(Color c)
-        {
-            var s = "#";
-            float[] iter = {c.r, c.g, c.b};
-            foreach (var VARIABLE in iter  )
-            {
-                s += ((int) (VARIABLE * 255)).ToString("x");
-            }
-
-
-            //$"{}"c.r*255
-            return s;
-        }
         
         
         public static float[] CalcParabolaVertex(float x1, float y1, float x2, float y2, float x3, float y3)

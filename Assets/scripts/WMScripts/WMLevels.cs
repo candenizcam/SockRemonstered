@@ -15,6 +15,15 @@ namespace WashingMachine.WMScripts
                 {
                     new WMSockInfo(0,0,1,10),
                     new WMSockInfo(3,0,1,20),
+                    new WMSockInfo(0,0,0,10),
+                    new WMSockInfo(3,0,0,20),
+                }),
+            
+            new WMLevelInfo(1f,2f,-1, 5,
+                new WMSockInfo[]
+                {
+                    new WMSockInfo(0,0,1,10),
+                    new WMSockInfo(3,0,1,20),
                     new WMSockInfo(0,0,1,10),
                     new WMSockInfo(3,0,1,20),
                 }),

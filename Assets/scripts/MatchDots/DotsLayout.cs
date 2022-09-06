@@ -51,5 +51,25 @@ namespace MatchDots
         {
             return _smallRects[r-1, c-1];
         }
+
+        public (int r, int c) WorldToGridPos(float x, float y)
+        {
+            if (!_field.Contains(new Vector2(x, y))) return (-1, -1);
+            var c = (x - _field.xMin) / ScaledSingleSize + 1;
+            var r = (_field.yMax - y) / ScaledSingleSize + 1;
+            return ((int)r, (int)c);
+
+        }
+        
+        public (int r, int c) WorldToGridPos(Vector2 q)
+        {
+            return WorldToGridPos(q.x, q.y);
+
+        }
+        
+        public (int r, int c) ScreenToGridPos(Vector2 q)
+        {
+            return WorldToGridPos(Camera.ScreenToWorldPoint(q));
+        }
     }
 }
