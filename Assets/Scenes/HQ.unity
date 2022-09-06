@@ -478,10 +478,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 466974981653054063, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -9
-      objectReference: {fileID: 0}
     - target: {fileID: 2629965236110315734, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
       propertyPath: m_Name
       value: MonsterPrefab
@@ -532,7 +528,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9034834565797904201, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2
+      value: -1.14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
