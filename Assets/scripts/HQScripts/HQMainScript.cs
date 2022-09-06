@@ -72,6 +72,12 @@ public class HQMainScript : MonoBehaviour
             _shop.AddToVisualElement(_uiDocument.rootVisualElement);
         };
 
+        _hqHud.AchiButtonAction = () =>
+        {
+            SerialGameData.ResetSaves();
+            UpdateStuff();
+        };
+
 
         _shop.BgButtonAction = () =>
         {
