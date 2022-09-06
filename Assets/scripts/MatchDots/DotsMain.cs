@@ -203,14 +203,22 @@ public class DotsMain : MonoBehaviour
     {
         if (_selectionList.Selections.Count > 2)
         {
+            _dotsScoreboard.AddToRemoved(_selectionList.getTypes());
+            
             foreach (var dotsPrefabScript in _selectionList.Selections)
             {
+                
                 dotsPrefabScript.InTheRightPlace = false;
                 dotsPrefabScript.gameObject.SetActive(false);
+                
             }
+            
+            
             moveDown();
         
             fillPhase();
+            
+            
         }
         
         
@@ -241,6 +249,11 @@ public class DotsMain : MonoBehaviour
 
 
         var touchWp = _mainCamera.Camera.ScreenToWorldPoint(thisTouch.position);
+
+        
+        
+        _selectionList.SetDragTip(touchWp, _mainCamera.Scale);
+        
         var p = _mainCamera.WorldToGridPos(touchWp);
 
         if (p.r == -1)
@@ -266,6 +279,7 @@ public class DotsMain : MonoBehaviour
         if (lineType == -1)
         {
             _selectionList.AddDot(thisDot);
+            _selectionList.SetDragChain( _mainCamera.Scale);
         }
         else
         {
@@ -274,6 +288,7 @@ public class DotsMain : MonoBehaviour
                 if (_selectionList.IsAdjacent(thisDot) || _selectionList.ListContains(thisDot))
                 {
                     _selectionList.AddDot(thisDot);
+                    _selectionList.SetDragChain( _mainCamera.Scale);
                 }
             }
         }
