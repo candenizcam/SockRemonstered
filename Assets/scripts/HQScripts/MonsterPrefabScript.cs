@@ -11,6 +11,7 @@ public class MonsterPrefabScript : MonoBehaviour
 
     private string[] _dressArray =   {"Body_Raw","LArm_Raw","RArm_Raw","LLeg_Raw","RLeg_Raw" };
     
+    // Back Body, Arms, Scarf, Horns, Face, Hands
     // Start is called before the first frame update
     void Awake()
     {

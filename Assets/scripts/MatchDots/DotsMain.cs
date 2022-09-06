@@ -22,7 +22,7 @@ public class DotsMain : MonoBehaviour
     private int _cols;
     private List<DotsPrefabScript> _dotsList = new List<DotsPrefabScript>();
     private SelectionList _selectionList = new SelectionList();
-    
+    private DotsScoreboard _dotsScoreboard;
     private DotGrid _dotGrid;
     private DotsGameState _gameState = DotsGameState.StandBy;
     private DotsLevelsInfo _dotsLevelsInfo;
@@ -55,7 +55,7 @@ public class DotsMain : MonoBehaviour
         _cols = thisLevel.Cols;
         _dotsLevelsInfo = thisLevel;
         _lineRandom = new System.Random(thisLevel.Seeds[0]);
-        
+        _dotsScoreboard = new DotsScoreboard(thisLevel);
         _uiDocument = gameObject.GetComponent<UIDocument>();
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;

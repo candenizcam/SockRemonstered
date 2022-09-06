@@ -34,8 +34,8 @@ namespace Classes
             bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
             bg.style.position = Position.Absolute;
             
-            bg.style.left = (Screen.width - bg.sprite.rect.width) * 0.5f;
-            bg.style.top = (Screen.height - bg.sprite.rect.height) * 0.5f;
+            bg.style.left = (Screen.width - bg.sprite.rect.width) * 0.5f*scale;
+            bg.style.top = (Screen.height - bg.sprite.rect.height) * 0.5f*scale;
             bg.style.width = bg.sprite.rect.width*scale;
             bg.style.height = bg.sprite.rect.height*scale;
             bg.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
