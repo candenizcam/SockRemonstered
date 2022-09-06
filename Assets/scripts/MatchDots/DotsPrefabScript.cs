@@ -22,7 +22,7 @@ public class DotsPrefabScript : MonoBehaviour
 
     public void TweenEffect(float scale)
     {
-        
+        dotSprites[DotType].gameObject.transform.localScale = new Vector3(scale, scale, 1f);
     }
     
     public void setColumn(int c)

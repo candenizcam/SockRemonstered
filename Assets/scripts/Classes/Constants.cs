@@ -47,8 +47,20 @@ namespace Classes
         {
 
             Debug.Log($"big number {bigNumber}");
+
+            var v = bigNumber - 1;
+            var l = (v / 10)*5;
+            if (v % 10 >= 5)
+            {
+                return new NextLevelData("Cards",l + v % 5 );
+            }
+            else
+            {
+                return new NextLevelData("WashingMachineScene",l + v % 5 );
+            }
+            /*
             var l = (bigNumber / 10)*5;
-            if (bigNumber % 10 >= 5)
+            if ((bigNumber-1) % 10 >= 5)
             {
                 return new NextLevelData("Cards",l + bigNumber % 5 -1);
             }
@@ -56,7 +68,7 @@ namespace Classes
             {
                 return new NextLevelData("WashingMachineScene",l + bigNumber % 5-1 );
             }
-            
+            */
             /*
             if (bigNumber % 5==0)
             {

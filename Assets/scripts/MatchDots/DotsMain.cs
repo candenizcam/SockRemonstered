@@ -78,7 +78,10 @@ public class DotsMain : MonoBehaviour
         
         _tweenHolder.newTween(0.3f, alpha =>
         {
-            
+            foreach (var selectionListSelection in _selectionList.Selections)
+            {
+                selectionListSelection.TweenEffect(alpha*0.4f+0.8f);
+            }
         },repeat:-1);
 
         /*
