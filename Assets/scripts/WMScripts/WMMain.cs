@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Classes;
 using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using WashingMachine.WMScripts;
+using Object = System.Object;
 
 public class WMMain : MonoBehaviour
 {
@@ -36,8 +36,11 @@ public class WMMain : MonoBehaviour
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
-    private int gameState = 0; //0 runs, 1 pause, 2 lost, 3 won
-
+    private int gameState = -1; //-1 initialize, 0 runs, 1 pause, 2 lost, 3 won
+    private Timer _timer;
+    private float firstStop = 1f;
+    private List<GameObject> _starters = new List<GameObject>();
+    
     public int MoveNo
     {
         get
@@ -72,6 +75,16 @@ public class WMMain : MonoBehaviour
     {
 
         
+        _timer = new Timer();
+        _timer.addEvent(firstStop, () =>
+        {
+            gameState = 0;
+            foreach (var starter in _starters)
+            {
+                
+                Destroy(starter);
+            }
+        });
         var sgd = SerialGameData.LoadOrGenerate();
 
         var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
@@ -179,6 +192,21 @@ public class WMMain : MonoBehaviour
         sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
         
+        var step = 1f/thisLevel.WmSockInfos.Length;
+        
+        thisLevel.InitializeLevel(also: (x,a) =>
+        {
+            var b= Instantiate(a);
+            b.transform.position = new Vector3(mainCamera.vp2wWidth(step*x*.5f), 0f, x);
+            b.transform.localScale = new Vector3(4f, 4f, 1f);
+            b.transform.rotation = Quaternion.Euler(0f,0f, step*x*360f);
+            _starters.Add(b);
+        });
+        
+        
+
+        //thisLevel.WmSockInfos
+        //_sockResources = new List<GameObject>();
 
         //var a = new string[thisLevel.WmSockInfos.Length];
 
@@ -194,6 +222,7 @@ public class WMMain : MonoBehaviour
         //public float SockSpawnTime;
         //public float WheelSpeed;
         //public int MaxSock;
+        
     }
 
     
@@ -331,15 +360,33 @@ public class WMMain : MonoBehaviour
         }
         
         _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
+        
     }
-    
-    
+
+
+    private void FixedUpdate()
+    {
+        if (gameState == 0)
+        {
+
+
+            Tools.TranslatePosition(wheel, y: -Time.deltaTime * _wheelSpeed);
+            if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
+            {
+                Tools.MutatePosition(wheel, y: wheel.transform.position.y + _baseWheelHeight);
+            }
+            
+            
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
         _betweenLevels.Update();
         _quickSettings.Update();
         _wmHud.Update();
+        _timer.Update(Time.deltaTime);
         
         if (MoveNo <= 0 && gameState==0)
         {
@@ -377,30 +424,42 @@ public class WMMain : MonoBehaviour
         }
         else if(gameState==0)
         {
+
+            /*
+
+            display += $"{Time.deltaTime*_wheelSpeed:0.000}, ";
             Tools.TranslatePosition(wheel,y: -Time.deltaTime*_wheelSpeed );
             if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
             {
                 Tools.MutatePosition(wheel,y: wheel.transform.position.y+_baseWheelHeight);
             }
-
+            
+            */
+            
+            
+            var i = 0;
+            
             sockSpawnTimer += Time.deltaTime;
             if (sockSpawnTimer > sockSpawnTime)
             {
                 sockSpawnTimer %= sockSpawnTime;
                 if (_maxSock <= 0 || _activeSocks.Count < _maxSock)
                 {
+                    i += 1;
                     var x =(float)_random.NextDouble() * 0.8f+ .1f;
-                    _activeSocks.Add(generateSock(new Vector2(x: x, y: mainCamera.playfieldTop)));
+                    _activeSocks.Add(generateSock(new Vector2(x: x, y: mainCamera.playfieldTop*1.1f)));
                     ArrangeActiveSocks();
                 }
             }
         
+            
             foreach (var sockPrefabScript in _activeSocks)
             {
                 sockPrefabScript.MoveDownTime();
                 var p = mainCamera.Camera.WorldToViewportPoint(sockPrefabScript.gameObject.transform.position);
                 if (p.y <  0f)//mainCamera.playfieldBottom)
                 {
+                    i += 10;
                     sockPrefabScript.Kill(instantly:true);
                 }
             }
@@ -408,16 +467,30 @@ public class WMMain : MonoBehaviour
             HandleTouch();
             foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
             {
+                i += 100;
                 Destroy(sockPrefabScript.gameObject);
             }
             
             
             _activeSocks.RemoveAll(x => x.ToBeDestroyed);
             ArrangeActiveSocks();
+
+
         }
-        else
+        else if(gameState==-1)
         {
-            
+            //Debug.Log("-1");
+            //gameState = 0;
+
+            for (var i = 0; i < _starters.Count; i++)
+            {
+                //var d = _random.NextDouble() * 6.28;
+                //Math.Cos(d)
+                var a = (6.28f*i)/_starters.Count;
+                var t = _starters[i].transform;
+                Tools.TranslatePosition(t, x: 25f*(float)Math.Cos(a)*Time.deltaTime,y: 25f*(float)Math.Sin(a)*Time.deltaTime );
+                t.rotation = Quaternion.Euler(t.rotation.eulerAngles.x, t.rotation.eulerAngles.y, t.rotation.eulerAngles.z+360f*Time.deltaTime);
+            }
         }
         
         
@@ -433,9 +506,8 @@ public class WMMain : MonoBehaviour
         
         // WmSockTypeLookup
         var s = WMLevels.WmLevelInfos[levelIndex].GetRandomSock(_random.NextDouble());
-        
-            
-        var bsp = Instantiate(Resources.Load(WMLevels.WmSockTypeLookup[s.SockType]));
+        //var r = Resources.Load(WMLevels.WmSockTypeLookup[s.SockType]);
+        var bsp = Instantiate(s.Resource());
         var sps = bsp.GetComponent <SockPrefabScript> ();
         sps.ChangeSprite(s.SockNo);
         
@@ -447,7 +519,6 @@ public class WMMain : MonoBehaviour
 
         sps.no = s.SockNo;
         sps.style = s.SockType;
-        
         
         return sps;
     }

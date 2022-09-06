@@ -13,6 +13,8 @@ namespace Classes
         protected float _unsafeTop;
         protected float _unsafeBottom;
 
+        public float UnsafeBottom => _unsafeBottom;
+        
         protected float _safeHeight;
         protected float _safeWidth;
 

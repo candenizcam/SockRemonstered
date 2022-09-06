@@ -14,6 +14,27 @@ namespace Classes
         }
 
 
+        public float screen2wpWidth(float w)
+        {
+            var x2 = Camera.ScreenToWorldPoint(new Vector3(w, 0f, 0f)).x;
+            var x1 = Camera.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)).x;
+            
+            return x2-x1;
+            
+            
+            
+        }
+        
+        public float vp2wWidth(float w)
+        {
+            return Camera.ViewportToWorldPoint(new Vector3(w, 0f, 0f)).x;
+        }
+        
+        public float vp2wHeight(float h)
+        {
+            return Camera.ViewportToWorldPoint(new Vector3(0f, h, 0f)).y;
+        }
+        
         public float vp2screenWidth(float w)
         {
             return Camera.ViewportToScreenPoint(new Vector3(w, 0f, 0f)).x;
