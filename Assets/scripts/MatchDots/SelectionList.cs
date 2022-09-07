@@ -92,8 +92,10 @@ namespace MatchDots
             }
             foreach (var dotsPrefabScript in _selectionList)
             {
+                dotsPrefabScript.SqueezeDragBar();
                 dotsPrefabScript.HitBlob.gameObject.SetActive(true);
                 dotsPrefabScript.DragBar.gameObject.SetActive(true);
+                //dotsPrefabScript.DragBar.gameObject.transform.localScale
             }
             
         }

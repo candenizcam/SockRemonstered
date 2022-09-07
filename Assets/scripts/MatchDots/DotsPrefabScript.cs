@@ -10,6 +10,7 @@ public class DotsPrefabScript : MonoBehaviour
     public List<SpriteRenderer> dotSprites;
     public SpriteRenderer HitBlob;
     public SpriteRenderer DragBar;
+    
     private float width = 1f;// in world coordinates
     public float height = 1f; // in world coordinates
     private float _hitboxCoeff = 0.8f;
@@ -66,6 +67,12 @@ public class DotsPrefabScript : MonoBehaviour
     public bool ContainsPoint(Vector2 p)
     {
         return _hitbox.Contains(p);
+    }
+
+    public void SqueezeDragBar()
+    {
+        var dgt = DragBar.gameObject.transform;
+        dgt.localScale = new Vector3(.01f, dgt.localScale.y, dgt.localScale.z);
     }
 
     public void MoveDragBar(Vector2 target, float scale)

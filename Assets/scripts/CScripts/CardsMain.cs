@@ -9,33 +9,31 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-public class CardsMain : MonoBehaviour
+public class CardsMain : GameMain
 {
     public SpriteRenderer bg;
     public SpriteRenderer topWater;
     public SpriteRenderer bottomWater;
     public int LevelNo=-1;
 
-    private TweenHolder _tweenHolder;
-    private System.Random _random;
+    
     private CardLayout _mainCamera;
     private int _levelNo;
-    private CardHud _cardHud;
+    
+    private CardHud _cardHud => (CardHud)_gameHud;
     private int _columns;
     private int _rows;
-    private UIDocument _uiDocument;
+    
     private UnityEngine.Object _sockCardPrefab;
     private List<SockCardPrefabScript> _sockCardPrefabs = new List<SockCardPrefabScript>();
     private int[] _selection;
 
-    private Timer _timer;
+    
     private bool _touchActive = true;
     //private bool _gameDone = false;
     private int moves = 10;
-    private int gameState = 0; //0 runs, 1 pause, 2 lost, 3 won
+    //private int gameState = 0; //0 runs, 1 pause, 2 lost, 3 won
     
-    private BetweenLevels _betweenLevels;
-    private QuickSettings _quickSettings;
     
     
     public int MoveNo
@@ -79,6 +77,8 @@ public class CardsMain : MonoBehaviour
     
     void Awake()
     {
+        _gameState = GameState.Game;
+        
         var sgd = SerialGameData.LoadOrGenerate();
         if (LevelNo > 0)
         {
@@ -96,25 +96,25 @@ public class CardsMain : MonoBehaviour
             _levelNo = levelInfo.LevelNo;
         }
 
-        _tweenHolder = new TweenHolder();
-        _random = new System.Random();
+        
         var thisLevel = CardLevels.CardLevelInfos[_levelNo];
             
         _rows = thisLevel.Row;
         _columns = thisLevel.Column;
-
-        _uiDocument = gameObject.GetComponent<UIDocument>();
-        _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
-        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-        
-        
         _mainCamera = new CardLayout(Camera.main, _rows, _columns);
+        InitializeMisc();
+        
+        
+        InitializeUi<CardHud>(_mainCamera);
+        
+        
+        
+        
         _selection = new int[] {-1,-1};
-        _timer = new Timer();
+        
 
         var littleS = _mainCamera.playfieldRect().width / bg.sprite.rect.width*100f;
         bg.gameObject.transform.localScale = new Vector3(littleS, littleS, 1f);
-        
         _sockCardPrefab = Resources.Load("prefabs/SockCardPrefab");
         var ssp1 = _sockCardPrefab.GetComponent<SockCardPrefabScript>();
 
@@ -146,6 +146,7 @@ public class CardsMain : MonoBehaviour
         
         
         
+        
 
         var v = (float)_random.NextDouble();
         var v2 = (float)_random.NextDouble();
@@ -162,11 +163,15 @@ public class CardsMain : MonoBehaviour
             sc.Resize(_mainCamera.Centres[r,c], _mainCamera.SingleScale);
             //s.transform.position = _mainCamera.Centres[r,c];
             //s.transform.localScale = _mainCamera.SingleScale;
-            _tweenHolder.newTween(0.3f, alpha =>
+            _tweenHolder.newTween(0.5f, alpha =>
             {
                 var v = (float)Math.Sin(2 * Math.PI * (1f-alpha))*15f*alpha;
                 var t = sc.gameObject.transform; 
                 t.rotation = Quaternion.Euler(t.rotation.eulerAngles.x,t.rotation.eulerAngles.y,v);
+            },endAction: () =>
+            {
+                var t = sc.gameObject.transform; 
+                t.rotation = Quaternion.Euler(t.rotation.eulerAngles.x,t.rotation.eulerAngles.y,0);
             });
             _sockCardPrefabs.Add(sc);
         }
@@ -180,89 +185,13 @@ public class CardsMain : MonoBehaviour
 
         topWater.gameObject.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
         bottomWater.gameObject.transform.position = new Vector3(left + bw.x / 2f, pfr.yMin - bw.y / 2f, 0f);
-
         
-        _cardHud = new CardHud(_mainCamera);
-        _cardHud.AddToVisualElement(_uiDocument.rootVisualElement);
-        _cardHud.SettingsButtonAction = () =>
-        {
-            gameState = 1;
-        };
-
+        
+        
         MoveNo = thisLevel.Moves;
-        
-        _betweenLevels = new BetweenLevels(_mainCamera);
-        _betweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
-        _betweenLevels.setVisible(false);
-        _betweenLevels.OnCross = () =>
-        {
-            ToHQ();
-        };
-        _betweenLevels.OnBigButton = () =>
-        {
-        };
-
 
         
-        _quickSettings = new QuickSettings(_mainCamera, sgd.sound, sgd.music);
-        _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
-        _quickSettings.setVisible(false);
-        _quickSettings.SettingsButtonAction = () =>
-        {
-            _quickSettings.setVisible(false);
-            gameState = 0;
-        };
-
-        _quickSettings.MusicButtonAction = (bool b) =>
-        {
-            Debug.Log("music cancelled");
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.music = b ? 0 : 1;
-            sgd.Save();
-        };
         
-        _quickSettings.SoundButtonAction = (bool b) =>
-        {
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.sound = b ? 0 : 1;
-            sgd.Save();
-        };
-        _quickSettings.ReturnButtonAction = () =>
-        {
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.changeHearts(-1);
-            sgd.Save();
-            ToHQ();
-        };
-
-        //var r = new Range(0, ssp1.socks.Count);
-
-
-
-
-
-
-        /*
-        var f = (_rows * _columns) / ssp1.socks.Count/2f;
-        
-        var cardTypes = new List<int>();
-
-        for (int i = 0; i < f; i++)
-        {
-            var r = new List<int>();
-            for (int j = 0; j < ssp1.socks.Count; j++)
-            {
-                r.Add(j);
-            }
-            var m = r.OrderBy(_ => _random.Next()).ToList();
-            cardTypes.AddRange(m);
-            
-        }
-        */
-
-
-        // Debug.Log($"ssp1: {cardTypes.Count*2}");
-
     }
 
 
@@ -381,40 +310,20 @@ public class CardsMain : MonoBehaviour
             
         }
         
+        /*
+         void QuickSettings
+         */
     }
     
     
-    private void ToHQ()
+    protected override void QuickSettingsButtonFunction()
     {
-        SceneManager.LoadScene("HQ", LoadSceneMode.Single);
-    }
-    
-    private void Restart()
-    {
-        var sgd = SerialGameData.LoadOrGenerate();
-        var nl = Constants.GetNextLevel(sgd.nextLevel);
-        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
-    }
-    
-    private void NextLevel()
-    {
-        var sgd = SerialGameData.LoadOrGenerate();
-        
-        var nl = Constants.GetNextLevel(sgd.nextLevel);
-        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+        _quickSettings.setVisible(false);
+        _gameState = GameState.Game;
     }
     
     
-    private string getBigText()
-    {
-        return $"Level {_levelNo+1}";
-    }
     
-    private string getSmallText(bool levelWon)
-    {
-
-        return levelWon ? "Yarn-tastic!" : "Level failed!";
-    }
 
     private (int number, string text)  getLevelPoints()
     {
@@ -427,7 +336,7 @@ public class CardsMain : MonoBehaviour
         var buttonText = "NEXT";
         if (won)
         {
-            gameState = 3;
+            _gameState = GameState.Won;
             var sgd = SerialGameData.LoadOrGenerate();
             sgd.nextLevel += 1;
             sgd.coins += lp.number;
@@ -440,7 +349,7 @@ public class CardsMain : MonoBehaviour
         }
         else
         {
-            gameState = 2;
+            _gameState = GameState.Lost;
             var sgd = SerialGameData.LoadOrGenerate();
             if (sgd.changeHearts(-1) > 0)
             {
@@ -474,19 +383,19 @@ public class CardsMain : MonoBehaviour
         _cardHud.Update();
         _betweenLevels.Update();
         _quickSettings.Update();
-        _tweenHolder.Update(0.02f);
+        _tweenHolder.Update(Time.deltaTime);
 
-        if (gameState==0)
+        if (_gameState==GameState.Game)
         {
             if (_sockCardPrefabs.Count == 0)
             {
-                gameState = 3;
+                _gameState = GameState.Won;
                 levelDone(true);
             }
 
             if (MoveNo <= 0)
             {
-                gameState = 2;
+                _gameState = GameState.Lost;
                 levelDone(false);
             }
             
@@ -562,7 +471,7 @@ public class CardsMain : MonoBehaviour
                 }
             }
             _sockCardPrefabs.RemoveAll(x => x.ToBeDestroyed);
-        }else if (gameState==1)
+        }else if (_gameState == GameState.Settings)
         {
             if (!_quickSettings.Active)
             {

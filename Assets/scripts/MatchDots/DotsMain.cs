@@ -8,28 +8,31 @@ using MatchDots;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class DotsMain : MonoBehaviour
+public class DotsMain : GameMain
 {
+    public SpriteRenderer bg;
+    //public SpriteRenderer BottomFrame;
+    public SpriteRenderer topFrame;
+    public SpriteRenderer sockBg;
     // Start is called before the first frame update
     public int LevelNo;
     private int _levelNo;
-    private TweenHolder _tweenHolder;
-    private System.Random _random;
     private System.Random _lineRandom;
     private DotsLayout _mainCamera;
-    private UIDocument _uiDocument;
     private int _rows;
     private int _cols;
+    
     private List<DotsPrefabScript> _dotsList = new List<DotsPrefabScript>();
     private SelectionList _selectionList = new SelectionList();
     private DotsScoreboard _dotsScoreboard;
     private DotGrid _dotGrid;
-    private DotsGameState _gameState = DotsGameState.StandBy;
+    //private DotsGameState _gameState = DotsGameState.StandBy;
     private DotsLevelsInfo _dotsLevelsInfo;
-    
+    private DotsHud _dotsHud => (DotsHud)_gameHud;
     
     void Awake()
     {
+        _gameState = GameState.Standby;
         var sgd = SerialGameData.LoadOrGenerate();
         if (LevelNo > 0)
         {
@@ -56,14 +59,15 @@ public class DotsMain : MonoBehaviour
         _dotsLevelsInfo = thisLevel;
         _lineRandom = new System.Random(thisLevel.Seeds[0]);
         _dotsScoreboard = new DotsScoreboard(thisLevel);
-        _uiDocument = gameObject.GetComponent<UIDocument>();
-        _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
-        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
         
-        
+        //Screen.
         _mainCamera = new DotsLayout(Camera.main, _rows, _cols);
+        InitializeMisc();
+        
+        
         _dotGrid = new DotGrid(thisLevel);
 
+        
 
         var r = Resources.Load<GameObject>("prefabs/DotsPrefab");
         var amn = _dotGrid.ActiveMemberNo();
@@ -85,22 +89,44 @@ public class DotsMain : MonoBehaviour
             }
         },repeat:-1);
 
-        /*
-        var removeList = _dotsList.Where(x => x.DotType == 0);
 
-        foreach (var dotsPrefabScript in removeList)
-        {
-            dotsPrefabScript.InTheRightPlace = false;
-            dotsPrefabScript.gameObject.SetActive(false);
-        }
-
-        moveDown();
+        InitializeUi<DotsHud>(_mainCamera);
         
-        fillPhase();
-        */
+        //_dotsScoreboard.MoveCounter
+        
+        //_dotsHud.updateInfo($"{_levelMoves}",MonsterMood.Happy);
+        var hi = _dotsScoreboard.GetHudInfo();
+        _dotsHud.updateInfo(hi.movesLeft,hi.mood);
+        
+        var w = _mainCamera.Camera.orthographicSize*_mainCamera.Camera.aspect*2f;
+        
+        var littleS = w / (bg.bounds.size.x-.5f);
+        
+        bg.gameObject.transform.localScale = new Vector3(littleS, littleS, 1f);
+        
+        var pfr = _mainCamera.playfieldRect();
+        var left = pfr.xMin;
+        var bottom = pfr.yMax;
+        var tw = topFrame.size;
+        topFrame.gameObject.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
+        
+        var littleSs = w / (sockBg.bounds.size.x-.2f);
+        sockBg.gameObject.transform.localScale = new Vector3(littleSs, littleSs, 1f);
+        
+        
+        
+        
+        _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+        
         
     }
 
+    protected override void QuickSettingsButtonFunction()
+    {
+        _quickSettings.setVisible(false);
+        _gameState = GameState.Game;
+    }
+    
     void moveDown()
     {
         var realDots = _dotsList.Where(x => x.InTheRightPlace);
@@ -201,6 +227,7 @@ public class DotsMain : MonoBehaviour
 
     void TerminateTouch()
     {
+        //_movesLeft -= 1;
         if (_selectionList.Selections.Count > 2)
         {
             _dotsScoreboard.AddToRemoved(_selectionList.getTypes());
@@ -217,7 +244,9 @@ public class DotsMain : MonoBehaviour
             moveDown();
         
             fillPhase();
-            
+            _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+            var hi = _dotsScoreboard.GetHudInfo();
+            _dotsHud.updateInfo(hi.movesLeft,hi.mood);
             
         }
         
@@ -384,35 +413,110 @@ public class DotsMain : MonoBehaviour
     
     
     
+    void UpdateEngine()
+    {
+        _tweenHolder.Update(Time.deltaTime);
+        _dotsHud.Update();
+    }
     
     
+    
+    
+    
+    private void levelDone(bool won)
+    {
+        var lp = _dotsScoreboard.GetLevelPoints();
+        var buttonText = "NEXT";
+        if (won)
+        {
+            _gameState = GameState.Won;
+            var sgd = SerialGameData.LoadOrGenerate();
+            sgd.nextLevel += 1;
+            sgd.coins += lp.number;
+            sgd.Save();
+            _betweenLevels.OnBigButton = () =>
+            {
+                NextLevel();
+
+            };
+        }
+        else
+        {
+            _gameState = GameState.Lost;
+            var sgd = SerialGameData.LoadOrGenerate();
+            if (sgd.changeHearts(-1) > 0)
+            {
+                buttonText = "RETRY";
+                _betweenLevels.OnBigButton = () =>
+                {
+                    Restart();
+                };
+            }
+            else
+            {
+                buttonText = "RETURN";
+                _betweenLevels.OnBigButton = () =>
+                {
+                    ToHQ();
+                };
+            }
+            
+            sgd.Save();
+            
+        }
+        
+        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
+    }
     
     
     // Update is called once per frame
     void Update()
     {
-        _tweenHolder.Update(Time.deltaTime);
+        UpdateEngine();
         
-        if (_gameState == DotsGameState.StandBy)
+        
+        if (_gameState == GameState.Game)
         {
-            
-            if (_dotsList.All(x => x.InTheRightPlace))
+            HandleTouch();
+
+            if (_dotsScoreboard.GameWon())
             {
-                _gameState = DotsGameState.Game;
+                _gameState = GameState.Won;
+                levelDone(true);
+            }else if (_dotsScoreboard.GameLost())
+            {
+                _gameState = GameState.Lost;
+                levelDone(false);
             }
             
             
-            
-        }else if (_gameState == DotsGameState.Game)
+        }else if (_gameState == GameState.Settings)
         {
-            HandleTouch();
+            if (!_quickSettings.Active)
+            {
+                _quickSettings.setVisible(true);
+            }
+        }else if (_gameState == GameState.Standby)
+        {
+            if (_dotsList.All(x => x.InTheRightPlace))
+            {
+                _gameState = GameState.Game;
+            }
+        }else if (_gameState == GameState.Won || _gameState == GameState.Lost)
+        {
+            if (!_betweenLevels.Active)
+            {
+                _betweenLevels.setVisible(true);
+            }
         }
     }
 
+    
 
 
-    enum DotsGameState
-    {
-        Loading, Game, StuffMoves, StandBy, GameLost, GameWon 
-    };
+
+    //enum DotsGameState
+    //{
+    //    Loading, Game, StuffMoves, StandBy, GameLost, GameWon, Pause 
+    //};
 }

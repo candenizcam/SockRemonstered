@@ -19,7 +19,18 @@ namespace Classes
         public Action SettingsButtonAction = () => {};
         protected MonsterFaces _monsterFaces;
         protected MoveCounter _moveCounter;
+        
+        public GameHud()
+        {
+        }
+        
         public GameHud(GameLayout gl)
+        {
+            Initialize(gl);
+            
+        }
+
+        public virtual void Initialize(GameLayout gl)
         {
             topBarRect = gl.topBarRect();
             bottomBarRect = gl.bottomBarRect();
@@ -80,11 +91,11 @@ namespace Classes
             _moveCounter.MoveBg.style.right = (w -_moveCounter.MoveBg.sprite.rect.width)*scale;
             _moveCounter.MoveBg.style.top = (h-_moveCounter.MoveBg.sprite.rect.height)*scale;
             _topBar.Add(_moveCounter.MoveBg);
-            
         }
         
         protected void settingsButtonFunction()
         {
+            Debug.Log("old guy");
             SettingsButtonAction();
         }
         

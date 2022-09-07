@@ -22,9 +22,19 @@ public class WMHud : GameHud
     
     
     
-    
+    public WMHud(): base()
+    {
+        //Initialize();
+    }
     public WMHud(WMLayout wmLayout): base(wmLayout)
     {
+        //Initialize();
+    }
+
+    public override void Initialize(GameLayout gl)
+    {
+        base.Initialize(gl);
+        
         _handMoveHeight = topBarRect.height*1.5f;
         _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
             _pixelPoints[4], _pixelPoints[5]);
@@ -54,7 +64,6 @@ public class WMHud : GameHud
         _hand.style.width = _hand.sprite.rect.width * scale;
         _hand.style.height = _hand.sprite.rect.height * scale;
         _hand.style.position = Position.Absolute;
-        //_sockHolder.Add(_hand);
     }
     
     

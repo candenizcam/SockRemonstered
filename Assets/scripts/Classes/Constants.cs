@@ -53,6 +53,32 @@ namespace Classes
             new Color(0.3f,0.1f,0.4f,1f)
         };
 
+        public static Color GetDotColours(int n)
+        {
+            if (n >= 0)
+            {
+                return DotsColours[n];
+            }
+            else
+            {
+                return GameColours[28];
+            }
+        }
+        
+
+        public static string GetDotPath(int n)
+        {
+            if (n >= 0)
+            {
+                return $"gamelements/dot-{n + 1}";
+            }
+            else
+            {
+                return "gamelements/dot-any";
+            }
+            
+        }
+
         public static NextLevelData GetNextLevel(int bigNumber)
         {
 
