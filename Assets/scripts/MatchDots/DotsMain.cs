@@ -42,7 +42,7 @@ public class DotsMain : GameMain
         {
             var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
 
-            if (levelInfo.SceneName != "Cards")
+            if (levelInfo.SceneName != "Dots")
             {
                 throw new Exception("there is a problem");
             }
@@ -161,7 +161,6 @@ public class DotsMain : GameMain
             if (dotsPrefabScript.TargetRow != -1)
             {
                 dotsPrefabScript.setRow(dotsPrefabScript.TargetRow);
-                
                 var gridRect =  _mainCamera.GetGridRect(dotsPrefabScript.Row,dotsPrefabScript.Column);
                 dotsPrefabScript.SetInfo(null, _mainCamera.ScaledSingleSize,gridRect);
                 dotsPrefabScript.TargetRow = -1;
@@ -321,151 +320,21 @@ public class DotsMain : GameMain
                 }
             }
         }
-        
-        //if (_selectionList.LineType() == thisDot.DotType || _selectionList.LineType() == -1)
-        //{
-            
-        //}
-        
-        
-        
-        
-        
-        
-        
-        
-
-        //var thisTurTouches = Array
-        //    .FindAll(Input.touches, x => x.phase == TouchPhase.Moved).ToList();
-
-        //var movingTouch = thisTurTouches[0];
-
-
-
-
-
-        //var firstTouch = thisTurnTouches[0];
-
-
-        //var worldPoint = _mainCamera.Camera.ScreenToWorldPoint(firstTouch.position);
-
-
-
-        /*
-        var counter = -1;
-        var broker = false;
-        foreach (var sockCardPrefabScript in _sockCardPrefabs)
-        {
-            counter += 1;
-            if(sockCardPrefabScript.sockVisible) continue;
-            
-
-            if (sockCardPrefabScript.Collides(worldPoint))
-            {
-                
-                broker = true;
-                
-                _tweenHolder.newTween(0.5f, alpha =>
-                {
-                    var t = sockCardPrefabScript.gameObject.transform;
-                    var x = (float)Math.Sin(alpha * Math.PI)*90;
-                    t.rotation = Quaternion.Euler(t.eulerAngles.x,x,t.eulerAngles.z);
-                    
-                    if (alpha > 0.5f)
-                    {
-                        if (!sockCardPrefabScript.sockVisible)
-                        {
-                            sockCardPrefabScript.SockVisible(true);
-                            
-                        }
-                    }
-                    
-                    
-                    
-                    
-                },endAction: () =>
-                {
-                    sockCardPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                    for (int i = 0; i < _selection.Length; i++)
-                    {
-                        if (_selection[i] == -1)
-                        {
-                            _selection[i] = counter;
-                            break;
-                        }
-                    }
-                });
-                
-
-                
-            }
-            if (broker)
-            {
-                break;
-            }
-            
-            
-        }
-        */
-
     }
     
-    
+    protected override (int number, string text)  GetLevelPoints()
+    {
+        return _dotsScoreboard.GetLevelPoints();
+    }
     
     
     void UpdateEngine()
     {
         _tweenHolder.Update(Time.deltaTime);
+        _timer.Update(Time.deltaTime);
         _dotsHud.Update();
-    }
-    
-    
-    
-    
-    
-    private void levelDone(bool won)
-    {
-        var lp = _dotsScoreboard.GetLevelPoints();
-        var buttonText = "NEXT";
-        if (won)
-        {
-            _gameState = GameState.Won;
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.nextLevel += 1;
-            sgd.coins += lp.number;
-            sgd.Save();
-            _betweenLevels.OnBigButton = () =>
-            {
-                NextLevel();
-
-            };
-        }
-        else
-        {
-            _gameState = GameState.Lost;
-            var sgd = SerialGameData.LoadOrGenerate();
-            if (sgd.changeHearts(-1) > 0)
-            {
-                buttonText = "RETRY";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    Restart();
-                };
-            }
-            else
-            {
-                buttonText = "RETURN";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    ToHQ();
-                };
-            }
-            
-            sgd.Save();
-            
-        }
-        
-        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
+        _betweenLevels.Update();
+        _quickSettings.Update();
     }
     
     
@@ -482,11 +351,11 @@ public class DotsMain : GameMain
             if (_dotsScoreboard.GameWon())
             {
                 _gameState = GameState.Won;
-                levelDone(true);
+                LevelDone(true);
             }else if (_dotsScoreboard.GameLost())
             {
                 _gameState = GameState.Lost;
-                levelDone(false);
+                LevelDone(false);
             }
             
             
@@ -512,11 +381,4 @@ public class DotsMain : GameMain
     }
 
     
-
-
-
-    //enum DotsGameState
-    //{
-    //    Loading, Game, StuffMoves, StandBy, GameLost, GameWon, Pause 
-    //};
 }

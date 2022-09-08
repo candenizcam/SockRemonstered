@@ -236,62 +236,10 @@ public class WMMain : GameMain
 
     
 
-    private (int number, string text)  getLevelPoints()
+    protected override (int number, string text)  GetLevelPoints()
     {
         return (_moveNo * 10,$"  {_moveNo * 10}");
     }
-    
-    
-
-
-    private void levelDone(bool won)
-    {
-        var lp = getLevelPoints();
-        var buttonText = "NEXT";
-        if (won)
-        {
-            _gameState = GameState.Won;
-            
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.nextLevel += 1;
-            sgd.coins += lp.number;
-            sgd.Save();
-            _betweenLevels.OnBigButton = () =>
-            {
-                NextLevel();
-
-            };
-        }
-        else
-        {
-            _gameState = GameState.Lost;
-            //gameState = 2;
-            var sgd = SerialGameData.LoadOrGenerate();
-            if (sgd.changeHearts(-1) > 0)
-            {
-                buttonText = "RETRY";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    Restart();
-                };
-            }
-            else
-            {
-                buttonText = "RETURN";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    ToHQ();
-                };
-            }
-            
-            sgd.Save();
-            
-        }
-        
-        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
-        
-    }
-
 
     private void FixedUpdate()
     {
@@ -320,13 +268,13 @@ public class WMMain : GameMain
         if (MoveNo <= 0 && _gameState == GameState.Game)
         {
             _gameState = GameState.Lost;
-            levelDone(false);
+            LevelDone(false);
         }
 
         if (_wmScoreboard.GameWon()&& _gameState == GameState.Game)
         {
             _gameState = GameState.Won;
-            levelDone(true);
+            LevelDone(true);
             
         }
 

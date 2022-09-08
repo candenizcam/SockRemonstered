@@ -7,17 +7,57 @@ namespace Classes
 {
     public class GameMain: MonoBehaviour
     {
-        
         protected BetweenLevels _betweenLevels;
         protected QuickSettings _quickSettings;
         protected UIDocument _uiDocument;
-
         protected TweenHolder _tweenHolder;
         protected System.Random _random;
         protected Timer _timer;
         protected GameHud _gameHud;
         protected GameState _gameState;
 
+        
+        protected void LevelDone(bool won)
+        {
+            var lp = GetLevelPoints();
+            var levelNo = 0;
+            var buttonText = "NEXT";
+            if (won)
+            {
+                _gameState = GameState.Won;
+                SerialGameData.Apply(sgd =>
+                {
+                    levelNo = sgd.nextLevel;
+                    sgd.nextLevel += 1;
+                    sgd.coins += lp.number;
+                });
+                _betweenLevels.OnBigButton = NextLevel;
+            }
+            else
+            {
+                _gameState = GameState.Lost;
+                SerialGameData.Apply(sgd =>
+                {
+                    levelNo = sgd.nextLevel;
+                    if (sgd.changeHearts(-1) > 0)
+                    {
+                        buttonText = "RETRY";
+                        _betweenLevels.OnBigButton = Restart;
+                    }
+                    else
+                    {
+                        buttonText = "RETURN";
+                        _betweenLevels.OnBigButton = ToHQ;
+                    }
+                });
+            }
+            _betweenLevels.UpdateInfo(won, bigText: getBigText(levelNo), smallText: getSmallText(won), lp.text,buttonText);
+        }
+
+        protected virtual (int number, string text)  GetLevelPoints()
+        {
+            return (0,$"0");
+        }
         
         
         protected void Restart()
@@ -35,23 +75,19 @@ namespace Classes
         }
     
     
-        protected string getBigText()
+        protected string getBigText(int levelNo)
         {
-            var sgd = SerialGameData.LoadOrGenerate();
-            return $"Level {sgd.nextLevel-1}";
+            return $"Level {levelNo}";
         }
     
         protected string getSmallText(bool levelWon)
         {
-
             return levelWon ? "Yarn-tastic!" : "Level failed!";
         }
-        
 
-        protected void InitializeHud<T>(GameLayout gl) where T: GameHud, new()
+
+        private void InitializeHud<T>(GameLayout gl) where T: GameHud, new()
         {
-            
-            //T data { get; set; };
             _gameHud = new T();
             _gameHud.Initialize(gl);
             _gameHud.SettingsButtonAction = () =>
@@ -59,7 +95,6 @@ namespace Classes
                 _gameState = GameState.Settings;
             };
             _gameHud.AddToVisualElement(_uiDocument.rootVisualElement);
-            
         }
 
         protected void InitializeUi<T>(GameLayout mainCamera) where T: GameHud, new()
@@ -77,33 +112,30 @@ namespace Classes
             _random = new System.Random();
             _timer = new Timer();
         }
-        
-        protected void InitializeUiDocument()
+
+        private void InitializeUiDocument()
         {
             _uiDocument = gameObject.GetComponent<UIDocument>();
             _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
             _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-        } 
-        
-        protected void InitializeQuickSettings(GameLayout camera)
+        }
+
+        private void InitializeQuickSettings(GameLayout gameLayout)
         {
-            var sgd = SerialGameData.LoadOrGenerate();
-            _quickSettings = new QuickSettings(camera, sgd.sound, sgd.music);
+            var sgd1 = SerialGameData.LoadOrGenerate();
+            _quickSettings = new QuickSettings(gameLayout, sgd1.sound, sgd1.music);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
             _quickSettings.setVisible(false);
-            _quickSettings.SettingsButtonAction = () =>
-            {
-                QuickSettingsButtonFunction();
-            };
+            _quickSettings.SettingsButtonAction = QuickSettingsButtonFunction;
 
-            _quickSettings.MusicButtonAction = (bool b) =>
+            _quickSettings.MusicButtonAction = b =>
             {
                 var sgd = SerialGameData.LoadOrGenerate();
                 sgd.music = b ? 0 : 1;
                 sgd.Save();
             };
         
-            _quickSettings.SoundButtonAction = (bool b) =>
+            _quickSettings.SoundButtonAction = b =>
             {
                 var sgd = SerialGameData.LoadOrGenerate();
                 sgd.sound = b ? 0 : 1;
@@ -118,15 +150,12 @@ namespace Classes
             };
         }
 
-        protected void InitializeBetweenLevels(GameLayout camera)
+        private void InitializeBetweenLevels(GameLayout gameLayout)
         {
-            _betweenLevels = new BetweenLevels(camera);
+            _betweenLevels = new BetweenLevels(gameLayout);
             _betweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
             _betweenLevels.setVisible(false);
-            _betweenLevels.OnCross = () =>
-            {
-                ToHQ();
-            };
+            _betweenLevels.OnCross = ToHQ;
             _betweenLevels.OnBigButton = () =>
             {
             };

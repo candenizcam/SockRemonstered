@@ -259,63 +259,13 @@ public class CardsMain : GameMain
         _gameState = GameState.Game;
     }
     
-    
-    
-
-    private (int number, string text)  GetLevelPoints()
+    protected override (int number, string text)  GetLevelPoints()
     {
-        return (MoveNo * 10,$"  {MoveNo * 10}");
+        return (50 + MoveNo * 10, $"  {50 + MoveNo * 10}");
     }
-    
-    private void LevelDone(bool won)
-    {
-        var lp = GetLevelPoints();
-        var buttonText = "NEXT";
-        if (won)
-        {
-            _gameState = GameState.Won;
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.nextLevel += 1;
-            sgd.coins += lp.number;
-            sgd.Save();
-            _betweenLevels.OnBigButton = () =>
-            {
-                NextLevel();
 
-            };
-        }
-        else
-        {
-            _gameState = GameState.Lost;
-            var sgd = SerialGameData.LoadOrGenerate();
-            if (sgd.changeHearts(-1) > 0)
-            {
-                buttonText = "RETRY";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    Restart();
-                };
-            }
-            else
-            {
-                buttonText = "RETURN";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    ToHQ();
-                };
-            }
-            
-            sgd.Save();
-            
-        }
-        
-        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
-    }
-    
-    // Update is called once per frame
     void Update()
     {
-        
         _timer.Update(Time.deltaTime);
         CardHud.Update();
         _betweenLevels.Update();
@@ -328,9 +278,7 @@ public class CardsMain : GameMain
             {
                 _gameState = GameState.Won;
                 LevelDone(true);
-            }
-
-            if (MoveNo <= 0)
+            }else if (MoveNo <= 0)
             {
                 _gameState = GameState.Lost;
                 LevelDone(false);
@@ -381,6 +329,14 @@ public class CardsMain : GameMain
                         sockCardPrefabScript.SockVisible(false);
                     }
                     _gameState = GameState.Game;
+                    foreach (var sockCardPrefabScript in _sockCardPrefabs)
+                    {
+                        if (sockCardPrefabScript.ToBeDestroyed)
+                        {
+                            Destroy(sockCardPrefabScript.gameObject);
+                        }
+                    }
+                    _sockCardPrefabs.RemoveAll(x => x.ToBeDestroyed);
                 });
 
                 for (var i = 0; i < _selection.Length; i++)

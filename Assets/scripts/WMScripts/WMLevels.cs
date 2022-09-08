@@ -36,14 +36,14 @@ namespace WashingMachine.WMScripts
                     new WMSockInfo(4,0,1,10),
                     
                 }),
-            new WMLevelInfo(1f,2f,-1, 5,
+            new WMLevelInfo(1f,4f,-1, 5,
                 new WMSockInfo[]
                 {
                     new WMSockInfo(6,0,1,10),
                     new WMSockInfo(6,0,1,20),
-                    new WMSockInfo(6,0,1,20),
+                    new WMSockInfo(6,0,1,20,3),
                     //new WMSockInfo(0,1,1),
-                    new WMSockInfo(3,0,0,10,3),
+                    new WMSockInfo(3,0,0,10,1),
                     new WMSockInfo(7,0,0,10,3),
                     new WMSockInfo(0,0,0,5,3)
                 }),
