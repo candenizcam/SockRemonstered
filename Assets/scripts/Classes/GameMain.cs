@@ -38,7 +38,7 @@ namespace Classes
         protected string getBigText()
         {
             var sgd = SerialGameData.LoadOrGenerate();
-            return $"Level {sgd.nextLevel}";
+            return $"Level {sgd.nextLevel-1}";
         }
     
         protected string getSmallText(bool levelWon)

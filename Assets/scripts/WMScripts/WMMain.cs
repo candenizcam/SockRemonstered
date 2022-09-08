@@ -234,16 +234,7 @@ public class WMMain : GameMain
     }
 
 
-    private string getBigText()
-    {
-        return $"Level {levelIndex+1}";
-    }
     
-    private string getSmallText(bool levelWon)
-    {
-
-        return levelWon ? "Yarn-tastic!" : "Level failed!";
-    }
 
     private (int number, string text)  getLevelPoints()
     {
