@@ -4,11 +4,11 @@
     {
         public static readonly CardLevelInfo[] CardLevelInfos =
         {
-            new CardLevelInfo(2,2,3),
-            new CardLevelInfo(3,2,5,2),
-            new CardLevelInfo(3,2,7),
-            new CardLevelInfo(4,3,9,cardTypes:3),
-            new CardLevelInfo(4,3,11,cardTypes:4)
+            new CardLevelInfo(2,2,5),
+            new CardLevelInfo(3,2,8,2),
+            new CardLevelInfo(3,2,10),
+            new CardLevelInfo(4,3,14,cardTypes:3),
+            new CardLevelInfo(4,3,17,cardTypes:4)
             
         };
     }
