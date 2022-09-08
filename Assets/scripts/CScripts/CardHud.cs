@@ -6,6 +6,11 @@ namespace Cards.CScripts
     {
         public CardHud(GameLayout gl) : base(gl)
         {
+            Initialize(gl);            
+        }
+
+        public CardHud() : base()
+        {
             
         }
     }

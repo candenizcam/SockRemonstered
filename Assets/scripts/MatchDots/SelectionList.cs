@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Classes;
+using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
 namespace MatchDots
@@ -81,9 +82,38 @@ namespace MatchDots
                 foreach (var dotsPrefabScript in _selectionList)
                 {
                     dotsPrefabScript.TweenEffect(1f);
+                    dotsPrefabScript.HitBlob.gameObject.SetActive(false);
+                    dotsPrefabScript.DragBar.gameObject.SetActive(false);
                 }
 
                 _selectionList.RemoveRange(i+1,_selectionList.Count-i-1);
+                
+                
+            }
+            foreach (var dotsPrefabScript in _selectionList)
+            {
+                dotsPrefabScript.SqueezeDragBar();
+                dotsPrefabScript.HitBlob.gameObject.SetActive(true);
+                dotsPrefabScript.DragBar.gameObject.SetActive(true);
+                //dotsPrefabScript.DragBar.gameObject.transform.localScale
+            }
+            
+        }
+
+        public void SetDragChain(float scale)
+        {
+            for (var i = 0; i < _selectionList.Count-1; i++)
+            {
+                _selectionList[i].MoveDragBar(_selectionList[i+1].gameObject.transform.position,scale);
+            }
+        }
+        
+        public void SetDragTip(Vector2 v, float scale)
+        {
+            if (_selectionList.Count > 0)
+            {
+                _selectionList.Last().MoveDragBar(v,scale);
+                
             }
             
         }
@@ -93,6 +123,8 @@ namespace MatchDots
             foreach (var dotsPrefabScript in _selectionList)
             {
                 dotsPrefabScript.TweenEffect(1f);
+                dotsPrefabScript.HitBlob.gameObject.SetActive(false);
+                dotsPrefabScript.DragBar.gameObject.SetActive(false);
             }
             _selectionList.Clear();
         }
@@ -106,6 +138,11 @@ namespace MatchDots
             }
 
             return s;
+        }
+
+        public List<int> getTypes()
+        {
+            return _selectionList.Select(x => x.DotType).ToList();
         }
         
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using Classes;
 using UnityEngine;
 
 public class SockCardPrefabScript : MonoBehaviour
@@ -64,7 +65,7 @@ public class SockCardPrefabScript : MonoBehaviour
         _hitboxRect = Rect.MinMaxRect(
             position.x - scale.x * 0.5f, position.y - scale.y * 0.5f,
             position.x + scale.x * 0.5f, position.y + scale.y * 0.5f);
-        gameObject.transform.localScale = Tools.Vector3Add(Tools.vector3Div(scale,new Vector3(cardBacks[0].size.x, cardBacks[0].size.y, 1f)),new Vector3(-borderPixel/100f,-borderPixel/100f,0f));
+        gameObject.transform.localScale = VectorTools.Vector3Add(VectorTools.vector3Div(scale,new Vector3(cardBacks[0].size.x, cardBacks[0].size.y, 1f)),new Vector3(-borderPixel/100f,-borderPixel/100f,0f));
     }
 
     public void SockVisible(bool b)

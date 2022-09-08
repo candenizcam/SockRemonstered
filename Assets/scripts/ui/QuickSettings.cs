@@ -39,6 +39,7 @@ namespace Classes
             
             var settingsButton = new ButtonClickable(scale,"ui/buttons/Pause",Color.gray,() =>
             {
+                
                 settingsButtonFunction();
             });
             settingsButton.style.position = Position.Absolute;

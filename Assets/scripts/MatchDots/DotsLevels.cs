@@ -7,7 +7,7 @@ namespace MatchDots
     {
         public static readonly DotsLevelsInfo[] Levels = new DotsLevelsInfo[]
         {
-            new DotsLevelsInfo(4,5,10,4, new []{1000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(0,20)}),
+            new DotsLevelsInfo(4,5,10,4, new []{1000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(0,10), new DotsTarget(-1,25)}),
             new DotsLevelsInfo(4,5,10,4, new []{2000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(0,16),new DotsTarget(1,16)})
         };
 
