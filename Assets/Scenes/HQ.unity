@@ -482,6 +482,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -9
       objectReference: {fileID: 0}
+    - target: {fileID: 2555543931541257312, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2629965236110315734, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
       propertyPath: m_Name
       value: MonsterPrefab
