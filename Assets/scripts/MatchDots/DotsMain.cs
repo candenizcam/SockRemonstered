@@ -159,7 +159,9 @@ public class DotsMain : GameMain
         }
 
         var movers = _dotGrid.DotsList.Where(x => x.TargetRow != -1);
+        if(!movers.Any()) return;
 
+        
         var maxDRow = movers.Max(x => x.TargetRow - x.Row);
         
         foreach (var dotsPrefabScript in movers)

@@ -7,7 +7,7 @@ namespace MatchDots
 {
     public class DotsHud: GameHud
     {
-        private VisualElement _targetHolder;
+        private Image _targetHolder;
         
         
         public DotsHud(GameLayout gl) : base(gl)
@@ -19,15 +19,17 @@ namespace MatchDots
         {
             base.Initialize(gl);
 
-            _targetHolder = new VisualElement();
+            _targetHolder = new Image();
             _targetHolder.style.position = Position.Absolute;
             _targetHolder.style.left = 25f * gl.Scale;
             _targetHolder.style.top = 30f * gl.Scale;
             _targetHolder.style.width = 800f * gl.Scale;
             _targetHolder.style.bottom = 30f * gl.Scale;
             _targetHolder.style.flexDirection = FlexDirection.Row;
-            //_targetHolder.style.backgroundColor = Color.blue;
-
+            _targetHolder.style.justifyContent = Justify.Center;
+            _targetHolder.sprite = Resources.Load<Sprite>("ui/buttons/money_bg_2");
+            
+            _targetHolder.style.alignContent = Align.Center;
             //_topBar.style.backgroundColor = Color.green;
             _topBar.Add(_targetHolder);
 
@@ -72,6 +74,7 @@ namespace MatchDots
             {
                 var frame = new VisualElement();
                 frame.style.alignItems = Align.Center;
+                frame.style.justifyContent = Justify.Center;
                 var number = new Label();
                 //number.style.bottom = 565f * scale;
                 //number.style.position = Position.Absolute;
@@ -90,6 +93,7 @@ namespace MatchDots
                 frame.Add(image);
                 
                 frame.Add(number);
+                
                 /*
                  
                  bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
