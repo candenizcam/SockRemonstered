@@ -165,6 +165,8 @@ namespace Classes
 
         protected virtual void QuickSettingsButtonFunction()
         {
+            _quickSettings.setVisible(false);
+            _gameState = GameState.Game;
         }
         
         

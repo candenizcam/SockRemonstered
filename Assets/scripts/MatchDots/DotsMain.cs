@@ -22,7 +22,7 @@ public class DotsMain : GameMain
     private int _rows;
     private int _cols;
     
-    private List<DotsPrefabScript> _dotsList = new List<DotsPrefabScript>();
+    
     private SelectionList _selectionList = new SelectionList();
     private DotsScoreboard _dotsScoreboard;
     private DotGrid _dotGrid;
@@ -66,15 +66,16 @@ public class DotsMain : GameMain
         
         
         _dotGrid = new DotGrid(thisLevel);
-
-        
-
         var r = Resources.Load<GameObject>("prefabs/DotsPrefab");
         var amn = _dotGrid.ActiveMemberNo();
+        var dl = new List<DotsPrefabScript>();
         for (int i = 0; i < amn; i++)
         {
-            _dotsList.Add(Instantiate(r).GetComponent<DotsPrefabScript>());
+            dl.Add(Instantiate(r).GetComponent<DotsPrefabScript>());
         }
+        _dotGrid.FillTheDotsList(dl);
+
+        
 
 
         
@@ -121,15 +122,24 @@ public class DotsMain : GameMain
         
     }
 
-    protected override void QuickSettingsButtonFunction()
+
+
+    
+
+    /*
+    bool AnyLegalMoves()
     {
-        _quickSettings.setVisible(false);
-        _gameState = GameState.Game;
+        var ar = Get2DDotArray();
+        
+        
+        
     }
+    */
+    
     
     void moveDown()
     {
-        var realDots = _dotsList.Where(x => x.InTheRightPlace);
+        var realDots = _dotGrid.DotsList.Where(x => x.InTheRightPlace);
         for (int i = 0; i < _cols; i++)
         {
             var c = i + 1;
@@ -156,7 +166,7 @@ public class DotsMain : GameMain
             }
         }
         
-        foreach (var dotsPrefabScript in _dotsList)
+        foreach (var dotsPrefabScript in _dotGrid.DotsList)
         {
             if (dotsPrefabScript.TargetRow != -1)
             {
@@ -184,7 +194,7 @@ public class DotsMain : GameMain
 
     void fillGrid(int[] colNeeds)
     {
-        var unstable = _dotsList.Where(x => !x.InTheRightPlace).ToList();
+        var unstable = _dotGrid.DotsList.Where(x => !x.InTheRightPlace).ToList();
 
         for (int i = 0; i < _rows; i++)
         {
@@ -214,7 +224,7 @@ public class DotsMain : GameMain
 
     int[] ColNeeds()
     {
-        var stabilized = _dotsList.Where(x => x.InTheRightPlace);
+        var stabilized = _dotGrid.DotsList.Where(x => x.InTheRightPlace);
         var a = new int[_cols];
         for (int i = 0; i < _cols; i++)
         {
@@ -251,6 +261,12 @@ public class DotsMain : GameMain
         
         
         _selectionList.Clear();
+        if (!_dotGrid.AnyLegalMoves())
+        {
+            _gameState = GameState.Lost;
+            LevelDone(false);
+            _betweenLevels.UpdateSmallText(  "No more moves!");
+        }
     }
     
     private void HandleTouch()
@@ -289,7 +305,7 @@ public class DotsMain : GameMain
             return;
         }
         
-        var thisDot = _dotsList.Find(x => x.Row == p.r && x.Column == p.c);
+        var thisDot = _dotGrid.DotsList.Find(x => x.Row == p.r && x.Column == p.c);
 
         if (_selectionList.IsLatestPick(thisDot))
         {
@@ -367,7 +383,7 @@ public class DotsMain : GameMain
             }
         }else if (_gameState == GameState.Standby)
         {
-            if (_dotsList.All(x => x.InTheRightPlace))
+            if (_dotGrid.DotsList.All(x => x.InTheRightPlace))
             {
                 _gameState = GameState.Game;
             }

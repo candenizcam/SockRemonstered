@@ -172,6 +172,11 @@ namespace Classes
             }
         }
 
+        public void UpdateSmallText(string s)
+        {
+            _smallText.text = s;
+        }
+
         public void UpdateInfo(bool levelWon, string bigText, string smallText, string pointsText, string buttonText)
         {
             if (levelWon)
