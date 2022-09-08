@@ -127,19 +127,6 @@ public class DotsMain : GameMain
     }
 
 
-
-    
-
-    /*
-    bool AnyLegalMoves()
-    {
-        var ar = Get2DDotArray();
-        
-        
-        
-    }
-    */
-    
     
     void moveDown()
     {
@@ -268,20 +255,11 @@ public class DotsMain : GameMain
         if (_selectionList.Selections.Count > 2)
         {
             _gameState = GameState.Standby;
-
-            
-            
             _dotsScoreboard.AddToRemoved(_selectionList.getTypes());
-            
-            
-            
-            
-            
-            
+
             foreach (var dotsPrefabScript in _selectionList.Selections)
             {
                 dotsPrefabScript.InTheRightPlace = false;
-                //dotsPrefabScript.gameObject.SetActive(false);
             }
             _selectionList.ClearTouchEffects();
             _tweenHolder.newTween(EraseTime, alpha =>
@@ -302,39 +280,40 @@ public class DotsMain : GameMain
                 }
                 
             });
+            _timer.addEvent(EraseTime+.1f, () =>
+            {
+                _selectionList.Clear();
+                moveDown();
+                //fillPhase();
+                //_dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+                //var hi = _dotsScoreboard.GetHudInfo();
+                //_dotsHud.updateInfo(hi.movesLeft,hi.mood);
+            });
+        
+            _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
+            {
+                //_selectionList.Clear();
+                //moveDown();
+                fillPhase();
+                _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+                var hi = _dotsScoreboard.GetHudInfo();
+                _dotsHud.updateInfo(hi.movesLeft,hi.mood);
+                
+                if (!_dotGrid.AnyLegalMoves())
+                {
+                    _gameState = GameState.Lost;
+                    LevelDone(false);
+                    _betweenLevels.UpdateSmallText(  "No more moves!");
+                }
+            });    
         }
         else
         {
             _selectionList.Clear();
         }
         
-        _timer.addEvent(EraseTime+.1f, () =>
-        {
-            _selectionList.Clear();
-            moveDown();
-            //fillPhase();
-            //_dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
-            //var hi = _dotsScoreboard.GetHudInfo();
-            //_dotsHud.updateInfo(hi.movesLeft,hi.mood);
-        });
-        
-        _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
-        {
-            //_selectionList.Clear();
-            //moveDown();
-            fillPhase();
-            _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
-            var hi = _dotsScoreboard.GetHudInfo();
-            _dotsHud.updateInfo(hi.movesLeft,hi.mood);
-        });
         
         
-        if (!_dotGrid.AnyLegalMoves())
-        {
-            _gameState = GameState.Lost;
-            LevelDone(false);
-            _betweenLevels.UpdateSmallText(  "No more moves!");
-        }
     }
     
     private void HandleTouch()
@@ -362,8 +341,6 @@ public class DotsMain : GameMain
 
         var touchWp = _mainCamera.Camera.ScreenToWorldPoint(thisTouch.position);
 
-        
-        
         _selectionList.SetDragTip(touchWp, _mainCamera.Scale);
         
         var p = _mainCamera.WorldToGridPos(touchWp);
@@ -377,14 +354,11 @@ public class DotsMain : GameMain
 
         if (_selectionList.IsLatestPick(thisDot))
         {
-            Debug.Log("is latest pick");
             return;
         }
 
-        
         if(!thisDot.ContainsPoint(touchWp))
         {
-            Debug.Log("does not contain");
             return;
         }
 
@@ -432,8 +406,6 @@ public class DotsMain : GameMain
         
         if (_gameState == GameState.Game)
         {
-            HandleTouch();
-
             if (_dotsScoreboard.GameWon())
             {
                 _gameState = GameState.Won;
@@ -443,7 +415,7 @@ public class DotsMain : GameMain
                 _gameState = GameState.Lost;
                 LevelDone(false);
             }
-            
+            HandleTouch();
             
         }else if (_gameState == GameState.Settings)
         {
