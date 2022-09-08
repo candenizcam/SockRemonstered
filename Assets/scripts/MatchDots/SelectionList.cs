@@ -118,7 +118,7 @@ namespace MatchDots
             
         }
 
-        public void Clear()
+        public void ClearTouchEffects()
         {
             foreach (var dotsPrefabScript in _selectionList)
             {
@@ -126,6 +126,11 @@ namespace MatchDots
                 dotsPrefabScript.HitBlob.gameObject.SetActive(false);
                 dotsPrefabScript.DragBar.gameObject.SetActive(false);
             }
+        }
+        
+        public void Clear()
+        {
+            ClearTouchEffects();
             _selectionList.Clear();
         }
 

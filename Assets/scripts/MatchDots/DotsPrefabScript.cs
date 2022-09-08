@@ -41,6 +41,15 @@ public class DotsPrefabScript : MonoBehaviour
         Row = r;
     }
 
+
+    
+    
+    public void SetPosition(float? x = null, float? y = null, float? z = null)
+    {
+        var p = transform.position;
+        transform.position = new Vector3(x ??= p.x, y ??= p.y, z??=-1f);
+    }
+    
     public void SetInfo(int? dt, float scaledSize, Rect gridRect)
     {
         

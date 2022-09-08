@@ -21,14 +21,16 @@ public class DotsMain : GameMain
     private DotsLayout _mainCamera;
     private int _rows;
     private int _cols;
-    
-    
     private SelectionList _selectionList = new SelectionList();
     private DotsScoreboard _dotsScoreboard;
     private DotGrid _dotGrid;
     //private DotsGameState _gameState = DotsGameState.StandBy;
     private DotsLevelsInfo _dotsLevelsInfo;
     private DotsHud _dotsHud => (DotsHud)_gameHud;
+    
+    private const float EraseTime = 0.5f;
+    private const float FallTime = 0.8f;
+    private const float SmallFallTime = 0.2f;
     
     void Awake()
     {
@@ -81,14 +83,16 @@ public class DotsMain : GameMain
         
         fillPhase();
         
+        
         _tweenHolder.newTween(0.3f, alpha =>
         {
             var a = (float)Math.Sin(alpha * Math.PI * 2)*.2f;
-            foreach (var selectionListSelection in _selectionList.Selections)
+            foreach (var selectionListSelection in _selectionList.Selections.Where(selectionListSelection => selectionListSelection.InTheRightPlace))
             {
                 selectionListSelection.TweenEffect(a+1f);
             }
         },repeat:-1);
+        
 
 
         InitializeUi<DotsHud>(_mainCamera);
@@ -109,7 +113,7 @@ public class DotsMain : GameMain
         var left = pfr.xMin;
         var bottom = pfr.yMax;
         var tw = topFrame.size;
-        topFrame.gameObject.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
+        topFrame.gameObject.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, -3f);
         
         var littleSs = w / (sockBg.bounds.size.x-.2f);
         sockBg.gameObject.transform.localScale = new Vector3(littleSs, littleSs, 1f);
@@ -158,6 +162,7 @@ public class DotsMain : GameMain
                 {
                     var f = s.First();
                     f.TargetRow =  f.Row + delta;
+                    f.InTheRightPlace = false;
                 }
                 else if(!s.Any())
                 {
@@ -165,17 +170,35 @@ public class DotsMain : GameMain
                 }
             }
         }
+
+        var movers = _dotGrid.DotsList.Where(x => x.TargetRow != -1);
+
+        var maxDRow = movers.Max(x => x.TargetRow - x.Row);
         
-        foreach (var dotsPrefabScript in _dotGrid.DotsList)
+        foreach (var dotsPrefabScript in movers)
         {
-            if (dotsPrefabScript.TargetRow != -1)
+            var oldY = dotsPrefabScript.gameObject.transform.position.y;
+            var dRow = dotsPrefabScript.TargetRow - dotsPrefabScript.Row;
+                
+            dotsPrefabScript.setRow(dotsPrefabScript.TargetRow);
+                
+            var gridRect =  _mainCamera.GetGridRect(dotsPrefabScript.Row,dotsPrefabScript.Column);
+            var newY = gridRect.center.y;
+                
+            dotsPrefabScript.SetInfo(null, _mainCamera.ScaledSingleSize,gridRect);
+            dotsPrefabScript.SetPosition(y: oldY);
+            _tweenHolder.newTween(SmallFallTime/maxDRow*dRow, alpha =>
             {
-                dotsPrefabScript.setRow(dotsPrefabScript.TargetRow);
-                var gridRect =  _mainCamera.GetGridRect(dotsPrefabScript.Row,dotsPrefabScript.Column);
-                dotsPrefabScript.SetInfo(null, _mainCamera.ScaledSingleSize,gridRect);
-                dotsPrefabScript.TargetRow = -1;
-            }
+                dotsPrefabScript.SetPosition(y: oldY*(1f-alpha) + alpha*newY);
+            }, () =>
+            {
+                dotsPrefabScript.InTheRightPlace = true;
+                dotsPrefabScript.SetPosition(y: newY);
+            });
+            dotsPrefabScript.TargetRow = -1;
         }
+        
+        
     }
     
     
@@ -184,11 +207,6 @@ public class DotsMain : GameMain
     void fillPhase()
     {
         var cn = ColNeeds();
-        var s = "";
-        foreach (var i in cn)
-        {
-            s += $"{i},";
-        }
         fillGrid(cn);
     }
 
@@ -210,8 +228,18 @@ public class DotsMain : GameMain
                 t.setRow(r);
                 t.setColumn(j+1);
                 t.SetInfo(_lineRandom.Next(0, _dotsLevelsInfo.DotTypes), _mainCamera.ScaledSingleSize,gridRect);
+                var y = gridRect.center.y;
+                t.SetPosition(y : y + (float)2f*_mainCamera.Camera.orthographicSize);
                 t.gameObject.SetActive(true);
-                t.InTheRightPlace = true;
+                _tweenHolder.newTween(.8f, alpha =>
+                {
+                    var dy = 2f*_mainCamera.Camera.orthographicSize*Math.Abs(Math.Cos(8f*alpha))*Math.Exp(-4f*alpha);
+                    t.SetPosition(y : y + (float)dy);
+                }, () =>
+                {
+                    t.SetPosition(y : y);
+                    t.InTheRightPlace = true;
+                });
                 unstable.Remove(t);
                 colNeeds[j] -= 1;
 
@@ -239,28 +267,68 @@ public class DotsMain : GameMain
         //_movesLeft -= 1;
         if (_selectionList.Selections.Count > 2)
         {
+            _gameState = GameState.Standby;
+
+            
+            
             _dotsScoreboard.AddToRemoved(_selectionList.getTypes());
+            
+            
+            
+            
+            
             
             foreach (var dotsPrefabScript in _selectionList.Selections)
             {
-                
                 dotsPrefabScript.InTheRightPlace = false;
-                dotsPrefabScript.gameObject.SetActive(false);
-                
+                //dotsPrefabScript.gameObject.SetActive(false);
             }
-            
-            
-            moveDown();
+            _selectionList.ClearTouchEffects();
+            _tweenHolder.newTween(EraseTime, alpha =>
+            {
+                var a = -1f * alpha * alpha + 1;
+                foreach (var dotsPrefabScript in _selectionList.Selections)
+                {
+                    
+                    dotsPrefabScript.gameObject.transform.localScale = new Vector3(a, a, 1f);
+                    dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
+                }
+                
+            }, () =>
+            {
+                foreach (var dotsPrefabScript in _selectionList.Selections)
+                {
+                    dotsPrefabScript.gameObject.SetActive(false);
+                }
+                
+            });
+        }
+        else
+        {
+            _selectionList.Clear();
+        }
         
+        _timer.addEvent(EraseTime+.1f, () =>
+        {
+            _selectionList.Clear();
+            moveDown();
+            //fillPhase();
+            //_dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+            //var hi = _dotsScoreboard.GetHudInfo();
+            //_dotsHud.updateInfo(hi.movesLeft,hi.mood);
+        });
+        
+        _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
+        {
+            //_selectionList.Clear();
+            //moveDown();
             fillPhase();
             _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
             var hi = _dotsScoreboard.GetHudInfo();
             _dotsHud.updateInfo(hi.movesLeft,hi.mood);
-            
-        }
+        });
         
         
-        _selectionList.Clear();
         if (!_dotGrid.AnyLegalMoves())
         {
             _gameState = GameState.Lost;
@@ -309,12 +377,14 @@ public class DotsMain : GameMain
 
         if (_selectionList.IsLatestPick(thisDot))
         {
+            Debug.Log("is latest pick");
             return;
         }
 
         
         if(!thisDot.ContainsPoint(touchWp))
         {
+            Debug.Log("does not contain");
             return;
         }
 
