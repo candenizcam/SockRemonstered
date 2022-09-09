@@ -82,7 +82,9 @@ namespace Classes
     
         protected string getSmallText(bool levelWon)
         {
-            return levelWon ? "Yarn-tastic!" : "Level failed!";
+            var i = _random.Next(0, Constants.WinTexts.Length);
+            
+            return levelWon ? Constants.WinTexts[i]: "Level failed!";
         }
 
 

@@ -5,7 +5,8 @@ namespace Classes
 {
     public static class Constants
     {
-        public static readonly Color[] GameColours =  {
+        public static readonly Color[] GameColours =
+        {
             new Color(0.63f, 0.18f, 0.15f), //a12d26 0
             new Color(0.71f, 0.22f, 0.19f), //b53831
             new Color(0.76f, 0.30f, 0.20f), //c14c33
@@ -42,6 +43,10 @@ namespace Classes
         public const int BetweenHeartsTime = 60; // in secs
         public const float FurnitureChance = 0.1f;
         public const bool MatchDiagonal = true;
+        public static readonly string[] WinTexts = new []{
+            "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
+        };
+        
         
         public static readonly Color[] DotsColours = new Color[]
         {
