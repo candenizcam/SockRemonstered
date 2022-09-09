@@ -8,28 +8,33 @@ using MatchDots;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class DotsMain : MonoBehaviour
+public class DotsMain : GameMain
 {
+    public SpriteRenderer bg;
+    //public SpriteRenderer BottomFrame;
+    public SpriteRenderer topFrame;
+    public SpriteRenderer sockBg;
     // Start is called before the first frame update
     public int LevelNo;
     private int _levelNo;
-    private TweenHolder _tweenHolder;
-    private System.Random _random;
     private System.Random _lineRandom;
     private DotsLayout _mainCamera;
-    private UIDocument _uiDocument;
     private int _rows;
     private int _cols;
-    private List<DotsPrefabScript> _dotsList = new List<DotsPrefabScript>();
     private SelectionList _selectionList = new SelectionList();
-    
+    private DotsScoreboard _dotsScoreboard;
     private DotGrid _dotGrid;
-    private DotsGameState _gameState = DotsGameState.StandBy;
+    //private DotsGameState _gameState = DotsGameState.StandBy;
     private DotsLevelsInfo _dotsLevelsInfo;
+    private DotsHud _dotsHud => (DotsHud)_gameHud;
     
+    private const float EraseTime = 0.5f;
+    private const float FallTime = 0.8f;
+    private const float SmallFallTime = 0.2f;
     
     void Awake()
     {
+        _gameState = GameState.Standby;
         var sgd = SerialGameData.LoadOrGenerate();
         if (LevelNo > 0)
         {
@@ -39,7 +44,7 @@ public class DotsMain : MonoBehaviour
         {
             var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
 
-            if (levelInfo.SceneName != "Cards")
+            if (levelInfo.SceneName != "Dots")
             {
                 throw new Exception("there is a problem");
             }
@@ -55,55 +60,77 @@ public class DotsMain : MonoBehaviour
         _cols = thisLevel.Cols;
         _dotsLevelsInfo = thisLevel;
         _lineRandom = new System.Random(thisLevel.Seeds[0]);
+        _dotsScoreboard = new DotsScoreboard(thisLevel);
         
-        _uiDocument = gameObject.GetComponent<UIDocument>();
-        _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
-        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-        
-        
+        //Screen.
         _mainCamera = new DotsLayout(Camera.main, _rows, _cols);
+        InitializeMisc();
+        
+        
         _dotGrid = new DotGrid(thisLevel);
-
-
         var r = Resources.Load<GameObject>("prefabs/DotsPrefab");
         var amn = _dotGrid.ActiveMemberNo();
+        var dl = new List<DotsPrefabScript>();
         for (int i = 0; i < amn; i++)
         {
-            _dotsList.Add(Instantiate(r).GetComponent<DotsPrefabScript>());
+            dl.Add(Instantiate(r).GetComponent<DotsPrefabScript>());
         }
+        _dotGrid.FillTheDotsList(dl);
+
+        
 
 
         
         fillPhase();
+        
         
         _tweenHolder.newTween(0.3f, alpha =>
         {
             var a = (float)Math.Sin(alpha * Math.PI * 2)*.2f;
-            foreach (var selectionListSelection in _selectionList.Selections)
+            foreach (var selectionListSelection in _selectionList.Selections.Where(selectionListSelection => selectionListSelection.InTheRightPlace))
             {
                 selectionListSelection.TweenEffect(a+1f);
             }
         },repeat:-1);
-
-        /*
-        var removeList = _dotsList.Where(x => x.DotType == 0);
-
-        foreach (var dotsPrefabScript in removeList)
-        {
-            dotsPrefabScript.InTheRightPlace = false;
-            dotsPrefabScript.gameObject.SetActive(false);
-        }
-
-        moveDown();
         
-        fillPhase();
-        */
+
+
+        InitializeUi<DotsHud>(_mainCamera);
+        
+        //_dotsScoreboard.MoveCounter
+        
+        //_dotsHud.updateInfo($"{_levelMoves}",MonsterMood.Happy);
+        var hi = _dotsScoreboard.GetHudInfo();
+        _dotsHud.updateInfo(hi.movesLeft,hi.mood);
+        
+        var w = _mainCamera.Camera.orthographicSize*_mainCamera.Camera.aspect*2f;
+        
+        var littleS = w / (bg.bounds.size.x-.5f);
+        
+        bg.gameObject.transform.localScale = new Vector3(littleS, littleS, 1f);
+        
+        var pfr = _mainCamera.playfieldRect();
+        var left = pfr.xMin;
+        var bottom = pfr.yMax;
+        var tw = topFrame.size;
+        topFrame.gameObject.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, -3f);
+        
+        var littleSs = w / (sockBg.bounds.size.x-.2f);
+        sockBg.gameObject.transform.localScale = new Vector3(littleSs, littleSs, 1f);
+        
+        
+        
+        
+        _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+        
         
     }
 
+
+    
     void moveDown()
     {
-        var realDots = _dotsList.Where(x => x.InTheRightPlace);
+        var realDots = _dotGrid.DotsList.Where(x => x.InTheRightPlace);
         for (int i = 0; i < _cols; i++)
         {
             var c = i + 1;
@@ -122,6 +149,7 @@ public class DotsMain : MonoBehaviour
                 {
                     var f = s.First();
                     f.TargetRow =  f.Row + delta;
+                    f.InTheRightPlace = false;
                 }
                 else if(!s.Any())
                 {
@@ -129,18 +157,37 @@ public class DotsMain : MonoBehaviour
                 }
             }
         }
+
+        var movers = _dotGrid.DotsList.Where(x => x.TargetRow != -1);
+        if(!movers.Any()) return;
+
         
-        foreach (var dotsPrefabScript in _dotsList)
+        var maxDRow = movers.Max(x => x.TargetRow - x.Row);
+        
+        foreach (var dotsPrefabScript in movers)
         {
-            if (dotsPrefabScript.TargetRow != -1)
-            {
-                dotsPrefabScript.setRow(dotsPrefabScript.TargetRow);
+            var oldY = dotsPrefabScript.gameObject.transform.position.y;
+            var dRow = dotsPrefabScript.TargetRow - dotsPrefabScript.Row;
                 
-                var gridRect =  _mainCamera.GetGridRect(dotsPrefabScript.Row,dotsPrefabScript.Column);
-                dotsPrefabScript.SetInfo(null, _mainCamera.ScaledSingleSize,gridRect);
-                dotsPrefabScript.TargetRow = -1;
-            }
+            dotsPrefabScript.setRow(dotsPrefabScript.TargetRow);
+                
+            var gridRect =  _mainCamera.GetGridRect(dotsPrefabScript.Row,dotsPrefabScript.Column);
+            var newY = gridRect.center.y;
+                
+            dotsPrefabScript.SetInfo(null, _mainCamera.ScaledSingleSize,gridRect);
+            dotsPrefabScript.SetPosition(y: oldY);
+            _tweenHolder.newTween(SmallFallTime/maxDRow*dRow, alpha =>
+            {
+                dotsPrefabScript.SetPosition(y: oldY*(1f-alpha) + alpha*newY);
+            }, () =>
+            {
+                dotsPrefabScript.InTheRightPlace = true;
+                dotsPrefabScript.SetPosition(y: newY);
+            });
+            dotsPrefabScript.TargetRow = -1;
         }
+        
+        
     }
     
     
@@ -149,17 +196,12 @@ public class DotsMain : MonoBehaviour
     void fillPhase()
     {
         var cn = ColNeeds();
-        var s = "";
-        foreach (var i in cn)
-        {
-            s += $"{i},";
-        }
         fillGrid(cn);
     }
 
     void fillGrid(int[] colNeeds)
     {
-        var unstable = _dotsList.Where(x => !x.InTheRightPlace).ToList();
+        var unstable = _dotGrid.DotsList.Where(x => !x.InTheRightPlace).ToList();
 
         for (int i = 0; i < _rows; i++)
         {
@@ -175,8 +217,18 @@ public class DotsMain : MonoBehaviour
                 t.setRow(r);
                 t.setColumn(j+1);
                 t.SetInfo(_lineRandom.Next(0, _dotsLevelsInfo.DotTypes), _mainCamera.ScaledSingleSize,gridRect);
+                var y = gridRect.center.y;
+                t.SetPosition(y : y + (float)2f*_mainCamera.Camera.orthographicSize);
                 t.gameObject.SetActive(true);
-                t.InTheRightPlace = true;
+                _tweenHolder.newTween(.8f, alpha =>
+                {
+                    var dy = 2f*_mainCamera.Camera.orthographicSize*Math.Abs(Math.Cos(8f*alpha))*Math.Exp(-4f*alpha);
+                    t.SetPosition(y : y + (float)dy);
+                }, () =>
+                {
+                    t.SetPosition(y : y);
+                    t.InTheRightPlace = true;
+                });
                 unstable.Remove(t);
                 colNeeds[j] -= 1;
 
@@ -189,7 +241,7 @@ public class DotsMain : MonoBehaviour
 
     int[] ColNeeds()
     {
-        var stabilized = _dotsList.Where(x => x.InTheRightPlace);
+        var stabilized = _dotGrid.DotsList.Where(x => x.InTheRightPlace);
         var a = new int[_cols];
         for (int i = 0; i < _cols; i++)
         {
@@ -201,20 +253,69 @@ public class DotsMain : MonoBehaviour
 
     void TerminateTouch()
     {
+        //_movesLeft -= 1;
         if (_selectionList.Selections.Count > 2)
         {
+            _gameState = GameState.Standby;
+            _dotsScoreboard.AddToRemoved(_selectionList.getTypes());
+
             foreach (var dotsPrefabScript in _selectionList.Selections)
             {
                 dotsPrefabScript.InTheRightPlace = false;
-                dotsPrefabScript.gameObject.SetActive(false);
             }
-            moveDown();
+            _selectionList.ClearTouchEffects();
+            _tweenHolder.newTween(EraseTime, alpha =>
+            {
+                var a = -1f * alpha * alpha + 1;
+                foreach (var dotsPrefabScript in _selectionList.Selections)
+                {
+                    
+                    dotsPrefabScript.gameObject.transform.localScale = new Vector3(a, a, 1f);
+                    dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
+                }
+                
+            }, () =>
+            {
+                foreach (var dotsPrefabScript in _selectionList.Selections)
+                {
+                    dotsPrefabScript.gameObject.SetActive(false);
+                }
+                
+            });
+            _timer.addEvent(EraseTime+.1f, () =>
+            {
+                _selectionList.Clear();
+                moveDown();
+                //fillPhase();
+                //_dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+                //var hi = _dotsScoreboard.GetHudInfo();
+                //_dotsHud.updateInfo(hi.movesLeft,hi.mood);
+            });
         
-            fillPhase();
+            _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
+            {
+                //_selectionList.Clear();
+                //moveDown();
+                fillPhase();
+                _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+                var hi = _dotsScoreboard.GetHudInfo();
+                _dotsHud.updateInfo(hi.movesLeft,hi.mood);
+                
+                if (!_dotGrid.AnyLegalMoves())
+                {
+                    _gameState = GameState.Lost;
+                    LevelDone(false);
+                    _betweenLevels.UpdateSmallText(  "No more moves!");
+                }
+            });    
+        }
+        else
+        {
+            _selectionList.Clear();
         }
         
         
-        _selectionList.Clear();
+        
     }
     
     private void HandleTouch()
@@ -241,6 +342,9 @@ public class DotsMain : MonoBehaviour
 
 
         var touchWp = _mainCamera.Camera.ScreenToWorldPoint(thisTouch.position);
+
+        _selectionList.SetDragTip(touchWp, _mainCamera.Scale);
+        
         var p = _mainCamera.WorldToGridPos(touchWp);
 
         if (p.r == -1)
@@ -248,14 +352,13 @@ public class DotsMain : MonoBehaviour
             return;
         }
         
-        var thisDot = _dotsList.Find(x => x.Row == p.r && x.Column == p.c);
+        var thisDot = _dotGrid.DotsList.Find(x => x.Row == p.r && x.Column == p.c);
 
         if (_selectionList.IsLatestPick(thisDot))
         {
             return;
         }
 
-        
         if(!thisDot.ContainsPoint(touchWp))
         {
             return;
@@ -266,6 +369,7 @@ public class DotsMain : MonoBehaviour
         if (lineType == -1)
         {
             _selectionList.AddDot(thisDot);
+            _selectionList.SetDragChain( _mainCamera.Scale);
         }
         else
         {
@@ -274,130 +378,67 @@ public class DotsMain : MonoBehaviour
                 if (_selectionList.IsAdjacent(thisDot) || _selectionList.ListContains(thisDot))
                 {
                     _selectionList.AddDot(thisDot);
+                    _selectionList.SetDragChain( _mainCamera.Scale);
                 }
             }
         }
-        
-        //if (_selectionList.LineType() == thisDot.DotType || _selectionList.LineType() == -1)
-        //{
-            
-        //}
-        
-        
-        
-        
-        
-        
-        
-        
-
-        //var thisTurTouches = Array
-        //    .FindAll(Input.touches, x => x.phase == TouchPhase.Moved).ToList();
-
-        //var movingTouch = thisTurTouches[0];
-
-
-
-
-
-        //var firstTouch = thisTurnTouches[0];
-
-
-        //var worldPoint = _mainCamera.Camera.ScreenToWorldPoint(firstTouch.position);
-
-
-
-        /*
-        var counter = -1;
-        var broker = false;
-        foreach (var sockCardPrefabScript in _sockCardPrefabs)
-        {
-            counter += 1;
-            if(sockCardPrefabScript.sockVisible) continue;
-            
-
-            if (sockCardPrefabScript.Collides(worldPoint))
-            {
-                
-                broker = true;
-                
-                _tweenHolder.newTween(0.5f, alpha =>
-                {
-                    var t = sockCardPrefabScript.gameObject.transform;
-                    var x = (float)Math.Sin(alpha * Math.PI)*90;
-                    t.rotation = Quaternion.Euler(t.eulerAngles.x,x,t.eulerAngles.z);
-                    
-                    if (alpha > 0.5f)
-                    {
-                        if (!sockCardPrefabScript.sockVisible)
-                        {
-                            sockCardPrefabScript.SockVisible(true);
-                            
-                        }
-                    }
-                    
-                    
-                    
-                    
-                },endAction: () =>
-                {
-                    sockCardPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                    for (int i = 0; i < _selection.Length; i++)
-                    {
-                        if (_selection[i] == -1)
-                        {
-                            _selection[i] = counter;
-                            break;
-                        }
-                    }
-                });
-                
-
-                
-            }
-            if (broker)
-            {
-                break;
-            }
-            
-            
-        }
-        */
-
+    }
+    
+    protected override (int number, string text)  GetLevelPoints()
+    {
+        return _dotsScoreboard.GetLevelPoints();
     }
     
     
-    
-    
-    
-    
+    void UpdateEngine()
+    {
+        _tweenHolder.Update(Time.deltaTime);
+        _timer.Update(Time.deltaTime);
+        _dotsHud.Update();
+        _betweenLevels.Update();
+        _quickSettings.Update();
+    }
     
     
     // Update is called once per frame
     void Update()
     {
-        _tweenHolder.Update(Time.deltaTime);
+        UpdateEngine();
         
-        if (_gameState == DotsGameState.StandBy)
+        
+        if (_gameState == GameState.Game)
         {
-            
-            if (_dotsList.All(x => x.InTheRightPlace))
+            if (_dotsScoreboard.GameWon())
             {
-                _gameState = DotsGameState.Game;
+                _gameState = GameState.Won;
+                LevelDone(true);
+            }else if (_dotsScoreboard.GameLost())
+            {
+                _gameState = GameState.Lost;
+                LevelDone(false);
             }
-            
-            
-            
-        }else if (_gameState == DotsGameState.Game)
-        {
             HandleTouch();
+            
+        }else if (_gameState == GameState.Settings)
+        {
+            if (!_quickSettings.Active)
+            {
+                _quickSettings.setVisible(true);
+            }
+        }else if (_gameState == GameState.Standby)
+        {
+            if (_dotGrid.DotsList.All(x => x.InTheRightPlace))
+            {
+                _gameState = GameState.Game;
+            }
+        }else if (_gameState == GameState.Won || _gameState == GameState.Lost)
+        {
+            if (!_betweenLevels.Active)
+            {
+                _betweenLevels.setVisible(true);
+            }
         }
     }
 
-
-
-    enum DotsGameState
-    {
-        Loading, Game, StuffMoves, StandBy, GameLost, GameWon 
-    };
+    
 }

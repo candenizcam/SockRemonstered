@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Classes;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.U2D;
@@ -62,7 +63,7 @@ public class SockPrefabScript : MonoBehaviour
             var v = 1f - _tweenTimer / _tweenTime;
             var s = -1.25f * v * v + 0.25f * v + 1f;
             
-            gameObject.transform.localScale= Tools.MutateVector3(gameObject.transform.localScale, 
+            gameObject.transform.localScale= VectorTools.MutateVector3(gameObject.transform.localScale, 
                 x: s*Screen.width / 1284f,
                 y:s*Screen.width / 1284f);
             

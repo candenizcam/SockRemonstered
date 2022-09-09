@@ -5,7 +5,8 @@ namespace Classes
 {
     public static class Constants
     {
-        public static readonly Color[] GameColours =  {
+        public static readonly Color[] GameColours =
+        {
             new Color(0.63f, 0.18f, 0.15f), //a12d26 0
             new Color(0.71f, 0.22f, 0.19f), //b53831
             new Color(0.76f, 0.30f, 0.20f), //c14c33
@@ -42,12 +43,52 @@ namespace Classes
         public const int BetweenHeartsTime = 60; // in secs
         public const float FurnitureChance = 0.1f;
         public const bool MatchDiagonal = true;
+        public static readonly string[] WinTexts = new []{
+            "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
+        };
+        
+        
+        public static readonly Color[] DotsColours = new Color[]
+        {
+            new Color(0.3f,0f,0f,1f),
+            new Color(0.3f,0.15f,0f,1f),
+            new Color(0.3f,0.3f,0f,1f),
+            new Color(0f,0.3f,.1f,1f),
+            new Color(0f,0.1f,0.3f,1f),
+            new Color(0.3f,0.1f,0.4f,1f)
+        };
+
+        public static Color GetDotColours(int n)
+        {
+            if (n >= 0)
+            {
+                return DotsColours[n];
+            }
+            else
+            {
+                return GameColours[28];
+            }
+        }
+        
+
+        public static string GetDotPath(int n)
+        {
+            if (n >= 0)
+            {
+                return $"gamelements/dot-{n + 1}";
+            }
+            else
+            {
+                return "gamelements/dot-any";
+            }
+            
+        }
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {
 
-            Debug.Log($"big number {bigNumber}");
-
+            //Debug.Log($"big number {bigNumber}");
+            /*
             var v = bigNumber - 1;
             var l = (v / 10)*5;
             if (v % 10 >= 5)
@@ -58,6 +99,7 @@ namespace Classes
             {
                 return new NextLevelData("WashingMachineScene",l + v % 5 );
             }
+            */
             /*
             var l = (bigNumber / 10)*5;
             if ((bigNumber-1) % 10 >= 5)
@@ -69,7 +111,7 @@ namespace Classes
                 return new NextLevelData("WashingMachineScene",l + bigNumber % 5-1 );
             }
             */
-            /*
+            
             if (bigNumber % 5==0)
             {
                 return new NextLevelData("Cards",bigNumber / 5 - 1);
@@ -84,7 +126,7 @@ namespace Classes
             {
                 return new NextLevelData("WashingMachineScene",l + bigNumber % 5 - 1);
             }
-            */
+            
 
         }
         

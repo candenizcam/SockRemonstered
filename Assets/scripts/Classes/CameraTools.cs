@@ -10,7 +10,8 @@ namespace Classes
         public CameraTools(Camera c)
         {
             Camera = c;
-            c.orthographicSize = Screen.height / 200f;
+            Debug.Log($"sh: {Screen.height}, sw: {Screen.width}");
+            c.orthographicSize = 2552f / 200f;
         }
 
 

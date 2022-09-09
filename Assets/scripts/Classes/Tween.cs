@@ -35,7 +35,7 @@ namespace Classes
             }
             if (Repeat == 0)
             {
-                _tweenAction(0f);
+                //_tweenAction(0f);
                 return;
             };
             

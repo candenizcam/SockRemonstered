@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 using WashingMachine.WMScripts;
 using Object = System.Object;
 
-public class WMMain : MonoBehaviour
+public class WMMain : GameMain
 {
     //public List<Prefab> 
     
@@ -25,19 +25,16 @@ public class WMMain : MonoBehaviour
     private List<SockPrefabScript> _activeSocks = new List<SockPrefabScript>();
     private WMLayout mainCamera;
 
-    private UIDocument _uiDocument;
-    private WMHud _wmHud;
-    private BetweenLevels _betweenLevels;
-    private QuickSettings _quickSettings;
+    
+    
+    private WMHud _wmHud => (WMHud)_gameHud;
     private float _baseWheelHeight;
     private float _wheelSpeed = 1f;
     private float _wheelStartPos;
-    private System.Random _random;
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
-    private int gameState = -1; //-1 initialize, 0 runs, 1 pause, 2 lost, 3 won
-    private Timer _timer;
+    //private int gameState = -1; //-1 initialize, 0 runs, 1 pause, 2 lost, 3 won
     private float firstStop = 1f;
     private List<GameObject> _starters = new List<GameObject>();
     
@@ -73,22 +70,9 @@ public class WMMain : MonoBehaviour
     
     void Awake()
     {
-
-        
-        _timer = new Timer();
-        _timer.addEvent(firstStop, () =>
-        {
-            gameState = 0;
-            foreach (var starter in _starters)
-            {
-                
-                Destroy(starter);
-            }
-        });
+        _gameState = GameState.Loading;
         var sgd = SerialGameData.LoadOrGenerate();
-
         var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
-
         if (levelInfo.SceneName != "WashingMachineScene")
         {
             throw new Exception("there is a problem");
@@ -100,14 +84,10 @@ public class WMMain : MonoBehaviour
             levelIndex = LevelIndex;
         }
         
-        _random = new System.Random();        
         
         mainCamera = new WMLayout(Camera.main);
-
         var r = mainCamera.playfieldRect();
-        
         playfield.transform.localScale = new Vector3(r.width,r.height,0f);
-
         playfield.transform.position = new Vector3(r.center.x,r.center.y,100f);
         
 
@@ -117,64 +97,20 @@ public class WMMain : MonoBehaviour
         _baseWheelHeight = wsr.sprite.vertices[0].y * 2;
         wsr.size = new Vector2(r.width, mainCamera.Camera.orthographicSize*4f);
         
-        _uiDocument = gameObject.GetComponent<UIDocument>();
-        _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
-        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-
-        _wmHud = new WMHud(mainCamera);
-        _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
-        _wmHud.SettingsButtonAction = () =>
+        //_uiDocument = gameObject.GetComponent<UIDocument>();
+        //_uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
+        //_uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+        InitializeMisc();
+        _timer.addEvent(firstStop, () =>
         {
-            gameState = 1;
-        };
-
-        
-        
-        _betweenLevels = new BetweenLevels(mainCamera);
-        _betweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
-        _betweenLevels.setVisible(false);
-        _betweenLevels.OnCross = () =>
-        {
-            ToHQ();
-        };
-        _betweenLevels.OnBigButton = () =>
-        {
-        };
-
-
-        
-        _quickSettings = new QuickSettings(mainCamera, sgd.sound, sgd.music);
-        _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
-        _quickSettings.setVisible(false);
-        _quickSettings.SettingsButtonAction = () =>
-        {
-            _quickSettings.setVisible(false);
-            gameState = 0;
-        };
-
-        _quickSettings.MusicButtonAction = (bool b) =>
-        {
-            Debug.Log("music cancelled");
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.music = b ? 0 : 1;
-            sgd.Save();
-        };
-        
-        _quickSettings.SoundButtonAction = (bool b) =>
-        {
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.sound = b ? 0 : 1;
-            sgd.Save();
-        };
-
-        _quickSettings.ReturnButtonAction = () =>
-        {
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.changeHearts(-1);
-            sgd.Save();
-            ToHQ();
-        };
-            
+            _gameState = GameState.Game;
+            foreach (var starter in _starters)
+            {
+                
+                Destroy(starter);
+            }
+        });
+        InitializeUi<WMHud>(mainCamera);
             
         var left = r.xMin;
         var bottom = r.yMax;
@@ -298,75 +234,16 @@ public class WMMain : MonoBehaviour
     }
 
 
-    private string getBigText()
-    {
-        return $"Level {levelIndex+1}";
-    }
     
-    private string getSmallText(bool levelWon)
-    {
 
-        return levelWon ? "Yarn-tastic!" : "Level failed!";
-    }
-
-    private (int number, string text)  getLevelPoints()
+    protected override (int number, string text)  GetLevelPoints()
     {
         return (_moveNo * 10,$"  {_moveNo * 10}");
     }
-    
-    
-
-
-    private void levelDone(bool won)
-    {
-        var lp = getLevelPoints();
-        var buttonText = "NEXT";
-        if (won)
-        {
-            gameState = 3;
-            var sgd = SerialGameData.LoadOrGenerate();
-            sgd.nextLevel += 1;
-            sgd.coins += lp.number;
-            sgd.Save();
-            _betweenLevels.OnBigButton = () =>
-            {
-                NextLevel();
-
-            };
-        }
-        else
-        {
-            gameState = 2;
-            var sgd = SerialGameData.LoadOrGenerate();
-            if (sgd.changeHearts(-1) > 0)
-            {
-                buttonText = "RETRY";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    Restart();
-                };
-            }
-            else
-            {
-                buttonText = "RETURN";
-                _betweenLevels.OnBigButton = () =>
-                {
-                    ToHQ();
-                };
-            }
-            
-            sgd.Save();
-            
-        }
-        
-        _betweenLevels.UpdateInfo(won, bigText: getBigText(), smallText: getSmallText(won), lp.text,buttonText);
-        
-    }
-
 
     private void FixedUpdate()
     {
-        if (gameState == 0)
+        if (_gameState == GameState.Game)
         {
 
 
@@ -388,21 +265,20 @@ public class WMMain : MonoBehaviour
         _wmHud.Update();
         _timer.Update(Time.deltaTime);
         
-        if (MoveNo <= 0 && gameState==0)
+        if (MoveNo <= 0 && _gameState == GameState.Game)
         {
-            
-            gameState = 2;
-            levelDone(false);
+            _gameState = GameState.Lost;
+            LevelDone(false);
         }
 
-        if (_wmScoreboard.GameWon()&& gameState==0)
+        if (_wmScoreboard.GameWon()&& _gameState == GameState.Game)
         {
-            gameState = 3;
-            levelDone(true);
+            _gameState = GameState.Won;
+            LevelDone(true);
             
         }
 
-        if (gameState==2 || gameState==3)
+        if (_gameState==GameState.Won || _gameState==GameState.Lost)
         {
             
             foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
@@ -415,27 +291,16 @@ public class WMMain : MonoBehaviour
             {
                 _betweenLevels.setVisible(true);
             }
-        }else if (gameState == 1)
+        }else if (_gameState == GameState.Settings)
         {
             if (!_quickSettings.Active)
             {
                 _quickSettings.setVisible(true);
             }
         }
-        else if(gameState==0)
+        else if(_gameState == GameState.Game)
         {
 
-            /*
-
-            display += $"{Time.deltaTime*_wheelSpeed:0.000}, ";
-            Tools.TranslatePosition(wheel,y: -Time.deltaTime*_wheelSpeed );
-            if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
-            {
-                Tools.MutatePosition(wheel,y: wheel.transform.position.y+_baseWheelHeight);
-            }
-            
-            */
-            
             
             var i = 0;
             
@@ -477,7 +342,7 @@ public class WMMain : MonoBehaviour
 
 
         }
-        else if(gameState==-1)
+        else if(_gameState == GameState.Loading)
         {
             //Debug.Log("-1");
             //gameState = 0;
@@ -511,7 +376,7 @@ public class WMMain : MonoBehaviour
         var sps = bsp.GetComponent <SockPrefabScript> ();
         sps.ChangeSprite(s.SockNo);
         
-        sps.gameObject.transform.position = Tools.MutateVector3(mainCamera.Camera.ViewportToWorldPoint(viewPortPos), z : 1f);
+        sps.gameObject.transform.position = VectorTools.MutateVector3(mainCamera.Camera.ViewportToWorldPoint(viewPortPos), z : 1f);
         
         sps.gameObject.transform.rotation = Quaternion.Euler(x: _random.Next(2)*180f, y: _random.Next(2)*180f, z: _random.Next(4) *90f);
         sps.gameObject.transform.localScale = new Vector3(Screen.width / 1284f, Screen.width / 1284f, 0f);

@@ -478,6 +478,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 466974981653054063, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555543931541257312, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2629965236110315734, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
       propertyPath: m_Name
       value: MonsterPrefab
@@ -528,7 +536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9034834565797904201, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.14
+      value: -2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4915d3941938a44f98c547c5a773c11, type: 3}
@@ -724,7 +732,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

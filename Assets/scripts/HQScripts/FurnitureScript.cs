@@ -31,9 +31,10 @@ public class FurnitureScript : MonoBehaviour
 
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public void MonsterEnabled(bool b)
     {
-        Debug.LogWarning($"id: {ID}, b: {b}");
+        
         if (ThereIsMonster)
         {
             NoMonster.enabled = !b;
@@ -43,7 +44,7 @@ public class FurnitureScript : MonoBehaviour
         {
             Debug.LogWarning("you fucked up, there is no monster");
         }
-            
+
     }
 
     // Update is called once per frame
