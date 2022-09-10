@@ -7,15 +7,40 @@ namespace Classes
     public class CameraTools
     {
         public readonly Camera Camera;
+        
+        //public static readonly float WorldHeight =  2532f / 200f;
+        //public static readonly float UiHeight = 2532f;
+        //public static readonly float UiWidth = 1170f;
+        
+        
         public float WorldWidth;
-        public float WorldHeight;
+        
+        // viewport
+        protected float _unsafeLeft;
+        protected float _unsafeRight;
+        protected float _unsafeTop;
+        protected float _unsafeBottom;
+        protected float _safeHeight;
+        protected float _safeWidth;
+
+
+
+        
         
         public CameraTools(Camera c)
         {
             Camera = c;
-            WorldHeight = 2552f / 200f;
-            c.orthographicSize = WorldHeight;
+            c.orthographicSize = Constants.WorldHeight;
             WorldWidth = c.aspect * c.orthographicSize;
+            
+            _unsafeLeft = Screen.safeArea.xMin/ Screen.width;
+            _unsafeRight = (Screen.width -  Screen.safeArea.xMax)/ Screen.width;
+            _unsafeBottom = Screen.safeArea.yMin/ Screen.height;
+            _unsafeTop = (Screen.height - Screen.safeArea.yMax)/ Screen.height;
+
+            
+            _safeWidth = Screen.safeArea.width / Screen.width;
+            _safeHeight = Screen.safeArea.height / Screen.height;
         }
 
 
@@ -84,6 +109,13 @@ namespace Classes
 
         }
         
+        //public Rect vp2uiRect(float xMin, float yMin, float xMax, float yMax)
+        //{
+            
+            //return vp2sRect(new Vector2(xMax,yMax),new Vector2(xMin,yMin));
+
+        //}
+        
         public Rect vp2sRect(Vector2 topRight, Vector2? bottomLeft = null)
         {
             var tr = Camera.ViewportToScreenPoint(topRight);
@@ -94,7 +126,7 @@ namespace Classes
 
         }
         
-        public enum  CoordSystem{Screen, World, Viewport}
+        public enum  CoordSystem{Screen, World, Viewport, UI}
         
     }
 }

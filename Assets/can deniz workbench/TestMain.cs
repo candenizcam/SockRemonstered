@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = System.Random;
 
 public class TestMain : MonoBehaviour
@@ -11,9 +12,12 @@ public class TestMain : MonoBehaviour
     public GameObject otherOtherOtherVisual;
 
     public GameObject otherVisual5;
+
+    private UIDocument _uiDocument;
     // Start is called before the first frame update
     void Start()
     {
+        /*
         var r = new Random(6);
 
         var s = "";
@@ -22,9 +26,52 @@ public class TestMain : MonoBehaviour
             var r2 = r.Next(0,4);
             s += $"{r2}";
         }
-        
+        */
 
-        Debug.Log(s);
+        var uiw = 1000;
+        var uih = 1000f / (float)Screen.width * (float)Screen.height;
+        
+        _uiDocument = gameObject.GetComponent<UIDocument>();
+        //_uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
+        //1170, 2532
+        _uiDocument.panelSettings.referenceResolution = new Vector2Int(uiw, (int)uih);
+        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+        _uiDocument.panelSettings.match = 0f;
+
+        var root = _uiDocument.rootVisualElement;
+        root.style.backgroundColor = Color.green;
+
+        root.style.justifyContent = Justify.Center;
+        root.style.alignContent = Align.Center;
+        
+        var ve2 = new VisualElement();
+        
+        ve2.style.backgroundColor = Color.red;
+        ve2.style.width = uiw*0.5f;
+        ve2.style.height = uih*0.5f;
+        ve2.style.position = Position.Absolute;
+        
+        ve2.style.left = uiw*0.25f;
+        ve2.style.top = uih*0.25f;
+        
+        
+        root.Add(ve2);
+        
+        
+        var ve = new VisualElement();
+        
+        ve.style.backgroundColor = Color.blue;
+        ve.style.width = uiw*0.5f-20f;
+        ve.style.height = uih*0.5f-20f;
+        ve.style.position = Position.Absolute;
+        //ve.style.right = 10f;
+        //ve.style.bottom = 10f;
+        ve.style.left = uiw*0.25f+10f;
+        ve.style.top = uih*0.25f+10f;
+        
+        
+        root.Add(ve);
+
 
         //Debug.Log($"screen, width {Screen.width}, height {Screen.height}");
 

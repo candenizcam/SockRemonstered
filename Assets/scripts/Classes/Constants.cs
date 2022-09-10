@@ -47,6 +47,16 @@ namespace Classes
             "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
         };
         
+        public const float WorldHeight =  2532f / 200f;
+        //public static readonly float UiHeight = 2532f;
+        public const float UiWidth = 1170f;
+        public static float UiHeight => UiWidth / (float)Screen.width * (float)Screen.height;
+        
+        public static float UnsafeTopUi => (Screen.height - Screen.safeArea.yMax)/ Screen.height * Constants.UiHeight;
+        public static float UnsafeBottomUi => Screen.safeArea.yMin/ Screen.height * Constants.UiHeight;
+        public static float UnsafeLeftUi => Screen.safeArea.xMin/ Screen.width * Constants.UiWidth;
+        public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
+        
         
         public static readonly Color[] DotsColours = new Color[]
         {

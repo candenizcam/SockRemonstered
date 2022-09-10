@@ -8,15 +8,11 @@ namespace Classes
         protected readonly float _playfieldXMax;
         protected readonly float _playfieldXMin;
 
-        protected float _unsafeLeft;
-        protected float _unsafeRight;
-        protected float _unsafeTop;
-        protected float _unsafeBottom;
+        
 
         public float UnsafeBottom => _unsafeBottom;
         
-        protected float _safeHeight;
-        protected float _safeWidth;
+        
 
         protected Rect _playfieldRectWorld;
         protected Rect _playfieldRectScreen;
@@ -25,10 +21,14 @@ namespace Classes
         protected Rect _topBarRectWorld;
         protected Rect _topBarRectScreen;
         protected Rect _topBarRectViewport;
+        protected Rect _topBarRectUi;
         
         protected Rect _bottomBarRectWorld;
         protected Rect _bottomBarRectScreen;
         protected Rect _bottomBarRectViewport;
+        
+        
+        
         
         //public float Scale = Screen.width / 1170f;
         public float Scale = 1f;
@@ -58,14 +58,7 @@ namespace Classes
             _playfieldXMax = topBar;
             _playfieldXMin = bottomBar;
 
-            _unsafeLeft = Screen.safeArea.xMin/ Screen.width;
-            _unsafeRight = (Screen.width -  Screen.safeArea.xMax)/ Screen.width;
-            _unsafeBottom = Screen.safeArea.yMin/ Screen.height;
-            _unsafeTop = (Screen.height - Screen.safeArea.yMax)/ Screen.height;
-
             
-            _safeWidth = Screen.safeArea.width / Screen.width;
-            _safeHeight = Screen.safeArea.height / Screen.height;
             
             _playfieldRectWorld = vp2wRect(_unsafeLeft, playfieldBottom, Screen.safeArea.xMax/ Screen.width, playfieldTop);
             _playfieldRectScreen = vp2sRect(_unsafeLeft, playfieldBottom, Screen.safeArea.xMax/ Screen.width, playfieldTop);
@@ -74,6 +67,7 @@ namespace Classes
             _topBarRectWorld = vp2sRect(_unsafeLeft, playfieldTop, Screen.safeArea.xMax/ Screen.width, 1f-_unsafeTop);
             _topBarRectScreen = vp2wRect(_unsafeLeft, playfieldTop, Screen.safeArea.xMax/ Screen.width, 1f-_unsafeTop);
             _topBarRectViewport =  Rect.MinMaxRect(_unsafeLeft, playfieldTop, Screen.safeArea.xMax/ Screen.width, 1f-_unsafeTop);
+            //_topBarRectUi = 
         
             _bottomBarRectWorld = vp2sRect(_unsafeLeft,_unsafeBottom, Screen.safeArea.xMax/ Screen.width,playfieldBottom );
             _bottomBarRectScreen = vp2wRect(_unsafeLeft,_unsafeBottom, Screen.safeArea.xMax/ Screen.width,playfieldBottom );

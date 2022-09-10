@@ -32,19 +32,20 @@ namespace Classes
 
         public virtual void Initialize(GameLayout gl)
         {
+            // 220, 200
             topBarRect = gl.topBarRect();
             bottomBarRect = gl.bottomBarRect();
             
             scale = gl.Scale;
-        
+            scale = 1f;
             
             _topBar = new VisualElement();
 
             _topBar.style.position = Position.Absolute;
-            _topBar.style.left = topBarRect.x;
-            _topBar.style.bottom = topBarRect.y;
-            _topBar.style.height = topBarRect.height;
-            _topBar.style.width = topBarRect.width;
+            _topBar.style.top = Constants.UnsafeTopUi;
+            _topBar.style.bottom = 0f;
+            _topBar.style.height = 220f;
+            _topBar.style.width = Constants.UiWidth;
             
             var settingsButton = new ButtonClickable(scale,"ui/buttons/Pause",Color.gray,() =>
             {
@@ -58,10 +59,10 @@ namespace Classes
             _bottomBar = new VisualElement();
         
             _bottomBar.style.position = Position.Absolute;
-            _bottomBar.style.left = bottomBarRect.x;
-            _bottomBar.style.bottom = bottomBarRect.y;
-            _bottomBar.style.height = bottomBarRect.height;
-            _bottomBar.style.width = bottomBarRect.width;
+            _bottomBar.style.left = 0f;
+            _bottomBar.style.bottom = Constants.UnsafeBottomUi;
+            _bottomBar.style.height = 200f;
+            _bottomBar.style.width = Constants.UiWidth;
             
             _buttons.Add(settingsButton);
             _bottomBar.Add(settingsButton);

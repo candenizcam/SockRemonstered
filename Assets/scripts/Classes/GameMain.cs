@@ -105,7 +105,7 @@ namespace Classes
             
             InitializeHud<T>(mainCamera);
             InitializeQuickSettings(mainCamera);
-            InitializeBetweenLevels(mainCamera);
+            InitializeBetweenLevels();
         }
         
         protected void InitializeMisc()
@@ -117,15 +117,17 @@ namespace Classes
 
         private void InitializeUiDocument()
         {
+            
             _uiDocument = gameObject.GetComponent<UIDocument>();
-            _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
+            _uiDocument.panelSettings.referenceResolution = new Vector2Int((int)Constants.UiWidth, (int)Constants.UiHeight);
             _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+            _uiDocument.panelSettings.match = 0f;
         }
 
         private void InitializeQuickSettings(GameLayout gameLayout)
         {
             var sgd1 = SerialGameData.LoadOrGenerate();
-            _quickSettings = new QuickSettings(gameLayout, sgd1.sound, sgd1.music);
+            _quickSettings = new QuickSettings( sgd1.sound, sgd1.music);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
             _quickSettings.setVisible(false);
             _quickSettings.SettingsButtonAction = QuickSettingsButtonFunction;
@@ -152,9 +154,9 @@ namespace Classes
             };
         }
 
-        private void InitializeBetweenLevels(GameLayout gameLayout)
+        private void InitializeBetweenLevels()
         {
-            _betweenLevels = new BetweenLevels(gameLayout);
+            _betweenLevels = new BetweenLevels();
             _betweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
             _betweenLevels.setVisible(false);
             _betweenLevels.OnCross = ToHQ;

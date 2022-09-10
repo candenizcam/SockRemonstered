@@ -77,8 +77,7 @@ namespace Classes
                 if (Input.touches[0].phase == TouchPhase.Began)
                 {
                     var p = Input.touches[0].position;
-                    p = new Vector2(p.x, Screen.height - p.y);
-                    
+                    p = new Vector2(p.x/Screen.width*Constants.UiWidth, (Screen.height - p.y)/Screen.height*Constants.UiHeight);
                     if (worldBound.Contains(p))
                     {
                         onTouchDown();
