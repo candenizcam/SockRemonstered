@@ -7,11 +7,15 @@ namespace Classes
     public class CameraTools
     {
         public readonly Camera Camera;
+        public float WorldWidth;
+        public float WorldHeight;
+        
         public CameraTools(Camera c)
         {
             Camera = c;
-            Debug.Log($"sh: {Screen.height}, sw: {Screen.width}");
-            c.orthographicSize = 2552f / 200f;
+            WorldHeight = 2552f / 200f;
+            c.orthographicSize = WorldHeight;
+            WorldWidth = c.aspect * c.orthographicSize;
         }
 
 
@@ -19,11 +23,7 @@ namespace Classes
         {
             var x2 = Camera.ScreenToWorldPoint(new Vector3(w, 0f, 0f)).x;
             var x1 = Camera.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)).x;
-            
             return x2-x1;
-            
-            
-            
         }
         
         public float vp2wWidth(float w)

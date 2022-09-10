@@ -30,7 +30,8 @@ namespace Classes
         protected Rect _bottomBarRectScreen;
         protected Rect _bottomBarRectViewport;
         
-        public float Scale = Screen.width / 1170f;
+        //public float Scale = Screen.width / 1170f;
+        public float Scale = 1f;
         
         public float playfieldTop // from unsafe top
         {
