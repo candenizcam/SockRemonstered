@@ -11,8 +11,8 @@ namespace Classes
         
         protected VisualElement _topBar;
         protected VisualElement _bottomBar;
-        protected Rect topBarRect;
-        protected Rect bottomBarRect;
+        //protected Rect topBarRect;
+        //protected Rect bottomBarRect;
         protected float scale;
         protected List<ButtonClickable> _buttons = new List<ButtonClickable>();
         
@@ -20,23 +20,15 @@ namespace Classes
         protected MonsterFaces _monsterFaces;
         protected MoveCounter _moveCounter;
         
+ 
         public GameHud()
         {
-        }
-        
-        public GameHud(GameLayout gl)
-        {
-            Initialize(gl);
+            Initialize();
             
         }
 
-        public virtual void Initialize(GameLayout gl)
+        public virtual void Initialize()
         {
-            // 220, 200
-            topBarRect = gl.topBarRect();
-            bottomBarRect = gl.bottomBarRect();
-            
-            scale = gl.Scale;
             scale = 1f;
             
             _topBar = new VisualElement();

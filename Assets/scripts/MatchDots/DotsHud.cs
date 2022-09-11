@@ -10,21 +10,21 @@ namespace MatchDots
         private Image _targetHolder;
         
         
-        public DotsHud(GameLayout gl) : base(gl)
+        public DotsHud() : base()
         {
-            Initialize(gl);
+            Initialize();
         }
         
-        public override void Initialize(GameLayout gl)
+        public override void Initialize()
         {
-            base.Initialize(gl);
-
+            base.Initialize();
+            var scale = 1f;
             _targetHolder = new Image();
             _targetHolder.style.position = Position.Absolute;
-            _targetHolder.style.left = 25f * gl.Scale;
-            _targetHolder.style.top = 30f * gl.Scale;
-            _targetHolder.style.width = 800f * gl.Scale;
-            _targetHolder.style.bottom = 30f * gl.Scale;
+            _targetHolder.style.left = 25f * scale;
+            _targetHolder.style.top = 30f * scale;
+            _targetHolder.style.width = 800f * scale;
+            _targetHolder.style.bottom = 30f * scale;
             _targetHolder.style.flexDirection = FlexDirection.Row;
             _targetHolder.style.justifyContent = Justify.Center;
             _targetHolder.sprite = Resources.Load<Sprite>("ui/buttons/money_bg_2");
@@ -109,9 +109,5 @@ namespace MatchDots
             }
         }
         
-        public DotsHud() : base()
-        {
-            
-        }
     }
 }

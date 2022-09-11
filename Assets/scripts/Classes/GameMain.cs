@@ -88,10 +88,10 @@ namespace Classes
         }
 
 
-        private void InitializeHud<T>(GameLayout gl) where T: GameHud, new()
+        private void InitializeHud<T>() where T: GameHud, new()
         {
             _gameHud = new T();
-            _gameHud.Initialize(gl);
+            _gameHud.Initialize();
             _gameHud.SettingsButtonAction = () =>
             {
                 _gameState = GameState.Settings;
@@ -103,8 +103,8 @@ namespace Classes
         {
             InitializeUiDocument();
             
-            InitializeHud<T>(mainCamera);
-            InitializeQuickSettings(mainCamera);
+            InitializeHud<T>();
+            InitializeQuickSettings();
             InitializeBetweenLevels();
         }
         
@@ -124,7 +124,7 @@ namespace Classes
             _uiDocument.panelSettings.match = 0f;
         }
 
-        private void InitializeQuickSettings(GameLayout gameLayout)
+        private void InitializeQuickSettings()
         {
             var sgd1 = SerialGameData.LoadOrGenerate();
             _quickSettings = new QuickSettings( sgd1.sound, sgd1.music);
