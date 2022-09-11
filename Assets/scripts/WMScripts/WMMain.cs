@@ -218,17 +218,15 @@ public class WMMain : GameMain
         _timer.Update(Time.deltaTime);
         _tweenHolder.Update(Time.deltaTime);
         
-        if (MoveNo <= 0 && _gameState == GameState.Game)
-        {
-            _gameState = GameState.Lost;
-            LevelDone(false);
-        }
-
         if (_wmScoreboard.GameWon()&& _gameState == GameState.Game)
         {
             _gameState = GameState.Won;
             LevelDone(true);
             
+        }else if (MoveNo <= 0 && _gameState == GameState.Game)
+        {
+            _gameState = GameState.Lost;
+            LevelDone(false);
         }
 
         if (_gameState==GameState.Won || _gameState==GameState.Lost)
@@ -253,7 +251,9 @@ public class WMMain : GameMain
         }
         else if(_gameState == GameState.Game)
         {
+            
 
+            
             
             var i = 0;
             
