@@ -7,22 +7,8 @@ namespace WashingMachine.WMScripts
 {
     public class WMLayout: GameLayout
     {
-
-        
-        
-        
-
-        
-        
         public WMLayout(Camera c) : base(c)
         {
-            
-            
         }
-
-        
-        
-        
-        
     }
 }

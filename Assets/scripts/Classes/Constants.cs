@@ -47,6 +47,16 @@ namespace Classes
             "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
         };
         
+        public const float WorldHeight =  2532f / 200f;
+        //public static readonly float UiHeight = 2532f;
+        public const float UiWidth = 1170f;
+        public static float UiHeight => UiWidth / (float)Screen.width * (float)Screen.height;
+        
+        public static float UnsafeTopUi => (Screen.height - Screen.safeArea.yMax)/ Screen.height * Constants.UiHeight;
+        public static float UnsafeBottomUi => Screen.safeArea.yMin/ Screen.height * Constants.UiHeight;
+        public static float UnsafeLeftUi => Screen.safeArea.xMin/ Screen.width * Constants.UiWidth;
+        public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
+        
         
         public static readonly Color[] DotsColours = new Color[]
         {
@@ -86,32 +96,6 @@ namespace Classes
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {
-
-            //Debug.Log($"big number {bigNumber}");
-            /*
-            var v = bigNumber - 1;
-            var l = (v / 10)*5;
-            if (v % 10 >= 5)
-            {
-                return new NextLevelData("Cards",l + v % 5 );
-            }
-            else
-            {
-                return new NextLevelData("WashingMachineScene",l + v % 5 );
-            }
-            */
-            /*
-            var l = (bigNumber / 10)*5;
-            if ((bigNumber-1) % 10 >= 5)
-            {
-                return new NextLevelData("Cards",l + bigNumber % 5 -1);
-            }
-            else
-            {
-                return new NextLevelData("WashingMachineScene",l + bigNumber % 5-1 );
-            }
-            */
-            
             if (bigNumber % 5==0)
             {
                 return new NextLevelData("Cards",bigNumber / 5 - 1);
@@ -126,11 +110,7 @@ namespace Classes
             {
                 return new NextLevelData("WashingMachineScene",l + bigNumber % 5 - 1);
             }
-            
-
         }
-        
-
     }
 
     public class NextLevelData

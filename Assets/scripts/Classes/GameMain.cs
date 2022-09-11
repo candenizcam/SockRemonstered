@@ -88,10 +88,10 @@ namespace Classes
         }
 
 
-        private void InitializeHud<T>(GameLayout gl) where T: GameHud, new()
+        private void InitializeHud<T>() where T: GameHud, new()
         {
             _gameHud = new T();
-            _gameHud.Initialize(gl);
+            _gameHud.Initialize();
             _gameHud.SettingsButtonAction = () =>
             {
                 _gameState = GameState.Settings;
@@ -103,9 +103,9 @@ namespace Classes
         {
             InitializeUiDocument();
             
-            InitializeHud<T>(mainCamera);
-            InitializeQuickSettings(mainCamera);
-            InitializeBetweenLevels(mainCamera);
+            InitializeHud<T>();
+            InitializeQuickSettings();
+            InitializeBetweenLevels();
         }
         
         protected void InitializeMisc()
@@ -117,15 +117,17 @@ namespace Classes
 
         private void InitializeUiDocument()
         {
+            
             _uiDocument = gameObject.GetComponent<UIDocument>();
-            _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
+            _uiDocument.panelSettings.referenceResolution = new Vector2Int((int)Constants.UiWidth, (int)Constants.UiHeight);
             _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+            _uiDocument.panelSettings.match = 0f;
         }
 
-        private void InitializeQuickSettings(GameLayout gameLayout)
+        private void InitializeQuickSettings()
         {
             var sgd1 = SerialGameData.LoadOrGenerate();
-            _quickSettings = new QuickSettings(gameLayout, sgd1.sound, sgd1.music);
+            _quickSettings = new QuickSettings( sgd1.sound, sgd1.music);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
             _quickSettings.setVisible(false);
             _quickSettings.SettingsButtonAction = QuickSettingsButtonFunction;
@@ -152,9 +154,9 @@ namespace Classes
             };
         }
 
-        private void InitializeBetweenLevels(GameLayout gameLayout)
+        private void InitializeBetweenLevels()
         {
-            _betweenLevels = new BetweenLevels(gameLayout);
+            _betweenLevels = new BetweenLevels();
             _betweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
             _betweenLevels.setVisible(false);
             _betweenLevels.OnCross = ToHQ;

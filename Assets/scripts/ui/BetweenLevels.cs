@@ -9,7 +9,7 @@ namespace Classes
     public class BetweenLevels
     {
         private VisualElement _betweenElement;
-        private float scale = Screen.width / 1170f;
+        private float scale = 1f;
         private List<ButtonClickable> _buttons = new List<ButtonClickable>();
         public bool Active;
         private Label _bigText;
@@ -21,12 +21,12 @@ namespace Classes
         public Action OnCross;
         public Action OnBigButton;
         
-        public BetweenLevels(GameLayout wmLayout)
+        public BetweenLevels()
         {
             
             _betweenElement = new VisualElement();
-            _betweenElement.style.width = Screen.width;
-            _betweenElement.style.height = Screen.height;
+            _betweenElement.style.width = Constants.UiWidth;
+            _betweenElement.style.height = Constants.UiHeight;
             _betweenElement.style.backgroundColor = new Color(0.102f, 0.024f, 0.071f,0.84f);
             
             
@@ -34,8 +34,8 @@ namespace Classes
             bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
             bg.style.position = Position.Absolute;
             
-            bg.style.left = (Screen.width - bg.sprite.rect.width) * 0.5f*scale;
-            bg.style.top = (Screen.height - bg.sprite.rect.height) * 0.5f*scale;
+            bg.style.left = (Constants.UiWidth - bg.sprite.rect.width) * 0.5f*scale;
+            bg.style.top = (Constants.UiHeight - bg.sprite.rect.height) * 0.5f*scale;
             bg.style.width = bg.sprite.rect.width*scale;
             bg.style.height = bg.sprite.rect.height*scale;
             bg.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));

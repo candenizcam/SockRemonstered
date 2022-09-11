@@ -24,30 +24,40 @@ namespace HQScripts
 
             _bgButton = new Button(BgButtonFunction);
             _bgButton.style.position = Position.Absolute;
-            _bgButton.style.left =-10f;
-            _bgButton.style.bottom = -10f;
-            _bgButton.style.height = Screen.height+20f;
-            _bgButton.style.width = Screen.width+20f;
+            _bgButton.style.left =-10f - Constants.UnsafeLeftUi;
+            _bgButton.style.top = -10f - Constants.UnsafeTopUi;
+            _bgButton.style.height = Constants.UiHeight+20f;
+            _bgButton.style.width = Constants.UiWidth+20f;
             _bgButton.style.backgroundColor = new Color(0.05f, 0.05f, 0.05f, 0.5f);
             _bgButton.style.borderBottomColor = Color.clear;
             _bgButton.style.borderTopColor = Color.clear;
             _bgButton.style.borderRightColor = Color.clear;
             _bgButton.style.borderLeftColor = Color.clear;
 
-            var top = hqLayout.topBarRect().yMin;
-            var bottom = hqLayout.bottomBarRect().yMin;
+            //var top = hqLayout.topBarRect().yMin;
+            //var bottom = hqLayout.bottomBarRect().yMin;
             
             _mainHolder = new Image();
             _mainHolder.sprite = Resources.Load<Sprite>("ui/shop/ShopBackground");
             
             _mainHolder.scaleMode = ScaleMode.StretchToFill;
             
+            // top: 250, bottom: 250
+
+            var w = Tools.WidthThatFitsToSize(Constants.UiWidth, Constants.UiHeight - 250f -Constants.UnsafeBottomUi-Constants.UnsafeTopUi,
+                _mainHolder.sprite.rect.width / _mainHolder.sprite.rect.height);
+
+            var h = w / _mainHolder.sprite.rect.width * _mainHolder.sprite.rect.height;
             
             _mainHolder.style.position = Position.Absolute;
-            _mainHolder.style.height = top-bottom;
-            _mainHolder.style.width = _mainHolder.sprite.rect.width*hqLayout.Scale;
-            _mainHolder.style.left = (Screen.width - (_mainHolder.sprite.rect.width * hqLayout.Scale))*0.5f;
-            _mainHolder.style.bottom = bottom;
+            _mainHolder.style.width = w;
+            _mainHolder.style.height = h;
+            _mainHolder.style.left = (Constants.UiWidth - w) * 0.5f;
+            _mainHolder.style.top = 250f;
+            //_mainHolder.style.height = top-bottom;
+            //_mainHolder.style.width = _mainHolder.sprite.rect.width*hqLayout.Scale;
+            //_mainHolder.style.left = (Screen.width - (_mainHolder.sprite.rect.width * hqLayout.Scale))*0.5f;
+            //mainHolder.style.bottom = bottom;
             _mainHolder.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
             _mainHolder.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
             _mainHolder.style.color = Constants.GameColours[11];
@@ -55,11 +65,13 @@ namespace HQScripts
             
 
             var tabHolder = new VisualElement();
-            tabHolder.style.paddingLeft = 23f*hqLayout.Scale;
-            tabHolder.style.paddingRight = 23f*hqLayout.Scale;
-            var tabHolderWidth = (_mainHolder.sprite.rect.width - 46f) * hqLayout.Scale;
+            tabHolder.style.paddingLeft = 23f;
+            tabHolder.style.paddingRight = 23f;
+            var tabHolderWidth = w - 46f;
+
+            var scale =  w/_mainHolder.sprite.rect.width;
             
-            _shopTabs = new ShopTabs(hqLayout.Scale, (x) =>
+            _shopTabs = new ShopTabs(scale, (x) =>
             {
                 // 0: closet, 1: shop, 2: coin
                 tabHolder.Clear();
@@ -89,11 +101,12 @@ namespace HQScripts
             _mainHolder.Add(_shopTabs);
             _mainHolder.Add(tabHolder);
             
+            // 250- 2000
+            var tabHeight = h * 7f / 8f;
             
-
-            _closetTab = new ClosetTab(hqLayout.Scale,
+            _closetTab = new ClosetTab(scale,
                 tabHolderWidth,
-                _mainHolder.sprite.rect.width*hqLayout.Scale
+                tabHeight
                 );
             _closetTab.ItemAction = thisItem =>
             {
@@ -145,7 +158,7 @@ namespace HQScripts
             }; 
             //_closetTab.UpdateShopItems(ShopItems.ShopItemsArray);
 
-            _coinTab = new CoinTab(hqLayout.Scale,tabHolderWidth,_mainHolder.sprite.rect.width*hqLayout.Scale);
+            _coinTab = new CoinTab(scale,tabHolderWidth,tabHeight);
             _coinTab.ItemAction = thisItem =>
             {
                 var sgd = SerialGameData.LoadOrGenerate();
@@ -154,7 +167,7 @@ namespace HQScripts
             };
             //_coinTab.UpdateShopItems(ShopItems.ShopItemsArray);
             
-            _purchaseTab = new PurchaseTab(hqLayout.Scale,tabHolderWidth,_mainHolder.sprite.rect.width*hqLayout.Scale);
+            _purchaseTab = new PurchaseTab(scale,tabHolderWidth,tabHeight);
             _purchaseTab.ItemAction = thisItem =>
             {
                 var sgd = SerialGameData.LoadOrGenerate();

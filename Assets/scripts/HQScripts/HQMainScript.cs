@@ -5,6 +5,7 @@ using System.Linq;
 using Classes;
 using HQScripts;
 using Unity.VisualScripting;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -14,6 +15,7 @@ public class HQMainScript : MonoBehaviour
     private System.Random _random;
     private HQLayout _mainCamera;
     private UIDocument _uiDocument;
+    private VisualElement _safeElement;
     private Timer _timer;
     private float _timeHolder;
     private HQHud _hqHud;
@@ -39,14 +41,29 @@ public class HQMainScript : MonoBehaviour
         _timer = new Timer();
         var sgd = SerialGameData.LoadOrGenerate();
         
-        _uiDocument = gameObject.GetComponent<UIDocument>();
-        _uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
-        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
         
+        //Debug.Log($"sw: {Screen.width}, {Screen.height}");
+        _uiDocument = gameObject.GetComponent<UIDocument>();
+        //_uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
+        //1170, 2532
+        _uiDocument.panelSettings.referenceResolution = new Vector2Int((int)Constants.UiWidth, (int)Constants.UiHeight);
+        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+        _uiDocument.panelSettings.match = 0f;
+        _safeElement = new VisualElement();
+        _safeElement.style.position = Position.Absolute;
+        _safeElement.style.top = Constants.UnsafeTopUi;
+        _safeElement.style.bottom = Constants.UnsafeBottomUi;
+        _safeElement.style.left = Constants.UnsafeLeftUi;
+        _safeElement.style.right = Constants.UnsafeRightUi;
+        _uiDocument.rootVisualElement.Add(_safeElement);
+        
+
         _mainCamera = new HQLayout(Camera.main,190f,200f);
 
         _hqHud = new HQHud(_mainCamera);
-        _hqHud.AddToVisualElement(_uiDocument.rootVisualElement);
+        
+        
+        _hqHud.AddToVisualElement(_safeElement);
         var h = sgd.getHeartsAndRem();
         _hqHud.UpdateInfo(sgd.coins,h.hearts,h.rem);
         _hqHud.PlayButtonAction = () =>
@@ -69,7 +86,8 @@ public class HQMainScript : MonoBehaviour
 
         _hqHud.ShopButtonAction = () =>
         {
-            _shop.AddToVisualElement(_uiDocument.rootVisualElement);
+            //_shop.AddToVisualElement(_uiDocument.rootVisualElement);
+            _shop.AddToVisualElement(_safeElement);
         };
 
         _hqHud.AchiButtonAction = () =>
@@ -84,7 +102,7 @@ public class HQMainScript : MonoBehaviour
 
         _shop.BgButtonAction = () =>
         {
-            _shop.RemoveFromVisualElement(_uiDocument.rootVisualElement);
+            _shop.RemoveFromVisualElement(_safeElement);
             UpdateStuff();
 
         };

@@ -11,8 +11,8 @@ namespace Classes
         
         protected VisualElement _topBar;
         protected VisualElement _bottomBar;
-        protected Rect topBarRect;
-        protected Rect bottomBarRect;
+        //protected Rect topBarRect;
+        //protected Rect bottomBarRect;
         protected float scale;
         protected List<ButtonClickable> _buttons = new List<ButtonClickable>();
         
@@ -20,31 +20,24 @@ namespace Classes
         protected MonsterFaces _monsterFaces;
         protected MoveCounter _moveCounter;
         
+ 
         public GameHud()
         {
-        }
-        
-        public GameHud(GameLayout gl)
-        {
-            Initialize(gl);
+            Initialize();
             
         }
 
-        public virtual void Initialize(GameLayout gl)
+        public virtual void Initialize()
         {
-            topBarRect = gl.topBarRect();
-            bottomBarRect = gl.bottomBarRect();
-            
-            scale = gl.Scale;
-        
+            scale = 1f;
             
             _topBar = new VisualElement();
 
             _topBar.style.position = Position.Absolute;
-            _topBar.style.left = topBarRect.x;
-            _topBar.style.bottom = topBarRect.y;
-            _topBar.style.height = topBarRect.height;
-            _topBar.style.width = topBarRect.width;
+            _topBar.style.top = Constants.UnsafeTopUi;
+            _topBar.style.bottom = 0f;
+            _topBar.style.height = 220f;
+            _topBar.style.width = Constants.UiWidth;
             
             var settingsButton = new ButtonClickable(scale,"ui/buttons/Pause",Color.gray,() =>
             {
@@ -58,10 +51,10 @@ namespace Classes
             _bottomBar = new VisualElement();
         
             _bottomBar.style.position = Position.Absolute;
-            _bottomBar.style.left = bottomBarRect.x;
-            _bottomBar.style.bottom = bottomBarRect.y;
-            _bottomBar.style.height = bottomBarRect.height;
-            _bottomBar.style.width = bottomBarRect.width;
+            _bottomBar.style.left = 0f;
+            _bottomBar.style.bottom = Constants.UnsafeBottomUi;
+            _bottomBar.style.height = 200f;
+            _bottomBar.style.width = Constants.UiWidth;
             
             _buttons.Add(settingsButton);
             _bottomBar.Add(settingsButton);

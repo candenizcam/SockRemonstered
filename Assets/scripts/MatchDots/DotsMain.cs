@@ -343,7 +343,7 @@ public class DotsMain : GameMain
 
         var touchWp = _mainCamera.Camera.ScreenToWorldPoint(thisTouch.position);
 
-        _selectionList.SetDragTip(touchWp, _mainCamera.Scale);
+        _selectionList.SetDragTip(touchWp);
         
         var p = _mainCamera.WorldToGridPos(touchWp);
 
@@ -369,7 +369,7 @@ public class DotsMain : GameMain
         if (lineType == -1)
         {
             _selectionList.AddDot(thisDot);
-            _selectionList.SetDragChain( _mainCamera.Scale);
+            _selectionList.SetDragChain();
         }
         else
         {
@@ -378,7 +378,7 @@ public class DotsMain : GameMain
                 if (_selectionList.IsAdjacent(thisDot) || _selectionList.ListContains(thisDot))
                 {
                     _selectionList.AddDot(thisDot);
-                    _selectionList.SetDragChain( _mainCamera.Scale);
+                    _selectionList.SetDragChain();
                 }
             }
         }

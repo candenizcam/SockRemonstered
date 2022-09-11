@@ -24,9 +24,6 @@ public class WMMain : GameMain
     private string _baseSockPrefabPath = "prefabs/BaseSockPrefab";
     private List<SockPrefabScript> _activeSocks = new List<SockPrefabScript>();
     private WMLayout mainCamera;
-
-    
-    
     private WMHud _wmHud => (WMHud)_gameHud;
     private float _baseWheelHeight;
     private float _wheelSpeed = 1f;
@@ -34,7 +31,6 @@ public class WMMain : GameMain
     private int levelIndex = 0;
     private int _maxSock= -1;
     private int _moveNo = 0;
-    //private int gameState = -1; //-1 initialize, 0 runs, 1 pause, 2 lost, 3 won
     private float firstStop = 1f;
     private List<GameObject> _starters = new List<GameObject>();
     
@@ -48,8 +44,6 @@ public class WMMain : GameMain
         {
             try
             {
-                
-
                 var i = value >= 0 ? value : 0;
                 var m = _wmScoreboard.GetWashingMachineMood(value);
                 _wmHud.updateInfo($"{i}",m);
@@ -90,96 +84,64 @@ public class WMMain : GameMain
         playfield.transform.localScale = new Vector3(r.width,r.height,0f);
         playfield.transform.position = new Vector3(r.center.x,r.center.y,100f);
         
-
         var wsr = wheel.GetComponent<SpriteRenderer>();
         _wheelStartPos = r.center.y + wsr.sprite.vertices[0].y;
         wheel.transform.position = new Vector3(r.center.x,_wheelStartPos,90f);
         _baseWheelHeight = wsr.sprite.vertices[0].y * 2;
         wsr.size = new Vector2(r.width, mainCamera.Camera.orthographicSize*4f);
         
-        //_uiDocument = gameObject.GetComponent<UIDocument>();
-        //_uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
-        //_uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
         InitializeMisc();
-        _timer.addEvent(firstStop, () =>
-        {
-            _gameState = GameState.Game;
-            foreach (var starter in _starters)
-            {
-                
-                Destroy(starter);
-            }
-        });
         InitializeUi<WMHud>(mainCamera);
             
         var left = r.xMin;
         var bottom = r.yMax;
-        
         var tw = topWater.GetComponent<SpriteRenderer>().size;
         var bw = bottomWater.GetComponent<SpriteRenderer>().size;
-
         topWater.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, 0f);
         bottomWater.transform.position = new Vector3(left + bw.x / 2f, r.yMin - bw.y / 2f, 0f);
-
         
-
         var thisLevel = WMLevels.WmLevelInfos[levelIndex];
         _wheelSpeed = thisLevel.WheelSpeed;
         sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
-        
-        var step = 1f/thisLevel.WmSockInfos.Length;
-        
-        thisLevel.InitializeLevel(also: (x,a) =>
-        {
-            var b= Instantiate(a);
-            b.transform.position = new Vector3(mainCamera.vp2wWidth(step*x*.5f), 0f, x);
-            b.transform.localScale = new Vector3(4f, 4f, 1f);
-            b.transform.rotation = Quaternion.Euler(0f,0f, step*x*360f);
-            _starters.Add(b);
-        });
-        
-        
-
-        //thisLevel.WmSockInfos
-        //_sockResources = new List<GameObject>();
-
-        //var a = new string[thisLevel.WmSockInfos.Length];
-
+        InitializeStartAnimation(thisLevel);
         _wmScoreboard = new WMScoreboard((from t in thisLevel.WmSockInfos
             where t.LevelCollect > 0
             select t).ToList());
         MoveNo = thisLevel.MoveNo;
+        
         _wmHud.generateSocks(_wmScoreboard.ScoreAddressArray());
-
         _wmHud.adjustSocks(_wmScoreboard.Collected);
-
-
-        //public float SockSpawnTime;
-        //public float WheelSpeed;
-        //public int MaxSock;
-        
     }
 
-    
-    private void ToHQ()
+    private void InitializeStartAnimation( WMLevelInfo thisLevel)
     {
-        SceneManager.LoadScene("HQ", LoadSceneMode.Single);
-    }
-    
-    private void Restart()
-    {
-        var sgd = SerialGameData.LoadOrGenerate();
-        var nl = Constants.GetNextLevel(sgd.nextLevel);
-        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
-    }
-    
-    private void NextLevel()
-    {
-        var sgd = SerialGameData.LoadOrGenerate();
-        
-        var nl = Constants.GetNextLevel(sgd.nextLevel);
-        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+        var step = 1f/thisLevel.WmSockInfos.Length;
+        thisLevel.InitializeLevel(also: (x,a) =>
+        {
+            var b= Instantiate(a);
+            b.transform.position = new Vector3(0f, 0f, x);
+            b.transform.localScale = new Vector3(4f, 4f, 1f);
+            b.transform.rotation = Quaternion.Euler(0f,0f, step*x*360f);
+            _starters.Add(b);
+        });
+        _tweenHolder.newTween(firstStop, alpha =>
+        {
+            for (var i = 0; i < _starters.Count; i++)
+            {
+                var a = (6.28f*i)/_starters.Count;
+                var t = _starters[i].transform;
+                Tools.MutatePosition(t, alpha*25f*(float)Math.Cos(a), 25f*alpha*(float)Math.Sin(a));
+                t.rotation = Quaternion.Euler(t.rotation.eulerAngles.x, t.rotation.eulerAngles.y, 360f*alpha + step*i*360f);
+            }
+        }, () =>
+        {
+            _gameState = GameState.Game;
+            foreach (var starter in _starters)
+            {   
+                Destroy(starter);
+            }
+        });
     }
     
     
@@ -212,9 +174,6 @@ public class WMMain : GameMain
                 break;
             }
             if (!touched) continue;
-            //Destroy(sockPrefabScript.gameObject);
-            
-            
             sockPrefabScript.Kill();
         }
 
@@ -224,12 +183,9 @@ public class WMMain : GameMain
             if (c[i] < 0)
             {
                 _wmHud.HandSock(i,c[i]);
-                _wmScoreboard.Collected[i] = 0;
-                
+                _wmScoreboard.Collected[i] = 0;   
             }
         }
-        
-        
         _wmHud.adjustSocks(_wmScoreboard.GetCollected());
     }
 
@@ -245,15 +201,11 @@ public class WMMain : GameMain
     {
         if (_gameState == GameState.Game)
         {
-
-
             Tools.TranslatePosition(wheel, y: -Time.deltaTime * _wheelSpeed);
             if (wheel.transform.position.y < _wheelStartPos - _baseWheelHeight)
             {
                 Tools.MutatePosition(wheel, y: wheel.transform.position.y + _baseWheelHeight);
             }
-            
-            
         }
     }
 
@@ -264,18 +216,17 @@ public class WMMain : GameMain
         _quickSettings.Update();
         _wmHud.Update();
         _timer.Update(Time.deltaTime);
+        _tweenHolder.Update(Time.deltaTime);
         
-        if (MoveNo <= 0 && _gameState == GameState.Game)
-        {
-            _gameState = GameState.Lost;
-            LevelDone(false);
-        }
-
         if (_wmScoreboard.GameWon()&& _gameState == GameState.Game)
         {
             _gameState = GameState.Won;
             LevelDone(true);
             
+        }else if (MoveNo <= 0 && _gameState == GameState.Game)
+        {
+            _gameState = GameState.Lost;
+            LevelDone(false);
         }
 
         if (_gameState==GameState.Won || _gameState==GameState.Lost)
@@ -300,7 +251,9 @@ public class WMMain : GameMain
         }
         else if(_gameState == GameState.Game)
         {
+            
 
+            
             
             var i = 0;
             
@@ -344,18 +297,7 @@ public class WMMain : GameMain
         }
         else if(_gameState == GameState.Loading)
         {
-            //Debug.Log("-1");
-            //gameState = 0;
-
-            for (var i = 0; i < _starters.Count; i++)
-            {
-                //var d = _random.NextDouble() * 6.28;
-                //Math.Cos(d)
-                var a = (6.28f*i)/_starters.Count;
-                var t = _starters[i].transform;
-                Tools.TranslatePosition(t, x: 25f*(float)Math.Cos(a)*Time.deltaTime,y: 25f*(float)Math.Sin(a)*Time.deltaTime );
-                t.rotation = Quaternion.Euler(t.rotation.eulerAngles.x, t.rotation.eulerAngles.y, t.rotation.eulerAngles.z+360f*Time.deltaTime);
-            }
+            
         }
         
         
@@ -368,23 +310,15 @@ public class WMMain : GameMain
      */
     SockPrefabScript generateSock(Vector2 viewPortPos)
     {
-        
-        // WmSockTypeLookup
         var s = WMLevels.WmLevelInfos[levelIndex].GetRandomSock(_random.NextDouble());
-        //var r = Resources.Load(WMLevels.WmSockTypeLookup[s.SockType]);
         var bsp = Instantiate(s.Resource());
         var sps = bsp.GetComponent <SockPrefabScript> ();
         sps.ChangeSprite(s.SockNo);
-        
         sps.gameObject.transform.position = VectorTools.MutateVector3(mainCamera.Camera.ViewportToWorldPoint(viewPortPos), z : 1f);
-        
         sps.gameObject.transform.rotation = Quaternion.Euler(x: _random.Next(2)*180f, y: _random.Next(2)*180f, z: _random.Next(4) *90f);
-        sps.gameObject.transform.localScale = new Vector3(Screen.width / 1284f, Screen.width / 1284f, 0f);
         sps.fallSpeed = ((float) s.Speed) / 10f*_wheelSpeed;
-
         sps.no = s.SockNo;
         sps.style = s.SockType;
-        
         return sps;
     }
 

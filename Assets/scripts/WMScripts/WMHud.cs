@@ -26,20 +26,15 @@ public class WMHud : GameHud
     {
         //Initialize();
     }
-    public WMHud(WMLayout wmLayout): base(wmLayout)
-    {
-        //Initialize();
-    }
 
-    public override void Initialize(GameLayout gl)
+    public override void Initialize()
     {
-        base.Initialize(gl);
+        base.Initialize();
         
-        _handMoveHeight = topBarRect.height*1.5f;
+        
+        _handMoveHeight = 220f * 1.5f;
         _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
             _pixelPoints[4], _pixelPoints[5]);
-        //_topBar.style.backgroundColor = new Color(1f,1f,0f,0.6f);
-
         var pins = new Image();
         pins.sprite = Resources.Load<Sprite>("ui/clothesline");
         pins.style.position = Position.Absolute;
@@ -47,7 +42,6 @@ public class WMHud : GameHud
         pins.style.bottom = 168f;
         pins.style.width = pins.sprite.rect.width*scale;
         pins.style.height = pins.sprite.rect.height*scale;
-        //pins.style.backgroundColor = Color.blue;
         _topBar.Add(pins);
 
         _sockHolder = new VisualElement();

@@ -84,12 +84,9 @@ public class DotsPrefabScript : MonoBehaviour
         dgt.localScale = new Vector3(.01f, dgt.localScale.y, dgt.localScale.z);
     }
 
-    public void MoveDragBar(Vector2 target, float scale)
+    public void MoveDragBar(Vector2 target)
     {
         var p1 = transform.position;
-        //Debug.Log($"target; x: {target.x}, y: {target.y}");
-        //Debug.Log($"p1; x: {p1.x}, y: {p1.y}");
-        
         var c = (Vector2)VectorTools.Vector3BiasedSum(target, p1, 0.5f);
 
         var dgt = DragBar.gameObject.transform;
@@ -97,16 +94,11 @@ public class DotsPrefabScript : MonoBehaviour
 
         var m = ((Vector2) VectorTools.Vector3Add(target, -1 * p1));
         var v = (Vector2)VectorTools.vector3Div(m, (Vector2)transform.localScale);
-        //Debug.Log($"x: {m.x}, y: {m.y}, d: {m.magnitude}");
         dgt.localScale = new Vector3(v.magnitude, dgt.localScale.y, dgt.localScale.z);
         var ang = (float)Math.Atan2(m.x, m.y);
         
         dgt.rotation = Quaternion.Euler(0f,0f,-ang / 6.282f * 360f+90f);
 
-
-
-
-        //HitBlob.gameObject.transform
     }
     
     

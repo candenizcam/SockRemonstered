@@ -100,19 +100,19 @@ namespace MatchDots
             
         }
 
-        public void SetDragChain(float scale)
+        public void SetDragChain()
         {
             for (var i = 0; i < _selectionList.Count-1; i++)
             {
-                _selectionList[i].MoveDragBar(_selectionList[i+1].gameObject.transform.position,scale);
+                _selectionList[i].MoveDragBar(_selectionList[i+1].gameObject.transform.position);
             }
         }
         
-        public void SetDragTip(Vector2 v, float scale)
+        public void SetDragTip(Vector2 v)
         {
             if (_selectionList.Count > 0)
             {
-                _selectionList.Last().MoveDragBar(v,scale);
+                _selectionList.Last().MoveDragBar(v);
                 
             }
             

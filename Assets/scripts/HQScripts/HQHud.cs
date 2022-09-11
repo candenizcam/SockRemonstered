@@ -11,9 +11,6 @@ namespace HQScripts
     {
         private VisualElement _topBar;
         private VisualElement _bottomBar;
-        private Rect topBarRect;
-        private Rect bottomBarRect;
-        private float scale;
         private List<ButtonClickable> _buttons = new List<ButtonClickable>();
         private LivesButton _livesButton;
         private CoinsButton _coinsButton;
@@ -28,58 +25,48 @@ namespace HQScripts
         
         public HQHud(HQLayout hqLayout)
         {
-            topBarRect = hqLayout.topBarRect();
-            bottomBarRect = hqLayout.bottomBarRect();
-            
-            scale = hqLayout.Scale;
-        
-            
             _topBar = new VisualElement();
 
             _topBar.style.position = Position.Absolute;
-            _topBar.style.left = topBarRect.x;
-            _topBar.style.bottom = topBarRect.y;
-            _topBar.style.height = topBarRect.height;
-            _topBar.style.width = topBarRect.width;
-            //_topBar.style.backgroundColor = Color.red;
+            _topBar.style.left = 0f;
+            _topBar.style.top = 0f;
+            _topBar.style.height = 190f;
+            _topBar.style.width = Constants.UiWidth;
             _topBar.style.flexDirection =FlexDirection.Row;
-            _topBar.style.flexBasis = topBarRect.width;
+            _topBar.style.flexBasis = Constants.UiWidth;
             _topBar.style.alignItems= Align.Center;
             _topBar.style.justifyContent = Justify.SpaceAround;
 
             var topVisual = new Image();
             topVisual.sprite  = Resources.Load<Sprite>("ui/top");
             topVisual.style.position = Position.Absolute;
-            topVisual.style.bottom = -70f*hqLayout.Scale;
-            topVisual.style.left = (Screen.width-topVisual.sprite.rect.width)*hqLayout.Scale*0.5f;
+            topVisual.style.bottom = -60f;
+            topVisual.style.left = 0f;
+            
+            topVisual.style.width = Constants.UiWidth;
             _topBar.Add(topVisual);
             
             generateTopBarElements(_topBar);
 
             _bottomBar = new VisualElement();
-        
             _bottomBar.style.position = Position.Absolute;
-            _bottomBar.style.left = bottomBarRect.x;
-            _bottomBar.style.bottom = bottomBarRect.y;
-            _bottomBar.style.height = bottomBarRect.height;
-            _bottomBar.style.width = bottomBarRect.width;
-            
+            _bottomBar.style.left = 0f;
+            _bottomBar.style.bottom = 0f;
+            _bottomBar.style.height = 200f;
+            _bottomBar.style.width = Constants.UiWidth;
             _bottomBar.style.flexDirection =FlexDirection.Row;
-            _bottomBar.style.flexBasis = topBarRect.width;
             _bottomBar.style.alignItems= Align.Center;
             _bottomBar.style.justifyContent = Justify.SpaceAround;
             
             var bottomVisual = new Image();
             bottomVisual.sprite  = Resources.Load<Sprite>("ui/bottom");
             bottomVisual.style.position = Position.Absolute;
-            bottomVisual.style.top = -20f*hqLayout.Scale;
-            bottomVisual.style.left = (Screen.width-bottomVisual.sprite.rect.width)*hqLayout.Scale*0.5f;
+            bottomVisual.style.top = -50f;
+            bottomVisual.style.left = 0f;
+            bottomVisual.style.width = Constants.UiWidth;
             _bottomBar.Add(bottomVisual);
             
             generateBottomBarElements(_bottomBar);
-
-            
-
         }
 
         public void UpdateInfo(int coins, int hearts, float remFloat)
@@ -90,11 +77,11 @@ namespace HQScripts
 
         void generateBottomBarElements(VisualElement bottomBar)
         {
-            var achiButton = new ButtonClickable(scale,"ui/buttons/Achievements",Color.gray,AchiButtonFunction);
+            var achiButton = new ButtonClickable(1f,"ui/buttons/Achievements",Color.gray,AchiButtonFunction);
             
-            var playButton = new ButtonClickable(scale,"ui/buttons/Play",Color.gray,PlayButtonFunction);
+            var playButton = new ButtonClickable(1f,"ui/buttons/Play",Color.gray,PlayButtonFunction);
             
-            var shopButton = new ButtonClickable(scale,"ui/buttons/Shop",Color.gray,ShopButtonFunction);
+            var shopButton = new ButtonClickable(1f,"ui/buttons/Shop",Color.gray,ShopButtonFunction);
             
             
             bottomBar.Add(achiButton);
@@ -108,13 +95,13 @@ namespace HQScripts
 
         void generateTopBarElements(VisualElement topBar)
         {
-            var settingsButton = new ButtonClickable(scale,"ui/buttons/Settings",Color.gray,SettingsButtonFunction);
+            var settingsButton = new ButtonClickable(1f,"ui/buttons/Settings",Color.gray,SettingsButtonFunction);
             
-            _livesButton = new LivesButton(scale,LivesButtonFunction);
+            _livesButton = new LivesButton(1f,LivesButtonFunction);
             
-            _coinsButton = new CoinsButton(scale,CoinButtonFunction);
+            _coinsButton = new CoinsButton(1f,CoinButtonFunction);
             
-            var otherButton = new ButtonClickable(scale,"ui/buttons/Pause",Color.gray,OtherButtonFunction);
+            var otherButton = new ButtonClickable(1f,"ui/buttons/Pause",Color.gray,OtherButtonFunction);
             
             topBar.Add(settingsButton);
             topBar.Add(_livesButton);
@@ -179,6 +166,8 @@ namespace HQScripts
         
         public void AddToVisualElement(VisualElement ve)
         {
+            
+            
             ve.Add(_topBar);
             ve.Add(_bottomBar);
         }
