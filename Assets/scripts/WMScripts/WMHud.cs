@@ -35,20 +35,31 @@ public class WMHud : GameHud
         _handMoveHeight = 220f * 1.5f;
         _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
             _pixelPoints[4], _pixelPoints[5]);
-        var pins = new Image();
-        pins.sprite = Resources.Load<Sprite>("ui/clothesline");
-        pins.style.position = Position.Absolute;
-        pins.style.left = 0f;
-        pins.style.bottom = 168f;
-        pins.style.width = pins.sprite.rect.width*scale;
-        pins.style.height = pins.sprite.rect.height*scale;
+        var s = Resources.Load<Sprite>("ui/clothesline");
+        var pins = new Image
+        {
+            sprite = s,
+            style =
+            {
+                position = Position.Absolute,
+                left = 0f,
+                bottom = 168f,
+                width = s.rect.width,
+                height = s.rect.height
+            }
+        };
         _topBar.Add(pins);
 
-        _sockHolder = new VisualElement();
-        _sockHolder.style.position = Position.Absolute;
-        _sockHolder.style.left = 0f;
-        _sockHolder.style.bottom = 0f;
-        
+        _sockHolder = new VisualElement
+        {
+            style =
+            {
+                position = Position.Absolute,
+                left = 0f,
+                bottom = 0f
+            }
+        };
+
         _topBar.Add(_sockHolder);
 
         
@@ -130,9 +141,6 @@ public class WMHud : GameHud
                     // code block
                     break;
             }
-
-            
-
         }
     }
 
@@ -148,15 +156,9 @@ public class WMHud : GameHud
             _sockHolder.Add(_hand);
         }
         
-
     }
-    
-    
 
-    
-    
-    
-    
+
     public void Update()
     {
         for (var i = 0; i < _handTimer.Length; i++)
@@ -182,12 +184,9 @@ public class WMHud : GameHud
                 _hand.style.bottom = _handYTargets[i] +normalDifference * _handMoveHeight;
             }
             
-            //_hand.style.bottom = _handYTargets[i] + 
 
             if (_handTimer[i] <= _handPickTime && emptyMark) 
-            {
-                
-                
+            {   
                 ((Image) _sockHolder[i]).tintColor = Color.gray;
                 _sockHolder[i + _handTimer.Length].visible = false;
             }
@@ -197,38 +196,4 @@ public class WMHud : GameHud
 
     }
 
-    
-    /*
-    public void adjustSocks(string[] address, int[] amount)
-    {
-        var totalSize = address.Length + 2;
-        var xStep = _pixelPoints[4]/totalSize;
-        var xHolder = xStep;
-        //_sockHolder.Clear();
-        
-        _sockHolder.RemoveAt();
-        for (int i = 0; i < address.Length; i++)
-        {
-            
-            var x = i * _pixelPoints[4]/5f;
-            var y = _polynomial[0] * x * x + _polynomial[1] * x + _polynomial[2];
-            Debug.Log($"x: {x}, y: {y}");
-            var n = new Image();
-            n.sprite = Resources.Load<Sprite>("ui/pins");
-            n.style.position = Position.Absolute;
-            n.style.left = x;
-            n.style.bottom = y;
-            n.style.width = 50f;
-            n.style.height = 50f;
-            n.style.backgroundColor = Color.blue;
-            _sockHolder.Add(n);
-            
-        }
-        
-
-    }
-
-*/
-        //var root = gameObject.GetComponent<UIDocument>().rootVisualElement;
-    
 }

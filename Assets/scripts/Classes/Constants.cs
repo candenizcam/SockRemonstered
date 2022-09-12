@@ -58,6 +58,8 @@ namespace Classes
         public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
         
         
+        
+        
         public static readonly Color[] DotsColours = new Color[]
         {
             new Color(0.3f,0f,0f,1f),

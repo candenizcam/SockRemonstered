@@ -8,12 +8,12 @@ namespace Classes
     public class PurchaseItem: ButtonClickable
     {
         private ShopItem _thisItem;
-        public PurchaseItem(float scale, ShopItem thisItem, Action clickAction): base(scale,"ui/shop/ShopListing",Color.gray,clickAction)
+        public PurchaseItem(float scale, ShopItem thisItem, Action clickAction, Color tint): base(scale,"ui/shop/ShopListing",Color.gray,clickAction)
         {
             _thisItem = thisItem;
             style.alignItems = Align.Center;
-            
-            
+            style.unityBackgroundImageTintColor = tint;
+            style.color = tint * Constants.GameColours[11];
             
             var frame = new VisualElement();
             frame.style.position = Position.Absolute;
@@ -26,6 +26,7 @@ namespace Classes
             var frame2 = new Image();
             frame2.sprite =  Resources.Load<Sprite>(_thisItem.Location);
             frame.Add(frame2);
+            frame2.tintColor = tint;
             Add(frame);
             
             var bigLabel = new Label();
@@ -34,6 +35,8 @@ namespace Classes
             bigLabel.style.left = 420f * scale;
             bigLabel.style.fontSize = 64f * scale;
             bigLabel.text = thisItem.DisplayName;
+            
+            
             Add(bigLabel);
             
             var smallLabel = new Label();
@@ -62,6 +65,7 @@ namespace Classes
             coinFrame.sprite =  Resources.Load<Sprite>("ui/buttons/coin");
             coinFrame.style.width = 50f * scale;
             coinFrame.style.height = 50f * scale;
+            coinFrame.tintColor = tint;
             moneyZone.Add(coinFrame);
             
             var price = new Label();

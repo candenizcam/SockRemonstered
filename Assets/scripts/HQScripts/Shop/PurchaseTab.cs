@@ -15,7 +15,7 @@ namespace HQScripts
             
         }
         
-        public void UpdateShopItems(ShopItem[] shopItems)
+        public void UpdateShopItems(ShopItem[] shopItems, int coins)
         {
             _scrollView.Clear();
             _buttons.Clear();
@@ -29,8 +29,10 @@ namespace HQScripts
                 var b = new PurchaseItem(_scale,thisItem, () =>
                 {
                     ItemFunction(thisItem);
-                });
+                }, coins>= thisItem.Price ? Color.white: new Color(1f,1f,1f,0.3f));
                 b.style.marginBottom = 43f * _scale;
+                b.DisableButton = coins < thisItem.Price;
+                
                 _buttons.Add(b);
                 _scrollView.Add(b);
             }

@@ -18,8 +18,10 @@ namespace Classes
         private VisualElement _pointDisplay;
         private Label _points;
         private MonsterFaces _monsterFaces;
+        private VisualElement _bg;
         public Action OnCross;
         public Action OnBigButton;
+        private StyleBackground[] _bgSprites = {};
         
         public BetweenLevels()
         {
@@ -28,17 +30,25 @@ namespace Classes
             _betweenElement.style.width = Constants.UiWidth;
             _betweenElement.style.height = Constants.UiHeight;
             _betweenElement.style.backgroundColor = new Color(0.102f, 0.024f, 0.071f,0.84f);
+
+            _bgSprites = new[]
+            {
+                new StyleBackground(Resources.Load<Sprite>("ui/betweenbg")),
+                new StyleBackground(Resources.Load<Sprite>("ui/betweenbg_fail2"))
+            };
+            var bgW = _bgSprites[0].value.sprite.rect.width;
+            var bgH = _bgSprites[0].value.sprite.rect.height;
             
+            _bg = new VisualElement();
+            //bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
+            _bg.style.backgroundImage = _bgSprites[0];
+            _bg.style.position = Position.Absolute;
             
-            var bg = new Image();
-            bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
-            bg.style.position = Position.Absolute;
-            
-            bg.style.left = (Constants.UiWidth - bg.sprite.rect.width) * 0.5f*scale;
-            bg.style.top = (Constants.UiHeight - bg.sprite.rect.height) * 0.5f*scale;
-            bg.style.width = bg.sprite.rect.width*scale;
-            bg.style.height = bg.sprite.rect.height*scale;
-            bg.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
+            _bg.style.left = (Constants.UiWidth - bgW) * 0.5f*scale;
+            _bg.style.top = (Constants.UiHeight - bgH) * 0.5f*scale;
+            _bg.style.width = bgW;
+            _bg.style.height = bgH;
+            _bg.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
 
             _bigText = new Label();
             _smallText = new Label();
@@ -46,8 +56,8 @@ namespace Classes
             _smallText.style.bottom = 458f * scale;
             _smallText.style.position = Position.Absolute;
             _smallText.style.left = 0f;
-            _smallText.style.width = bg.sprite.rect.width*scale;
-            _smallText.style.fontSize = 64f * scale;
+            _smallText.style.width = bgW;
+            _smallText.style.fontSize = 109f * scale;
             _smallText.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
             _smallText.text = "Level failed!";
             _smallText.style.color = Constants.GameColours[11];
@@ -55,9 +65,9 @@ namespace Classes
             
             _bigText.style.bottom = 565f * scale;
             _bigText.style.position = Position.Absolute;
-            _bigText.style.fontSize = 109f * scale;
+            _bigText.style.fontSize = 64 * scale;
             _bigText.style.left = 0f;
-            _bigText.style.width = bg.sprite.rect.width*scale;
+            _bigText.style.width = bgW;
             _bigText.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
             _bigText.text = "LEVEL 320";
             _bigText.style.color = Constants.GameColours[11];
@@ -67,12 +77,12 @@ namespace Classes
 
             _pointDisplay.style.position = Position.Absolute;
             _pointDisplay.style.left = 0f;
-            _pointDisplay.style.width = bg.sprite.rect.width*scale;
+            _pointDisplay.style.width = bgW;
             _pointDisplay.style.bottom = 291f * scale;
             _pointDisplay.style.flexDirection = FlexDirection.Row;
             _pointDisplay.style.alignContent = new StyleEnum<Align>(Align.Center);
             _pointDisplay.style.justifyContent = new StyleEnum<Justify>(Justify.Center);
-            _pointDisplay.style.flexBasis = bg.sprite.rect.width * scale;
+            _pointDisplay.style.flexBasis = bgW;
             _pointDisplay.style.alignItems = new StyleEnum<Align>(Align.Center);
             
             var coin = new Image();
@@ -86,35 +96,23 @@ namespace Classes
             _points.text = "  8888";
             _points.style.color = Constants.GameColours[11];
             _pointDisplay.Add(_points);
-            bg.Add(_pointDisplay);
+            _bg.Add(_pointDisplay);
             
             
             
             _monsterFaces = new MonsterFaces(scale);
             _monsterFaces.Portrait.style.left = 260f*scale;
             _monsterFaces.Portrait.style.bottom = (805f) * scale;
-            bg.Add(_monsterFaces.Portrait);
+            _bg.Add(_monsterFaces.Portrait);
             
+            _bigButton = new ButtonClickable(bigButton);
             
-            
-            
-            
-            
-            _bigButton = new ButtonClickable(() =>
-            {
-                bigButton();
-            });
-
-                
-                
-                
-                
             var s = Resources.Load<Sprite>("ui/button");
 
             _bigButton.style.backgroundImage = new StyleBackground(s);
             _bigButton.style.position = Position.Absolute;
             _bigButton.style.bottom = 63*scale;
-            _bigButton.style.left = (bg.sprite.rect.width*scale - s.rect.width*scale) * 0.5f;
+            _bigButton.style.left = (bgW - s.rect.width*scale) * 0.5f;
             _bigButton.style.width= s.rect.width*scale;
             _bigButton.style.height= s.rect.height*scale;
             _bigButton.style.backgroundColor = Color.clear;
@@ -143,11 +141,11 @@ namespace Classes
             smallButton.style.right = 50f*scale;
             
             
-            bg.Add(smallButton);
-            bg.Add(_bigButton);
-            bg.Add(_smallText);
-            bg.Add(_bigText);
-            _betweenElement.Add(bg);
+            _bg.Add(smallButton);
+            _bg.Add(_bigButton);
+            _bg.Add(_smallText);
+            _bg.Add(_bigText);
+            _betweenElement.Add(_bg);
         }
         
         public void AddToVisualElement(VisualElement ve)
@@ -172,21 +170,23 @@ namespace Classes
         {
             if (levelWon)
             {
-                _bigText.style.bottom = 565f * scale;
+                _bigText.style.bottom = 605f * scale;
                 _smallText.style.bottom = 458f * scale;
                 _monsterFaces.Portrait.style.bottom = (805f) * scale;
                 _monsterFaces.ChangeMood(MonsterMood.Happy);
                 _bigButton.Text = buttonText;
                 _pointDisplay.visible = true;
+                _bg.style.backgroundImage = _bgSprites[0];
             }
             else
             {
-                _bigText.style.bottom =  419f* scale;
+                _bigText.style.bottom =  459f* scale;
                 _smallText.style.bottom = 312f * scale;
                 _monsterFaces.Portrait.style.bottom = (606f) * scale;
                 _monsterFaces.ChangeMood(MonsterMood.Sad);
                 _bigButton.Text = buttonText;
                 _pointDisplay.visible = false;
+                _bg.style.backgroundImage = _bgSprites[1];
             }
             
             

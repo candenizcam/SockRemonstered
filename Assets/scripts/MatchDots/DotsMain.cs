@@ -34,7 +34,7 @@ public class DotsMain : GameMain
     
     void Awake()
     {
-        _gameState = GameState.Standby;
+        _gameState = GameState.Loading;
         var sgd = SerialGameData.LoadOrGenerate();
         if (LevelNo > 0)
         {
@@ -74,6 +74,7 @@ public class DotsMain : GameMain
         for (int i = 0; i < amn; i++)
         {
             dl.Add(Instantiate(r).GetComponent<DotsPrefabScript>());
+            dl.Last().gameObject.SetActive(false);
         }
         _dotGrid.FillTheDotsList(dl);
 
@@ -81,17 +82,7 @@ public class DotsMain : GameMain
 
 
         
-        fillPhase();
         
-        
-        _tweenHolder.newTween(0.3f, alpha =>
-        {
-            var a = (float)Math.Sin(alpha * Math.PI * 2)*.2f;
-            foreach (var selectionListSelection in _selectionList.Selections.Where(selectionListSelection => selectionListSelection.InTheRightPlace))
-            {
-                selectionListSelection.TweenEffect(a+1f);
-            }
-        },repeat:-1);
         
 
 
@@ -122,6 +113,37 @@ public class DotsMain : GameMain
         
         
         _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+        
+        _dotsHud.StartAnimation(0f);
+        _timer.addEvent(0.75f, () =>
+        {
+            _tweenHolder.newTween(.75f, alpha =>
+            {
+                _dotsHud.StartAnimation(Math.Clamp(alpha*1.2f,0f,1f));
+            }, () =>
+            {
+                _dotsHud.StartAnimation(1f);
+                _gameState = GameState.Standby;
+                _dotsHud.ClearBg();
+
+                _timer.addEvent(0.3f, () =>
+                {
+                    
+                    fillPhase();
+                    _tweenHolder.newTween(0.3f, alpha =>
+                    {
+                        var a = (float)Math.Sin(alpha * Math.PI * 2)*.2f;
+                        foreach (var selectionListSelection in _selectionList.Selections.Where(selectionListSelection => selectionListSelection.InTheRightPlace))
+                        {
+                            selectionListSelection.TweenEffect(a+1f);
+                        }
+                    },repeat:-1);
+                });
+                
+            });
+        });
+        
+        
         
         
     }

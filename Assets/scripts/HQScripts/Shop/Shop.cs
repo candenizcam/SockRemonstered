@@ -233,7 +233,7 @@ namespace HQScripts
             
             _closetTab.UpdateShopItems(bought.ToArray());
             _coinTab.UpdateShopItems(ShopItems.GetCoinsArray());
-            _purchaseTab.UpdateShopItems(notBought.ToArray());
+            _purchaseTab.UpdateShopItems(notBought.ToArray(), sgd.coins);
         }
         
 

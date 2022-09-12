@@ -11,6 +11,8 @@ namespace Classes
         
         protected VisualElement _topBar;
         protected VisualElement _bottomBar;
+
+        
         //protected Rect topBarRect;
         //protected Rect bottomBarRect;
         protected float scale;
@@ -84,6 +86,8 @@ namespace Classes
             _moveCounter.MoveBg.style.right = (w -_moveCounter.MoveBg.sprite.rect.width)*scale;
             _moveCounter.MoveBg.style.top = (h-_moveCounter.MoveBg.sprite.rect.height)*scale;
             _topBar.Add(_moveCounter.MoveBg);
+
+
         }
         
         protected void settingsButtonFunction()
@@ -108,6 +112,7 @@ namespace Classes
         {
             _topBar.visible = b;
             _bottomBar.visible = b;
+
         }
         
         public void updateInfo([CanBeNull] string  moveLeft = null, MonsterMood? monsterMood = null)

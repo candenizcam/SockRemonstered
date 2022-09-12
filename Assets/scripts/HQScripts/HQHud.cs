@@ -11,7 +11,6 @@ namespace HQScripts
     {
         private VisualElement _topBar;
         private VisualElement _bottomBar;
-        private List<ButtonClickable> _buttons = new List<ButtonClickable>();
         private LivesButton _livesButton;
         private CoinsButton _coinsButton;
         
@@ -84,13 +83,11 @@ namespace HQScripts
             var shopButton = new ButtonClickable(1f,"ui/buttons/Shop",Color.gray,ShopButtonFunction);
             
             
-            bottomBar.Add(achiButton);
-            bottomBar.Add(playButton);
-            bottomBar.Add(shopButton);
             
-            _buttons.Add(achiButton);
-            _buttons.Add(playButton);
-            _buttons.Add(shopButton);
+            
+            bottomBar.Add(shopButton);
+            bottomBar.Add(playButton);
+            bottomBar.Add(achiButton);
         }
 
         void generateTopBarElements(VisualElement topBar)
@@ -107,11 +104,6 @@ namespace HQScripts
             topBar.Add(_livesButton);
             topBar.Add(_coinsButton);
             topBar.Add(otherButton);
-            
-            _buttons.Add(settingsButton);
-            _buttons.Add(_livesButton);
-            _buttons.Add(_coinsButton);
-            _buttons.Add(otherButton);
         }
 
         void AchiButtonFunction()

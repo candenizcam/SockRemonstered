@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Classes;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,9 +8,9 @@ namespace MatchDots
 {
     public class DotsHud: GameHud
     {
-        private Image _targetHolder;
-        
-        
+        private VisualElement _targetHolder;
+        protected VisualElement _fullScreen; // including unsafe
+        private float _targetHolderWidth = 800f;
         public DotsHud() : base()
         {
             Initialize();
@@ -18,92 +19,82 @@ namespace MatchDots
         public override void Initialize()
         {
             base.Initialize();
-            var scale = 1f;
-            _targetHolder = new Image();
-            _targetHolder.style.position = Position.Absolute;
-            _targetHolder.style.left = 25f * scale;
-            _targetHolder.style.top = 30f * scale;
-            _targetHolder.style.width = 800f * scale;
-            _targetHolder.style.bottom = 30f * scale;
-            _targetHolder.style.flexDirection = FlexDirection.Row;
-            _targetHolder.style.justifyContent = Justify.Center;
-            _targetHolder.sprite = Resources.Load<Sprite>("ui/buttons/money_bg_2");
+            _targetHolder = new VisualElement()
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = 25f,
+                    width = _targetHolderWidth,
+                    height = 120f,
+                    bottom = 30f,
+                    flexDirection = FlexDirection.Row,
+                    justifyContent = Justify.SpaceAround,
+                    alignContent = Align.Center,
+                    backgroundImage = new StyleBackground(Resources.Load<Sprite>("ui/buttons/money_bg_2")) 
+                }
+            };
             
-            _targetHolder.style.alignContent = Align.Center;
-            //_topBar.style.backgroundColor = Color.green;
+            
+            _fullScreen = new VisualElement();
+            _fullScreen.style.position = Position.Absolute;
+            _fullScreen.style.top = -Constants.UnsafeTopUi;
+            _fullScreen.style.bottom = -Constants.UiHeight;
+            _fullScreen.style.left = -Constants.UnsafeLeftUi;
+            _fullScreen.style.right = -Constants.UnsafeRightUi;
+            _fullScreen.style.backgroundColor = new Color(0.1f,0.1f,0.1f,0.8f);
+            _topBar.Add(_fullScreen);
+            
             _topBar.Add(_targetHolder);
+            
+            
+            
+            
+        }
 
-
-            /*
-            _handMoveHeight = topBarRect.height*1.5f;
-            _polynomial = Tools.CalcParabolaVertex(_pixelPoints[0], _pixelPoints[1], _pixelPoints[2], _pixelPoints[3],
-                _pixelPoints[4], _pixelPoints[5]);
-            //_topBar.style.backgroundColor = new Color(1f,1f,0f,0.6f);
-
-            var pins = new Image();
-            pins.sprite = Resources.Load<Sprite>("ui/clothesline");
-            pins.style.position = Position.Absolute;
-            pins.style.left = 0f;
-            pins.style.bottom = 168f;
-            pins.style.width = pins.sprite.rect.width*scale;
-            pins.style.height = pins.sprite.rect.height*scale;
-            //pins.style.backgroundColor = Color.blue;
-            _topBar.Add(pins);
-
-            _sockHolder = new VisualElement();
-            _sockHolder.style.position = Position.Absolute;
-            _sockHolder.style.left = 0f;
-            _sockHolder.style.bottom = 0f;
+        public void ClearBg()
+        {
+            _fullScreen.style.backgroundColor = Color.clear;
+        }
         
-            _topBar.Add(_sockHolder);
-
-        
-
-            _hand = new Image();
-            _hand.sprite = Resources.Load<Sprite>("ui/hand");
-            _hand.style.width = _hand.sprite.rect.width * scale;
-            _hand.style.height = _hand.sprite.rect.height * scale;
-            _hand.style.position = Position.Absolute;
-            */
+        public void StartAnimation(float alpha)
+        {
+            
+            
+            
+            _targetHolder.style.bottom = 80f * alpha - (Constants.UiHeight*0.5f - 220f + 180f) * (1f - alpha);
+            _targetHolder.style.width = _targetHolderWidth*alpha + (Constants.UiWidth+100f)*(1f-alpha);
+            _targetHolder.style.left = 25f * alpha - 50f*(1f-alpha);
+            _targetHolder.style.height = 160f * alpha + 360f * (1f - alpha);
+            
+            
         }
 
         public void UpdateTargets(List<DotsTarget> dt)
         {
             _targetHolder.Clear();
+            
+            
             foreach (var dotsTarget in dt)
             {
                 var frame = new VisualElement();
                 frame.style.alignItems = Align.Center;
                 frame.style.justifyContent = Justify.Center;
+                frame.style.flexDirection = FlexDirection.Row;
                 var number = new Label();
-                //number.style.bottom = 565f * scale;
-                //number.style.position = Position.Absolute;
-                number.style.fontSize = 48f * scale;
-                //number.style.left = 0f;
-                // number.style.width = bg.sprite.rect.width*scale;
+                number.style.fontSize = 64f * scale;
                 number.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleLeft);
-                number.text = $"{dotsTarget.Amount}";
+                number.text = $" {dotsTarget.Amount}";
                 number.style.color = Constants.GetDotColours(dotsTarget.Type);
                 
 
                 var image = new Image();
                 image.sprite = Resources.Load<Sprite>(Constants.GetDotPath(dotsTarget.Type));
-                image.style.height = 48f * scale;
-                image.style.width = 48f * scale;
+                image.style.height = 72f;
+                image.style.width = 72f;
                 frame.Add(image);
                 
                 frame.Add(number);
-                
-                /*
-                 
-                 bg.sprite = Resources.Load<Sprite>("ui/betweenbg");
-                bg.style.position = Position.Absolute;                
-                bg.style.left = (Screen.width - bg.sprite.rect.width) * 0.5f*scale;
-                bg.style.top = (Screen.height - bg.sprite.rect.height) * 0.5f*scale;
-                bg.style.width = bg.sprite.rect.width*scale;
-                bg.style.height = bg.sprite.rect.height*scale;
-                bg.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
-                 */
                 
                 _targetHolder.Add(frame);
             }

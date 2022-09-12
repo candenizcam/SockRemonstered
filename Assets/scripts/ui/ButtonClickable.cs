@@ -24,6 +24,7 @@ namespace Classes
         protected float height;
 
         private readonly Label _textLabel;
+        public bool DisableButton = false;
         
         public ButtonClickable(Action clickAction= null) : base()
         {
@@ -83,24 +84,34 @@ namespace Classes
         
         protected virtual void TouchLeave(MouseLeaveEvent e)
         {
-            OnLeave();
+            if (!DisableButton)
+            {
+                OnLeave();
+            }
         }
         
         protected virtual void TouchDown(MouseDownEvent e)
         {
-            OnTouchDown();
-            
+            if (!DisableButton)
+            {
+                OnTouchDown();
+            }
         }
 
         protected virtual void TouchUp(MouseUpEvent e)
         {
-            OnTouchUp();
-            
+            if (!DisableButton)
+            {
+                OnTouchUp();
+            }
         }
 
         protected virtual void Click(ClickEvent e)
         {
-            ClickAction();
+            if (!DisableButton)
+            {
+                ClickAction();
+            }
         }
 
     }
