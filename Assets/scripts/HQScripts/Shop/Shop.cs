@@ -154,7 +154,7 @@ namespace HQScripts
                     
                     
                 }
-
+                UpdateShopItems();
             }; 
             //_closetTab.UpdateShopItems(ShopItems.ShopItemsArray);
 
@@ -164,6 +164,7 @@ namespace HQScripts
                 var sgd = SerialGameData.LoadOrGenerate();
                 sgd.coins += thisItem.Price;
                 sgd.Save();
+                UpdateShopItems();
             };
             //_coinTab.UpdateShopItems(ShopItems.ShopItemsArray);
             

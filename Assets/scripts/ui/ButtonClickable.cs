@@ -22,7 +22,7 @@ namespace Classes
         
         protected float width;
         protected float height;
-
+        protected float scale;
         private readonly Label _textLabel;
         public bool DisableButton = false;
         
@@ -46,12 +46,8 @@ namespace Classes
 
         public ButtonClickable(float scale, string imagePath, Color pressedTint, Action clickAction): this(clickAction)
         {
-            var s2 = Resources.Load<Sprite>(imagePath);
-            width = s2.rect.width * scale;
-            height = s2.rect.height * scale;
-            style.width = width;
-            style.height = height;
-            style.backgroundImage = new StyleBackground(s2);
+            this.scale = scale;
+            ChangeImage(imagePath);
             style.backgroundColor = Color.clear;
             
             OnTouchDown = () =>
@@ -70,6 +66,16 @@ namespace Classes
             
             
             
+        }
+
+        public void ChangeImage(string imagePath)
+        {
+            var s2 = Resources.Load<Sprite>(imagePath);
+            width = s2.rect.width * scale;
+            height = s2.rect.height * scale;
+            style.width = width;
+            style.height = height;
+            style.backgroundImage = new StyleBackground(s2);
         }
 
         

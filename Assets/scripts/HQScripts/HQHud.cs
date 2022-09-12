@@ -13,6 +13,7 @@ namespace HQScripts
         private VisualElement _bottomBar;
         private LivesButton _livesButton;
         private CoinsButton _coinsButton;
+        private ButtonClickable _shopButton;
         
         public Action SettingsButtonAction = () => {};
         public Action LivesButtonAction = () => {};
@@ -80,14 +81,19 @@ namespace HQScripts
             
             var playButton = new ButtonClickable(1f,"ui/buttons/Play",Color.gray,PlayButtonFunction);
             
-            var shopButton = new ButtonClickable(1f,"ui/buttons/Shop",Color.gray,ShopButtonFunction);
+            _shopButton = new ButtonClickable(1f,"ui/buttons/Shop",Color.gray,ShopButtonFunction);
             
             
             
             
-            bottomBar.Add(shopButton);
+            bottomBar.Add(_shopButton);
             bottomBar.Add(playButton);
             bottomBar.Add(achiButton);
+        }
+
+        public void ShopExclamation(bool b)
+        {
+            _shopButton.ChangeImage(b ? "ui/buttons/Shop!":"ui/buttons/Shop");
         }
 
         void generateTopBarElements(VisualElement topBar)

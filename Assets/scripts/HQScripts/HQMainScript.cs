@@ -128,8 +128,6 @@ public class HQMainScript : MonoBehaviour
                     furnitureScript.MonsterEnabled(false);
                     l.Add(furnitureScript);
                 }
-                
-                    
             }
 
             
@@ -148,11 +146,19 @@ public class HQMainScript : MonoBehaviour
                 MonsterPrefabScript.UpdateDress(sgd.lineup);
             }
             
+            // ShopExclamation
+            // sgd.activeFurnitures
+            try
+            {
+                var f = ShopItems.ShopItemsArray.First(x => !sgd.activeFurnitures.Contains(x.ID));
+                _hqHud.ShopExclamation(f.Price <= sgd.coins);
+            }
+            catch (InvalidOperationException e)
+            {
+                
+            }
             
-           
-            
-            
-            
+
         });
     }
 

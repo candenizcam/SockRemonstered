@@ -21,7 +21,7 @@ namespace HQScripts
             _buttons.Clear();
 
             
-            
+            Debug.Log(coins);
             for (int i = 0; i < shopItems.Length; i++)
             {
                 var thisItem = shopItems[i];
