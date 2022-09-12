@@ -1,4 +1,5 @@
 ﻿using MatchDots;
+using ui;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -129,7 +130,7 @@ namespace Classes
             var sgd1 = SerialGameData.LoadOrGenerate();
             _quickSettings = new QuickSettings( sgd1.sound, sgd1.music);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
-            _quickSettings.setVisible(false);
+            _quickSettings.SetVisible(false);
             _quickSettings.SettingsButtonAction = QuickSettingsButtonFunction;
 
             _quickSettings.MusicButtonAction = b =>
@@ -169,7 +170,7 @@ namespace Classes
 
         protected virtual void QuickSettingsButtonFunction()
         {
-            _quickSettings.setVisible(false);
+            _quickSettings.SetVisible(false);
             _gameState = GameState.Game;
         }
         

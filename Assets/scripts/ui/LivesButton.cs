@@ -38,7 +38,7 @@ namespace Classes
             _loader.style.backgroundColor = new Color(0.2f,0.2f,0.2f,0.2f);
             Add(_loader);
             
-            onTouchDown = () =>
+            OnTouchDown = () =>
             {
                 style.unityBackgroundImageTintColor = Color.gray;
                 foreach (var heart in _hearts)
@@ -49,7 +49,7 @@ namespace Classes
                 _loader.visible = false;
             };
             
-            onTouchUp = () =>
+            OnTouchUp = () =>
             {
                 UpdateHeartNo(_heartCount,_rem);
                 style.unityBackgroundImageTintColor = Color.white;

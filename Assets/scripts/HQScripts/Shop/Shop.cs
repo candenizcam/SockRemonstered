@@ -237,19 +237,6 @@ namespace HQScripts
         }
         
 
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-            
-            _shopTabs.Update();
-            _closetTab.Update();
-            _purchaseTab.Update();
-            _coinTab.Update();
-            
-        }
 
 
         private void BgButtonFunction()

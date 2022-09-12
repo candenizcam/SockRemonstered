@@ -193,8 +193,6 @@ public class WMHud : GameHud
             }
             
         }
-        
-        base.Update();
 
 
     }

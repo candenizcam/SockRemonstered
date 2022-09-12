@@ -14,7 +14,7 @@ namespace Classes
         //protected Rect topBarRect;
         //protected Rect bottomBarRect;
         protected float scale;
-        protected List<ButtonClickable> _buttons = new List<ButtonClickable>();
+        
         
         public Action SettingsButtonAction = () => {};
         protected MonsterFaces _monsterFaces;
@@ -56,7 +56,7 @@ namespace Classes
             _bottomBar.style.height = 200f;
             _bottomBar.style.width = Constants.UiWidth;
             
-            _buttons.Add(settingsButton);
+            
             _bottomBar.Add(settingsButton);
             
             var w = 382f;
@@ -90,14 +90,6 @@ namespace Classes
         {
             Debug.Log("old guy");
             SettingsButtonAction();
-        }
-        
-        public virtual void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
         }
         
         public void AddToVisualElement(VisualElement ve)

@@ -394,9 +394,6 @@ public class DotsMain : GameMain
     {
         _tweenHolder.Update(Time.deltaTime);
         _timer.Update(Time.deltaTime);
-        _dotsHud.Update();
-        _betweenLevels.Update();
-        _quickSettings.Update();
     }
     
     
@@ -423,7 +420,7 @@ public class DotsMain : GameMain
         {
             if (!_quickSettings.Active)
             {
-                _quickSettings.setVisible(true);
+                _quickSettings.SetVisible(true);
             }
         }else if (_gameState == GameState.Standby)
         {

@@ -10,7 +10,7 @@ namespace Classes
     {
         private VisualElement _betweenElement;
         private float scale = 1f;
-        private List<ButtonClickable> _buttons = new List<ButtonClickable>();
+        
         public bool Active;
         private Label _bigText;
         private Label _smallText;
@@ -120,15 +120,15 @@ namespace Classes
             _bigButton.style.backgroundColor = Color.clear;
             _bigButton.style.color = Constants.GameColours[11];
             _bigButton.style.fontSize = 80f*scale;
-            _bigButton.text = "CONTINUE";
+            _bigButton.Text = "CONTINUE";
             
-            _buttons.Add(_bigButton);
-            _bigButton.onTouchDown = () =>
+            
+            _bigButton.OnTouchDown = () =>
             {
                 _bigButton.style.unityBackgroundImageTintColor = Color.gray;
             };
             
-            _bigButton.onTouchUp = () =>
+            _bigButton.OnTouchUp = () =>
             {
                 _bigButton.style.unityBackgroundImageTintColor = Color.white;
             };
@@ -142,8 +142,6 @@ namespace Classes
             smallButton.style.top = 50f*scale;
             smallButton.style.right = 50f*scale;
             
-            
-            _buttons.Add(smallButton);
             
             bg.Add(smallButton);
             bg.Add(_bigButton);
@@ -164,13 +162,6 @@ namespace Classes
         }
 
 
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-        }
 
         public void UpdateSmallText(string s)
         {
@@ -185,7 +176,7 @@ namespace Classes
                 _smallText.style.bottom = 458f * scale;
                 _monsterFaces.Portrait.style.bottom = (805f) * scale;
                 _monsterFaces.ChangeMood(MonsterMood.Happy);
-                _bigButton.text = buttonText;
+                _bigButton.Text = buttonText;
                 _pointDisplay.visible = true;
             }
             else
@@ -194,7 +185,7 @@ namespace Classes
                 _smallText.style.bottom = 312f * scale;
                 _monsterFaces.Portrait.style.bottom = (606f) * scale;
                 _monsterFaces.ChangeMood(MonsterMood.Sad);
-                _bigButton.text = buttonText;
+                _bigButton.Text = buttonText;
                 _pointDisplay.visible = false;
             }
             

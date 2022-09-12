@@ -58,13 +58,5 @@ namespace Classes
             TabAction(i);
         }
         
-        
-        public void Update()
-        {
-            
-            _clothButton.Update();
-            _furniButton.Update();
-            _coinsButton.Update();
-        }
     }
 }

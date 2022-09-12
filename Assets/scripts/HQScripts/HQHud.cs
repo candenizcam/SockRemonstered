@@ -152,18 +152,6 @@ namespace HQScripts
         
         
         
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-            
-            
-            
-            
-        }
-        
         public void AddToVisualElement(VisualElement ve)
         {
             

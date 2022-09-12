@@ -161,8 +161,6 @@ public class HQMainScript : MonoBehaviour
     {
         
         _timer.Update(Time.deltaTime);
-        _hqHud.Update();
-        _shop.Update();
 
 
         if (Input.touches.Length > 0)

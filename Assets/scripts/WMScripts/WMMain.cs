@@ -212,8 +212,6 @@ public class WMMain : GameMain
     // Update is called once per frame
     void Update()
     {
-        _betweenLevels.Update();
-        _quickSettings.Update();
         _wmHud.Update();
         _timer.Update(Time.deltaTime);
         _tweenHolder.Update(Time.deltaTime);
@@ -246,7 +244,7 @@ public class WMMain : GameMain
         {
             if (!_quickSettings.Active)
             {
-                _quickSettings.setVisible(true);
+                _quickSettings.SetVisible(true);
             }
         }
         else if(_gameState == GameState.Game)
