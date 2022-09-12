@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.DeviceSimulation;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = System.Random;
@@ -12,7 +13,9 @@ public class TestMain : MonoBehaviour
     public GameObject otherOtherOtherVisual;
 
     public GameObject otherVisual5;
-
+    public string s;
+    
+    
     private UIDocument _uiDocument;
     // Start is called before the first frame update
     void Start()
@@ -38,6 +41,69 @@ public class TestMain : MonoBehaviour
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
         _uiDocument.panelSettings.match = 0f;
 
+        var root = _uiDocument.rootVisualElement;
+
+
+        var im1 = new VisualElement();
+        var r = Resources.Load<Sprite>("test/ASZ3c_9");
+        //Debug.Log($"{r.packingMode}");
+        im1.style.backgroundImage = new StyleBackground(r);
+        //im1.style.unityBackgroundScaleMode = ScaleMode.ScaleAndCrop;
+        
+        im1.style.width = 600f;
+        im1.style.height = 400f;
+        im1.style.position = Position.Absolute;
+        im1.style.left = 200f;
+        im1.style.top = 100f;
+        //im1.scaleMode = ScaleMode.StretchToFill;
+        root.Add(im1);
+        
+        
+        var im2 = new VisualElement();
+        var r2 = Resources.Load<Sprite>("test/ASZ3c_9");
+        
+        
+        //im2.sprite = r2;
+        im2.style.width = 600f;
+        im2.style.height = 400f;
+        im2.style.backgroundImage = new StyleBackground(r2);
+        
+        im2.style.unityBackgroundScaleMode = ScaleMode.StretchToFill;
+        im2.style.position = Position.Absolute;
+        im2.style.left = 200f;
+        im2.style.top = 700f;
+        root.Add(im2);
+
+        var im3 = new VisualElement();
+        var r3 = Resources.Load<Sprite>("test/ASZ3c_9");
+        
+        
+        //im2.sprite = r2;
+        im3.style.width = 600f;
+        im3.style.height = 400f;
+        im3.style.backgroundImage = new StyleBackground(r3);
+        
+        im3.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+        im3.style.position = Position.Absolute;
+        im3.style.left = 200f;
+        im3.style.top = 1200f;
+        root.Add(im3);
+        
+        im3.RegisterCallback<MouseDownEvent>((e) =>
+        {
+            im3.style.unityBackgroundImageTintColor = Color.red;
+        });
+        im3.RegisterCallback<MouseUpEvent>((e) =>
+        {
+            im3.style.unityBackgroundImageTintColor = Color.white;
+        });
+
+        im3.RegisterCallback<MouseLeaveEvent>(e =>
+        {
+            im3.style.unityBackgroundImageTintColor = Color.white;
+        });
+        
+        /*
         var root = _uiDocument.rootVisualElement;
         root.style.backgroundColor = Color.green;
 
@@ -71,7 +137,7 @@ public class TestMain : MonoBehaviour
         
         
         root.Add(ve);
-
+*/
 
         //Debug.Log($"screen, width {Screen.width}, height {Screen.height}");
 
