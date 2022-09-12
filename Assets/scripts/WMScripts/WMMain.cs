@@ -33,6 +33,7 @@ public class WMMain : GameMain
     private int _moveNo = 0;
     private float firstStop = 1f;
     private List<GameObject> _starters = new List<GameObject>();
+    public GameObject Curtain;
     
     public int MoveNo
     {
@@ -77,9 +78,9 @@ public class WMMain : GameMain
         {
             levelIndex = LevelIndex;
         }
-        
-        
-        mainCamera = new WMLayout(Camera.main);
+
+        var topBarHeight = 320f;
+        mainCamera = new WMLayout(Camera.main,topBarHeight);
         var r = mainCamera.playfieldRect();
         playfield.transform.localScale = new Vector3(r.width,r.height,0f);
         playfield.transform.position = new Vector3(r.center.x,r.center.y,100f);
@@ -91,7 +92,7 @@ public class WMMain : GameMain
         wsr.size = new Vector2(r.width, mainCamera.Camera.orthographicSize*4f);
         
         InitializeMisc();
-        InitializeUi<WMHud>(mainCamera);
+        InitializeUi<WMHud>(topBarHeight);
             
         var left = r.xMin;
         var bottom = r.yMax;
@@ -112,6 +113,7 @@ public class WMMain : GameMain
         
         _wmHud.generateSocks(_wmScoreboard.ScoreAddressArray());
         _wmHud.adjustSocks(_wmScoreboard.Collected);
+        _wmHud.RemoveFromVisualElement(_uiDocument.rootVisualElement);
     }
 
     private void InitializeStartAnimation( WMLevelInfo thisLevel)
@@ -136,11 +138,33 @@ public class WMMain : GameMain
             }
         }, () =>
         {
-            _gameState = GameState.Game;
+            _wmHud.StartAnimation(0f);
+            _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
+            
+            Curtain.SetActive(false);
             foreach (var starter in _starters)
             {   
                 Destroy(starter);
             }
+            _timer.addEvent(.75f, () =>
+            {
+                _tweenHolder.newTween(.75f, alpha =>
+                {
+                    _wmHud.StartAnimation(Math.Clamp(alpha*1.2f,0f,1f));
+                }, () =>
+                {
+                    _wmHud.StartAnimation(1f);
+                    _gameState = GameState.Standby;
+                    
+                    _wmHud.ClearBg();
+
+                    _timer.addEvent(0.3f, () =>
+                    {
+                        _gameState = GameState.Game;
+                    });
+                
+                });
+            });
         });
     }
     

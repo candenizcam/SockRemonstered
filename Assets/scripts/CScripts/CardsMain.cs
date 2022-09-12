@@ -80,7 +80,7 @@ public class CardsMain : GameMain
         _columns = thisLevel.Column;
         _mainCamera = new CardLayout(Camera.main, _rows, _columns);
         InitializeMisc();
-        InitializeUi<CardHud>(_mainCamera);
+        InitializeUi<CardHud>();
         _selection = new[] {-1,-1};
         var littleS = _mainCamera.playfieldRect().width / bg.sprite.rect.width*100f;
         bg.gameObject.transform.localScale = new Vector3(littleS, littleS, 1f);

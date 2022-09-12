@@ -89,10 +89,10 @@ namespace Classes
         }
 
 
-        private void InitializeHud<T>() where T: GameHud, new()
+        private void InitializeHud<T>(float topHeight = 220f, float bottomHeight = 200f) where T: GameHud, new()
         {
             _gameHud = new T();
-            _gameHud.Initialize();
+            _gameHud.Initialize(topHeight,bottomHeight);
             _gameHud.SettingsButtonAction = () =>
             {
                 _gameState = GameState.Settings;
@@ -100,11 +100,11 @@ namespace Classes
             _gameHud.AddToVisualElement(_uiDocument.rootVisualElement);
         }
 
-        protected void InitializeUi<T>(GameLayout mainCamera) where T: GameHud, new()
+        protected void InitializeUi<T>(float topHeight=220f, float bottomHeight=200f) where T: GameHud, new()
         {
             InitializeUiDocument();
             
-            InitializeHud<T>();
+            InitializeHud<T>(topHeight,bottomHeight);
             InitializeQuickSettings();
             InitializeBetweenLevels();
         }

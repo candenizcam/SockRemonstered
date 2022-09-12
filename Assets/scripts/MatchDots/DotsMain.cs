@@ -86,7 +86,7 @@ public class DotsMain : GameMain
         
 
 
-        InitializeUi<DotsHud>(_mainCamera);
+        InitializeUi<DotsHud>();
         
         //_dotsScoreboard.MoveCounter
         

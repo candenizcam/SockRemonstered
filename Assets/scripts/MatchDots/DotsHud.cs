@@ -16,9 +16,9 @@ namespace MatchDots
             Initialize();
         }
         
-        public override void Initialize()
+        public override void Initialize(float topHeight = 220f, float bottomHeight = 200f)
         {
-            base.Initialize();
+            base.Initialize(topHeight,bottomHeight);
             _targetHolder = new VisualElement()
             {
                 style =
@@ -59,15 +59,10 @@ namespace MatchDots
         
         public void StartAnimation(float alpha)
         {
-            
-            
-            
             _targetHolder.style.bottom = 80f * alpha - (Constants.UiHeight*0.5f - 220f + 180f) * (1f - alpha);
             _targetHolder.style.width = _targetHolderWidth*alpha + (Constants.UiWidth+100f)*(1f-alpha);
             _targetHolder.style.left = 25f * alpha - 50f*(1f-alpha);
             _targetHolder.style.height = 160f * alpha + 360f * (1f - alpha);
-            
-            
         }
 
         public void UpdateTargets(List<DotsTarget> dt)
