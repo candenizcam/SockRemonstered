@@ -1,3 +1,4 @@
+using System;
 using Classes;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -175,7 +176,7 @@ public class WMHud : GameHud
             n.style.height = scale*n.sprite.rect.height;
             n.style.left = (x - n.sprite.rect.width/2f)*scale;
             n.style.top = y;//(y- n.sprite.rect.height)*scale;
-            _handYTargets[i] = (y- n.sprite.rect.height)*scale;
+            _handYTargets[i] = (y- n.sprite.rect.height - _frameHeight - Constants.UnsafeTopUi)*scale;
             _sockHolder.Add(n);
         }
         
@@ -265,7 +266,7 @@ public class WMHud : GameHud
             }else
             {
                 
-                var normalDifference = 1f - (_handTimer[i]) / (_handPickTime);
+                var normalDifference = 1f - (_handTimer[i]) / Math.Max(_handPickTime,0.05f);
                 _hand.style.bottom = _handYTargets[i] +normalDifference * _handMoveHeight;
             }
             
