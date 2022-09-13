@@ -18,61 +18,32 @@ namespace Classes
         protected Timer _timer;
         protected GameHud _gameHud;
         protected GameState _gameState;
-        protected InterstitialAd Interstitial;
         protected Action OnAdClosedAction;
-        
-        
-        protected void RequestInterstitial()
-        {
-            #if UNITY_ANDROID
-                string adUnitId = "ca-app-pub-3940256099942544/1033173712";
-                
-            #elif UNITY_IPHONE
-                    string adUnitId = "ca-app-pub-3940256099942544/4411468910";
-            #else
-                    string adUnitId = "unexpected_platform";
-            #endif
 
-            Debug.Log(adUnitId);
-            // Initialize an InterstitialAd.
-            this.Interstitial = new InterstitialAd(adUnitId);
-
-            // Called when an ad request has successfully loaded.
-            this.Interstitial.OnAdLoaded += HandleOnAdLoaded;
-            // Called when an ad request failed to load.
-            this.Interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
-            // Called when an ad is shown.
-            this.Interstitial.OnAdOpening += HandleOnAdOpening;
-            // Called when the ad is closed.
-            this.Interstitial.OnAdClosed += HandleOnAdClosed;
-
-            // Create an empty ad request.
-            AdRequest request = new AdRequest.Builder().Build();
-            // Load the interstitial with the request.
-            this.Interstitial.LoadAd(request);
-        }
+        public InterstitialAd interstatial;
+       
 
         public void HandleOnAdLoaded(object sender, EventArgs args)
         {
-            Debug.Log("yokluğun çok zor");
+            //Debug.Log("yokluğun çok zor");
             //MonoBehaviour.print("HandleAdLoaded event received");
         }
 
         public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
         {
-            Debug.Log("vur bu akılsız başı");
+            //Debug.Log("vur bu akılsız başı");
             //MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "+ args.Message);
         }
 
         public void HandleOnAdOpening(object sender, EventArgs args)
         {
-            Debug.Log("sensiz olamadım");
+            //Debug.Log("sensiz olamadım");
             //MonoBehaviour.print("HandleAdOpening event received");
         }
 
         public void HandleOnAdClosed(object sender, EventArgs args)
         {
-            Debug.Log("işte kuzu kuzu geldim");
+            //Debug.Log("işte kuzu kuzu geldim");
             //MonoBehaviour.print("HandleAdClosed event received");
             OnAdClosedAction();
         }
@@ -126,29 +97,37 @@ namespace Classes
         {
             var sgd = SerialGameData.LoadOrGenerate();
             Debug.Log("restart me");
-            
-            if (sgd.AdTime() && Interstitial.IsLoaded())
+            if (!Constants.SupressAd)
             {
-                OnAdClosedAction = () =>
+                if (sgd.AdTime() && interstatial.IsLoaded() )
+                {
+                    OnAdClosedAction = () =>
+                    {
+                        var nl = Constants.GetNextLevel(sgd.nextLevel);
+                        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+                        interstatial.Destroy();
+                        //_uiDocument.rootVisualElement.SetEnabled(true);
+                        _uiDocument.enabled = true;
+                    };
+                    _uiDocument.enabled = false;
+                
+                    //_uiDocument.rootVisualElement.SetEnabled(false);
+
+                    interstatial.Show();
+
+                }
+                else
                 {
                     var nl = Constants.GetNextLevel(sgd.nextLevel);
                     SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
-                    Interstitial.Destroy();
-                    //_uiDocument.rootVisualElement.SetEnabled(true);
-                    _uiDocument.enabled = true;
-                };
-                _uiDocument.enabled = false;
-                
-                //_uiDocument.rootVisualElement.SetEnabled(false);
-
-                Interstitial.Show();
-
+                }
             }
             else
             {
                 var nl = Constants.GetNextLevel(sgd.nextLevel);
                 SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
             }
+            
             
         }
     
@@ -191,7 +170,12 @@ namespace Classes
             InitializeHud<T>(topHeight,bottomHeight);
             InitializeQuickSettings();
             InitializeBetweenLevels();
-            RequestInterstitial();
+            if (!Constants.SupressAd)
+            {
+                interstatial = AdHandler.RequestInterstitial();
+                interstatial.OnAdClosed += HandleOnAdClosed;
+            }
+                
         }
         
         protected void InitializeMisc()
