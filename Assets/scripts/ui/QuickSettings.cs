@@ -16,10 +16,14 @@ namespace ui
         };
         public Action<bool> MusicButtonAction = (on) => {Debug.Log($"music {on}");};
         public Action ReturnButtonAction = () => {};
-
+        //private List<string> _tutorialPath = new List<string>();
         
         public QuickSettings( int sound, int music)
         {
+            
+            
+            
+            //_tutorialPath = tutorialPath;
             var bottom = Constants.UnsafeBottomUi;
             _qsElements = new VisualElement
             {
