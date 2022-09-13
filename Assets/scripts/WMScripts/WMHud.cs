@@ -122,7 +122,8 @@ public class WMHud : GameHud
     
     public void ClearBg()
     {
-        _fullScreen.style.backgroundColor = Color.clear;
+        _topBar.Remove(_fullScreen);
+        //_fullScreen.style.backgroundColor = Color.clear;
         for (int i = 0; i < _amount-1; i++)
         {
             var im = ((Image) _sockHolder[i]);

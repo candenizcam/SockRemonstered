@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.DeviceSimulation;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Random = System.Random;
+
 
 public class TestMain : MonoBehaviour
 {
