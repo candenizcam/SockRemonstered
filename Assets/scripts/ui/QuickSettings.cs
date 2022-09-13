@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Classes;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,13 +18,18 @@ namespace ui
         public Action<bool> MusicButtonAction = (on) => {Debug.Log($"music {on}");};
         public Action ReturnButtonAction = () => {};
         //private List<string> _tutorialPath = new List<string>();
+        private TutorialFrame[] _tutorialFrames;
+        private StyleBackground[] _tutorialSprite;
+        private float _tutorialTimeCounter = 0f;
+        private int _tutorialIndex = 0;
         
-        public QuickSettings( int sound, int music)
+        
+        public QuickSettings( int sound, int music, TutorialFrame[] tutorialFrames)
         {
-            
-            
-            
-            //_tutorialPath = tutorialPath;
+
+            _tutorialFrames = tutorialFrames;
+            _tutorialSprite = tutorialFrames.Select(x => new StyleBackground(Resources.Load<Sprite>(x.Path))).ToArray();
+
             var bottom = Constants.UnsafeBottomUi;
             _qsElements = new VisualElement
             {
@@ -58,8 +64,8 @@ namespace ui
                  style =
                  {
                      position = Position.Absolute,
-                     left = 32f,
-                     bottom = bottom+ 250f
+                     left = 264f,
+                     bottom = bottom+ 32f
                  }
              };
             _qsElements.Add(soundButton);
@@ -73,8 +79,8 @@ namespace ui
                  style =
                  {
                      position = Position.Absolute,
-                     left = 32f,
-                     bottom = bottom+482f
+                     left = 496f,
+                     bottom = bottom+32f
                  }
              };
             _qsElements.Add(musicButton);
@@ -84,13 +90,46 @@ namespace ui
                  style =
                  {
                      position = Position.Absolute,
-                     left = 32f,
-                     bottom = bottom+714f
+                     left = 728f,
+                     bottom = bottom+32f
                  }
              };
 
             _qsElements.Add(returnButton);
+            
+            TutorialRoll(0f);
         }
+
+
+        public void TutorialRoll(float dt)
+        {
+            
+            if (_tutorialFrames.Length > 0)
+            {
+                
+                _tutorialTimeCounter += dt;
+                
+                if (_tutorialTimeCounter >= _tutorialFrames[_tutorialIndex].StayTime)
+                {
+                    _tutorialTimeCounter -= _tutorialFrames[_tutorialIndex].StayTime;
+                    Debug.Log($"{_tutorialIndex}, {_tutorialFrames[_tutorialIndex].Path}, {_tutorialSprite[_tutorialIndex]}");
+                
+                
+                
+                    _tutorialIndex += 1;
+                    if (_tutorialIndex >= _tutorialFrames.Length)
+                    {
+                        _tutorialIndex -= _tutorialFrames.Length;
+                    }
+
+                    _qsElements.style.backgroundImage = _tutorialSprite[_tutorialIndex];
+
+                }
+            }
+            
+            
+        }
+        
 
         private void SettingsButtonFunction()
         {

@@ -41,7 +41,7 @@ namespace Classes
             _topBar.style.height = topHeight;
             _topBar.style.width = Constants.UiWidth;
             
-            var settingsButton = new ButtonClickable(scale,"ui/buttons/Pause",Color.gray,() =>
+            var settingsButton = new ButtonClickable(scale,"ui/buttons/Pause_new",Color.gray,() =>
             {
                 settingsButtonFunction();
             });

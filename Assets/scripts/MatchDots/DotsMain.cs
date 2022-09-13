@@ -86,7 +86,7 @@ public class DotsMain : GameMain
         
 
 
-        InitializeUi<DotsHud>();
+        InitializeUi<DotsHud>(tutorialFrames: DotsLevels.Tutorial);
         
         //_dotsScoreboard.MoveCounter
         
@@ -444,6 +444,7 @@ public class DotsMain : GameMain
             {
                 _quickSettings.SetVisible(true);
             }
+            _quickSettings.TutorialRoll(Time.deltaTime);
         }else if (_gameState == GameState.Standby)
         {
             if (_dotGrid.DotsList.All(x => x.InTheRightPlace))
