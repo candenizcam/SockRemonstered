@@ -1,3 +1,6 @@
+using System;
+using Classes;
+using GoogleMobileAds.Api;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,12 +14,81 @@ public class TestMain : MonoBehaviour
 
     public GameObject otherVisual5;
     public string s;
+    private Timer _timer;
+    
+    
+    protected InterstitialAd Interstitial;
+    protected RewardedAd RewardedAd;
+    protected Action OnAdClosedAction;
+        
+        
+        protected void RequestInterstitial()
+        {
+            string adUnitId;
+
+            #if UNITY_ANDROID
+                        adUnitId = "ca-app-pub-3940256099942544/5224354917";
+            #elif UNITY_IPHONE
+                        adUnitId = "ca-app-pub-3940256099942544/1712485313";
+            #else
+                        adUnitId = "unexpected_platform";
+            #endif
+
+
+            Debug.Log(adUnitId);
+            // Initialize an InterstitialAd.
+            //this.Interstitial = new InterstitialAd(adUnitId);
+            this.RewardedAd = new RewardedAd(adUnitId);
+
+
+            // Called when an ad request has successfully loaded.
+            //this.Interstitial.OnAdLoaded += HandleOnAdLoaded;
+            // Called when an ad request failed to load.
+            //this.Interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
+            // Called when an ad is shown.
+            //this.Interstitial.OnAdOpening += HandleOnAdOpening;
+            // Called when the ad is closed.
+            //this.Interstitial.OnAdClosed += HandleOnAdClosed;
+
+            // Create an empty ad request.
+            AdRequest request = new AdRequest.Builder().Build();
+            // Load the rewarded ad with the request.
+            this.RewardedAd.LoadAd(request);
+
+        }
+
+        public void HandleOnAdLoaded(object sender, EventArgs args)
+        {
+            Debug.Log("yokluğun çok zor");
+            //MonoBehaviour.print("HandleAdLoaded event received");
+        }
+
+        public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+        {
+            Debug.Log("vur bu akılsız başı");
+            //MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "+ args.Message);
+        }
+
+        public void HandleOnAdOpening(object sender, EventArgs args)
+        {
+            Debug.Log("sensiz olamadım");
+            //MonoBehaviour.print("HandleAdOpening event received");
+        }
+
+        public void HandleOnAdClosed(object sender, EventArgs args)
+        {
+            Debug.Log("işte kuzu kuzu geldim");
+            //MonoBehaviour.print("HandleAdClosed event received");
+            OnAdClosedAction();
+        }
+    
     
     
     private UIDocument _uiDocument;
     // Start is called before the first frame update
     void Start()
     {
+        _timer = new Timer();
         /*
         var r = new Random(6);
 
@@ -31,18 +103,39 @@ public class TestMain : MonoBehaviour
         var uiw = 1000;
         var uih = 1000f / (float)Screen.width * (float)Screen.height;
         
-        _uiDocument = gameObject.GetComponent<UIDocument>();
+        //_uiDocument = gameObject.GetComponent<UIDocument>();
         //_uiDocument.panelSettings.referenceResolution = new Vector2Int(Screen.width, Screen.height);
         //1170, 2532
-        _uiDocument.panelSettings.referenceResolution = new Vector2Int(uiw, (int)uih);
-        _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-        _uiDocument.panelSettings.match = 0f;
+        //_uiDocument.panelSettings.referenceResolution = new Vector2Int(uiw, (int)uih);
+        //_uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+        //_uiDocument.panelSettings.match = 0f;
+
+        RequestInterstitial();
+
+        //var root = _uiDocument.rootVisualElement;
+
+
+        _timer.addEvent(1f, () =>
+        {
+            if (RewardedAd.IsLoaded())
+            {
+                
+                RewardedAd.Show();
+            }
+        });
+        /*
+        var b = new ButtonClickable(1f,"test/ASZ3c_9",Color.gray, () =>
+        {
+            
+        });
+
+        b.style.position = Position.Absolute;
+        b.style.top = 100f;
+        b.style.left = 100f;
         
-        
-
-        var root = _uiDocument.rootVisualElement;
-
-
+        root.Add(b);
+        */
+        /*
         var im1 = new VisualElement();
         var r = Resources.Load<Sprite>("test/ASZ3c_9");
         //Debug.Log($"{r.packingMode}");
@@ -101,7 +194,7 @@ public class TestMain : MonoBehaviour
         {
             im3.style.unityBackgroundImageTintColor = Color.white;
         });
-        
+        */
         /*
         var root = _uiDocument.rootVisualElement;
         root.style.backgroundColor = Color.green;
@@ -205,6 +298,7 @@ public class TestMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _timer.Update(Time.deltaTime);
         
     }
 }

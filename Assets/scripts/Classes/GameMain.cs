@@ -1,4 +1,6 @@
-﻿using MatchDots;
+﻿using System;
+using GoogleMobileAds.Api;
+using MatchDots;
 using ui;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,7 +18,66 @@ namespace Classes
         protected Timer _timer;
         protected GameHud _gameHud;
         protected GameState _gameState;
+        protected InterstitialAd Interstitial;
+        protected Action OnAdClosedAction;
+        
+        
+        protected void RequestInterstitial()
+        {
+            #if UNITY_ANDROID
+                string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+                
+            #elif UNITY_IPHONE
+                    string adUnitId = "ca-app-pub-3940256099942544/4411468910";
+            #else
+                    string adUnitId = "unexpected_platform";
+            #endif
 
+            Debug.Log(adUnitId);
+            // Initialize an InterstitialAd.
+            this.Interstitial = new InterstitialAd(adUnitId);
+
+            // Called when an ad request has successfully loaded.
+            this.Interstitial.OnAdLoaded += HandleOnAdLoaded;
+            // Called when an ad request failed to load.
+            this.Interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
+            // Called when an ad is shown.
+            this.Interstitial.OnAdOpening += HandleOnAdOpening;
+            // Called when the ad is closed.
+            this.Interstitial.OnAdClosed += HandleOnAdClosed;
+
+            // Create an empty ad request.
+            AdRequest request = new AdRequest.Builder().Build();
+            // Load the interstitial with the request.
+            this.Interstitial.LoadAd(request);
+        }
+
+        public void HandleOnAdLoaded(object sender, EventArgs args)
+        {
+            Debug.Log("yokluğun çok zor");
+            //MonoBehaviour.print("HandleAdLoaded event received");
+        }
+
+        public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+        {
+            Debug.Log("vur bu akılsız başı");
+            //MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "+ args.Message);
+        }
+
+        public void HandleOnAdOpening(object sender, EventArgs args)
+        {
+            Debug.Log("sensiz olamadım");
+            //MonoBehaviour.print("HandleAdOpening event received");
+        }
+
+        public void HandleOnAdClosed(object sender, EventArgs args)
+        {
+            Debug.Log("işte kuzu kuzu geldim");
+            //MonoBehaviour.print("HandleAdClosed event received");
+            OnAdClosedAction();
+        }
+
+        
         
         protected void LevelDone(bool won)
         {
@@ -64,8 +125,31 @@ namespace Classes
         protected void Restart()
         {
             var sgd = SerialGameData.LoadOrGenerate();
-            var nl = Constants.GetNextLevel(sgd.nextLevel);
-            SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+            Debug.Log("restart me");
+            
+            if (sgd.AdTime() && Interstitial.IsLoaded())
+            {
+                OnAdClosedAction = () =>
+                {
+                    var nl = Constants.GetNextLevel(sgd.nextLevel);
+                    SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+                    Interstitial.Destroy();
+                    //_uiDocument.rootVisualElement.SetEnabled(true);
+                    _uiDocument.enabled = true;
+                };
+                _uiDocument.enabled = false;
+                
+                //_uiDocument.rootVisualElement.SetEnabled(false);
+
+                Interstitial.Show();
+
+            }
+            else
+            {
+                var nl = Constants.GetNextLevel(sgd.nextLevel);
+                SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+            }
+            
         }
     
         protected void NextLevel()
@@ -107,6 +191,7 @@ namespace Classes
             InitializeHud<T>(topHeight,bottomHeight);
             InitializeQuickSettings();
             InitializeBetweenLevels();
+            RequestInterstitial();
         }
         
         protected void InitializeMisc()

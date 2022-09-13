@@ -34,7 +34,7 @@ namespace ui
                 }
             };
 
-            var settingsButton = new ButtonClickable(1f,"ui/buttons/Pause",Color.gray,SettingsButtonFunction)
+            var settingsButton = new ButtonClickable(1f,"ui/buttons/Pause-2",Color.gray,SettingsButtonFunction)
              {
                  style =
                  {
@@ -113,6 +113,11 @@ namespace ui
         public void AddToVisualElement(VisualElement ve)
         {
             ve.Add(_qsElements);
+        }
+        
+        public void RemoveFromVisualElement(VisualElement ve)
+        {
+            ve.Remove(_qsElements);
         }
 
         public void SetVisible(bool b)

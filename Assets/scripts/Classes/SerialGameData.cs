@@ -22,8 +22,11 @@ namespace Classes
         public string[] lineup;
         public List<string> activeFurnitures; // maybe this will be server one day...
         private const string Location = "/sockMonsterData.dat";
-        
-        
+
+        public bool AdTime()
+        {
+            return true;
+        }
 
         public int getHearts()
         {
