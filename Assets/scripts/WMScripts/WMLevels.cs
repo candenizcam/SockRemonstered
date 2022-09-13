@@ -112,7 +112,7 @@ namespace WashingMachine.WMScripts
             for (var i = 0; i < WmSockInfos.Length; i++)
             {
                 var r = WmSockInfos[i].Resource();
-                also(i,r);
+                also(i-5,r);
             }
 
         }

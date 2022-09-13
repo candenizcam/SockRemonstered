@@ -1,4 +1,5 @@
 ﻿using MatchDots;
+using ui;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -21,7 +22,7 @@ namespace Classes
         {
             var lp = GetLevelPoints();
             var levelNo = 0;
-            var buttonText = "NEXT";
+            var buttonText = "RETURN";
             if (won)
             {
                 _gameState = GameState.Won;
@@ -31,7 +32,7 @@ namespace Classes
                     sgd.nextLevel += 1;
                     sgd.coins += lp.number;
                 });
-                _betweenLevels.OnBigButton = NextLevel;
+                _betweenLevels.OnBigButton = ToHQ;
             }
             else
             {
@@ -88,10 +89,10 @@ namespace Classes
         }
 
 
-        private void InitializeHud<T>() where T: GameHud, new()
+        private void InitializeHud<T>(float topHeight = 220f, float bottomHeight = 200f) where T: GameHud, new()
         {
             _gameHud = new T();
-            _gameHud.Initialize();
+            _gameHud.Initialize(topHeight,bottomHeight);
             _gameHud.SettingsButtonAction = () =>
             {
                 _gameState = GameState.Settings;
@@ -99,11 +100,11 @@ namespace Classes
             _gameHud.AddToVisualElement(_uiDocument.rootVisualElement);
         }
 
-        protected void InitializeUi<T>(GameLayout mainCamera) where T: GameHud, new()
+        protected void InitializeUi<T>(float topHeight=220f, float bottomHeight=200f) where T: GameHud, new()
         {
             InitializeUiDocument();
             
-            InitializeHud<T>();
+            InitializeHud<T>(topHeight,bottomHeight);
             InitializeQuickSettings();
             InitializeBetweenLevels();
         }
@@ -129,7 +130,7 @@ namespace Classes
             var sgd1 = SerialGameData.LoadOrGenerate();
             _quickSettings = new QuickSettings( sgd1.sound, sgd1.music);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
-            _quickSettings.setVisible(false);
+            _quickSettings.SetVisible(false);
             _quickSettings.SettingsButtonAction = QuickSettingsButtonFunction;
 
             _quickSettings.MusicButtonAction = b =>
@@ -169,7 +170,7 @@ namespace Classes
 
         protected virtual void QuickSettingsButtonFunction()
         {
-            _quickSettings.setVisible(false);
+            _quickSettings.SetVisible(false);
             _gameState = GameState.Game;
         }
         

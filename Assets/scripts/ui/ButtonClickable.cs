@@ -4,26 +4,71 @@ using UnityEngine.UIElements;
 
 namespace Classes
 {
-    public class ButtonClickable: Button
+    public class ButtonClickable: VisualElement
     {
-        public Action onTouchDown = () => {};
-        public Action onTouchUp = () => {};
+        public Action OnTouchDown = () => {};
+        public Action OnTouchUp = () => {};
+        public Action OnLeave = () => { };
+        public Action ClickAction = () => {};
 
+        
+        
+        public string Text
+        {
+            get => _textLabel.text;
+            set => _textLabel.text = value;
+        }
+        
+        
         protected float width;
         protected float height;
+        protected float scale;
+        private readonly Label _textLabel;
+        public bool DisableButton = false;
         
-        public ButtonClickable(Action clickAction) : base(clickAction)
+        public ButtonClickable(Action clickAction= null) : base()
         {
-            //OnMouseDown();
-        
+            ClickAction = clickAction ??= () => {};
             style.borderBottomColor = Color.clear;
             style.borderTopColor = Color.clear;
             style.borderRightColor = Color.clear;
             style.borderLeftColor = Color.clear;
+            _textLabel = new Label();
+            _textLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
+            _textLabel.StretchToParentSize();
+            Add(_textLabel);
             
+            RegisterCallback<MouseLeaveEvent>(TouchLeave);
+            RegisterCallback<MouseDownEvent>(TouchDown);
+            RegisterCallback<MouseUpEvent>(TouchUp);
+            RegisterCallback<ClickEvent>(Click);
         }
 
         public ButtonClickable(float scale, string imagePath, Color pressedTint, Action clickAction): this(clickAction)
+        {
+            this.scale = scale;
+            ChangeImage(imagePath);
+            style.backgroundColor = Color.clear;
+            
+            OnTouchDown = () =>
+            {
+                style.unityBackgroundImageTintColor = pressedTint;
+            };
+            
+            OnTouchUp = () =>
+            {
+                style.unityBackgroundImageTintColor = Color.white;
+            };
+            OnLeave = () =>
+            {
+                style.unityBackgroundImageTintColor = Color.white;
+            };
+            
+            
+            
+        }
+
+        public void ChangeImage(string imagePath)
         {
             var s2 = Resources.Load<Sprite>(imagePath);
             width = s2.rect.width * scale;
@@ -31,75 +76,49 @@ namespace Classes
             style.width = width;
             style.height = height;
             style.backgroundImage = new StyleBackground(s2);
-            style.backgroundColor = Color.clear;
-            
-            onTouchDown = () =>
-            {
-                style.unityBackgroundImageTintColor = pressedTint;
-            };
-            
-            onTouchUp = () =>
-            {
-                style.unityBackgroundImageTintColor = Color.white;
-            };
-            
         }
 
+        
+        
         public void Scale(float scale)
         {
             style.width = width * scale;
             style.height = height * scale;
         }
+
         
-        public void TouchDown(Vector2 p)
+        
+        protected virtual void TouchLeave(MouseLeaveEvent e)
         {
-            if (worldBound.Contains(p))
+            if (!DisableButton)
             {
-                onTouchDown();
+                OnLeave();
             }
-            
+        }
+        
+        protected virtual void TouchDown(MouseDownEvent e)
+        {
+            if (!DisableButton)
+            {
+                OnTouchDown();
+            }
         }
 
-        public void TouchUp(Vector2 p)
+        protected virtual void TouchUp(MouseUpEvent e)
         {
-            onTouchUp();
-            if (worldBound.Contains(p))
+            if (!DisableButton)
             {
-                
+                OnTouchUp();
             }
-            
         }
 
-        public void Update()
+        protected virtual void Click(ClickEvent e)
         {
-            if (Input.touches.Length > 0)
+            if (!DisableButton)
             {
-                if (Input.touches[0].phase == TouchPhase.Began)
-                {
-                    var p = Input.touches[0].position;
-                    p = new Vector2(p.x/Screen.width*Constants.UiWidth, (Screen.height - p.y)/Screen.height*Constants.UiHeight);
-                    if (worldBound.Contains(p))
-                    {
-                        onTouchDown();
-                    }
-                }
-                
-                if (Input.touches[0].phase == TouchPhase.Ended)
-                {
-                    onTouchUp();
-                }
-                
-                
+                ClickAction();
             }
         }
-        
-        /*
-        override protected void OnMouseDown()
-        {
-            
-        }
-        
-        */
-        
+
     }
 }

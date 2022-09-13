@@ -36,13 +36,13 @@ namespace Classes
             text.style.color = Constants.GameColours[11];
             Add(text);
             
-            onTouchDown = () =>
+            OnTouchDown = () =>
             {
                 style.unityBackgroundImageTintColor = Color.gray;
                 h.tintColor = Color.gray;
             };
             
-            onTouchUp = () =>
+            OnTouchUp = () =>
             {
                 h.tintColor = Color.white;
                 style.unityBackgroundImageTintColor = Color.white;

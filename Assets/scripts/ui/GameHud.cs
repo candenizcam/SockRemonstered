@@ -11,10 +11,12 @@ namespace Classes
         
         protected VisualElement _topBar;
         protected VisualElement _bottomBar;
+
+        
         //protected Rect topBarRect;
         //protected Rect bottomBarRect;
         protected float scale;
-        protected List<ButtonClickable> _buttons = new List<ButtonClickable>();
+        
         
         public Action SettingsButtonAction = () => {};
         protected MonsterFaces _monsterFaces;
@@ -27,7 +29,7 @@ namespace Classes
             
         }
 
-        public virtual void Initialize()
+        public virtual void Initialize(float topHeight = 220f, float bottomHeight = 200f)
         {
             scale = 1f;
             
@@ -36,7 +38,7 @@ namespace Classes
             _topBar.style.position = Position.Absolute;
             _topBar.style.top = Constants.UnsafeTopUi;
             _topBar.style.bottom = 0f;
-            _topBar.style.height = 220f;
+            _topBar.style.height = topHeight;
             _topBar.style.width = Constants.UiWidth;
             
             var settingsButton = new ButtonClickable(scale,"ui/buttons/Pause",Color.gray,() =>
@@ -53,10 +55,10 @@ namespace Classes
             _bottomBar.style.position = Position.Absolute;
             _bottomBar.style.left = 0f;
             _bottomBar.style.bottom = Constants.UnsafeBottomUi;
-            _bottomBar.style.height = 200f;
+            _bottomBar.style.height = bottomHeight;
             _bottomBar.style.width = Constants.UiWidth;
             
-            _buttons.Add(settingsButton);
+            
             _bottomBar.Add(settingsButton);
             
             var w = 382f;
@@ -84,20 +86,14 @@ namespace Classes
             _moveCounter.MoveBg.style.right = (w -_moveCounter.MoveBg.sprite.rect.width)*scale;
             _moveCounter.MoveBg.style.top = (h-_moveCounter.MoveBg.sprite.rect.height)*scale;
             _topBar.Add(_moveCounter.MoveBg);
+
+
         }
         
         protected void settingsButtonFunction()
         {
             Debug.Log("old guy");
             SettingsButtonAction();
-        }
-        
-        public virtual void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
         }
         
         public void AddToVisualElement(VisualElement ve)
@@ -116,6 +112,7 @@ namespace Classes
         {
             _topBar.visible = b;
             _bottomBar.visible = b;
+
         }
         
         public void updateInfo([CanBeNull] string  moveLeft = null, MonsterMood? monsterMood = null)

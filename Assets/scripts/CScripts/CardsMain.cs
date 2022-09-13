@@ -80,7 +80,7 @@ public class CardsMain : GameMain
         _columns = thisLevel.Column;
         _mainCamera = new CardLayout(Camera.main, _rows, _columns);
         InitializeMisc();
-        InitializeUi<CardHud>(_mainCamera);
+        InitializeUi<CardHud>();
         _selection = new[] {-1,-1};
         var littleS = _mainCamera.playfieldRect().width / bg.sprite.rect.width*100f;
         bg.gameObject.transform.localScale = new Vector3(littleS, littleS, 1f);
@@ -255,7 +255,7 @@ public class CardsMain : GameMain
     
     protected override void QuickSettingsButtonFunction()
     {
-        _quickSettings.setVisible(false);
+        _quickSettings.SetVisible(false);
         _gameState = GameState.Game;
     }
     
@@ -267,9 +267,6 @@ public class CardsMain : GameMain
     void Update()
     {
         _timer.Update(Time.deltaTime);
-        CardHud.Update();
-        _betweenLevels.Update();
-        _quickSettings.Update();
         _tweenHolder.Update(Time.deltaTime);
 
         if (_gameState==GameState.Game)
@@ -358,7 +355,7 @@ public class CardsMain : GameMain
         {
             if (!_quickSettings.Active)
             {
-                _quickSettings.setVisible(true);
+                _quickSettings.SetVisible(true);
             }
         }else if (_gameState == GameState.Standby)
         {

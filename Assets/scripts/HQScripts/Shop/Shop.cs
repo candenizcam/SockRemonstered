@@ -154,7 +154,7 @@ namespace HQScripts
                     
                     
                 }
-
+                UpdateShopItems();
             }; 
             //_closetTab.UpdateShopItems(ShopItems.ShopItemsArray);
 
@@ -164,6 +164,7 @@ namespace HQScripts
                 var sgd = SerialGameData.LoadOrGenerate();
                 sgd.coins += thisItem.Price;
                 sgd.Save();
+                UpdateShopItems();
             };
             //_coinTab.UpdateShopItems(ShopItems.ShopItemsArray);
             
@@ -233,23 +234,10 @@ namespace HQScripts
             
             _closetTab.UpdateShopItems(bought.ToArray());
             _coinTab.UpdateShopItems(ShopItems.GetCoinsArray());
-            _purchaseTab.UpdateShopItems(notBought.ToArray());
+            _purchaseTab.UpdateShopItems(notBought.ToArray(), sgd.coins);
         }
         
 
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-            
-            _shopTabs.Update();
-            _closetTab.Update();
-            _purchaseTab.Update();
-            _coinTab.Update();
-            
-        }
 
 
         private void BgButtonFunction()

@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Classes;
 using HQScripts;
-using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -128,8 +125,6 @@ public class HQMainScript : MonoBehaviour
                     furnitureScript.MonsterEnabled(false);
                     l.Add(furnitureScript);
                 }
-                
-                    
             }
 
             
@@ -148,11 +143,19 @@ public class HQMainScript : MonoBehaviour
                 MonsterPrefabScript.UpdateDress(sgd.lineup);
             }
             
+            // ShopExclamation
+            // sgd.activeFurnitures
+            try
+            {
+                var f = ShopItems.ShopItemsArray.First(x => !sgd.activeFurnitures.Contains(x.ID));
+                _hqHud.ShopExclamation(f.Price <= sgd.coins);
+            }
+            catch (InvalidOperationException e)
+            {
+                
+            }
             
-           
-            
-            
-            
+
         });
     }
 
@@ -161,8 +164,6 @@ public class HQMainScript : MonoBehaviour
     {
         
         _timer.Update(Time.deltaTime);
-        _hqHud.Update();
-        _shop.Update();
 
 
         if (Input.touches.Length > 0)

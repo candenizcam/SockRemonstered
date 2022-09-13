@@ -11,9 +11,9 @@ namespace HQScripts
     {
         private VisualElement _topBar;
         private VisualElement _bottomBar;
-        private List<ButtonClickable> _buttons = new List<ButtonClickable>();
         private LivesButton _livesButton;
         private CoinsButton _coinsButton;
+        private ButtonClickable _shopButton;
         
         public Action SettingsButtonAction = () => {};
         public Action LivesButtonAction = () => {};
@@ -81,16 +81,19 @@ namespace HQScripts
             
             var playButton = new ButtonClickable(1f,"ui/buttons/Play",Color.gray,PlayButtonFunction);
             
-            var shopButton = new ButtonClickable(1f,"ui/buttons/Shop",Color.gray,ShopButtonFunction);
+            _shopButton = new ButtonClickable(1f,"ui/buttons/Shop",Color.gray,ShopButtonFunction);
             
             
-            bottomBar.Add(achiButton);
+            
+            
+            bottomBar.Add(_shopButton);
             bottomBar.Add(playButton);
-            bottomBar.Add(shopButton);
-            
-            _buttons.Add(achiButton);
-            _buttons.Add(playButton);
-            _buttons.Add(shopButton);
+            bottomBar.Add(achiButton);
+        }
+
+        public void ShopExclamation(bool b)
+        {
+            _shopButton.ChangeImage(b ? "ui/buttons/Shop!":"ui/buttons/Shop");
         }
 
         void generateTopBarElements(VisualElement topBar)
@@ -107,11 +110,6 @@ namespace HQScripts
             topBar.Add(_livesButton);
             topBar.Add(_coinsButton);
             topBar.Add(otherButton);
-            
-            _buttons.Add(settingsButton);
-            _buttons.Add(_livesButton);
-            _buttons.Add(_coinsButton);
-            _buttons.Add(otherButton);
         }
 
         void AchiButtonFunction()
@@ -151,18 +149,6 @@ namespace HQScripts
         
         
         
-        
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-            
-            
-            
-            
-        }
         
         public void AddToVisualElement(VisualElement ve)
         {

@@ -41,13 +41,5 @@ namespace HQScripts
             ItemAction(shopItem);
         }
         
-        public void Update()
-        {
-            foreach (var buttonClickable in _buttons)
-            {
-                buttonClickable.Update();
-            }
-        }
-        
     }
 }
