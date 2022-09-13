@@ -40,6 +40,8 @@ public class TestMain : MonoBehaviour
         _uiDocument.panelSettings.referenceResolution = new Vector2Int(uiw, (int)uih);
         _uiDocument.panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
         _uiDocument.panelSettings.match = 0f;
+        
+        
 
         var root = _uiDocument.rootVisualElement;
 
