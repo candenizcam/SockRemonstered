@@ -1,4 +1,5 @@
 ﻿using System;
+using Classes;
 using UnityEngine;
 
 namespace RainScripts
@@ -95,6 +96,11 @@ namespace RainScripts
             {"ui/wm_socks/ss4" }, {"ui/wm_socks/ss5" }, {"ui/wm_socks/ss6" },
             {"ui/wm_socks/ss7" }, {"ui/wm_socks/ss8" }, {"ui/wm_socks/ss9" }
             
+        };
+        
+        public static readonly TutorialFrame[] Tutorial = new TutorialFrame[]
+        {
+
         };
 
     }

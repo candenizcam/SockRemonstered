@@ -91,7 +91,7 @@ public class RainMain : GameMain
         wsr.size = new Vector2(r.width, _mainCamera.Camera.orthographicSize*4f);
         
         InitializeMisc();
-        InitializeUi<RainHud>(topBarHeight);
+        InitializeUi<RainHud>(topBarHeight,tutorialFrames: RainLevels.Tutorial);
             
         var left = r.xMin;
         var bottom = r.yMax;

@@ -1,4 +1,6 @@
-﻿namespace Cards.CScripts
+﻿using Classes;
+
+namespace Cards.CScripts
 {
     public static class CardLevels
     {
@@ -10,6 +12,11 @@
             new CardLevelInfo(4,3,14,cardTypes:3),
             new CardLevelInfo(4,3,17,cardTypes:4)
             
+        };
+
+        public static readonly TutorialFrame[] Tutorial = new TutorialFrame[]
+        {
+
         };
     }
 
