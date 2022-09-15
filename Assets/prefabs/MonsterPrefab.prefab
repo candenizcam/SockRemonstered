@@ -614,18 +614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a53f88446467def40859729ffdfc1742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BodySprites:
-  - {fileID: 3762651758627107697}
-  - {fileID: 6438648205906670375}
-  RightLegSprites:
-  - {fileID: 581276149691309229}
-  LeftLegSprites:
-  - {fileID: 3571048245939175403}
-  RightArmSprites:
-  - {fileID: 6077974392519861465}
-  LeftArmSprites:
-  - {fileID: 7436604946266089099}
-  - {fileID: 5359899106758664256}
   Sprites:
   - {fileID: 3762651758627107697}
   - {fileID: 6438648205906670375}
@@ -1271,7 +1259,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7657892083606699293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
