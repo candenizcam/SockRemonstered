@@ -111,7 +111,7 @@ namespace Classes
             }
             else
             {
-                return new NextLevelData("WashingMachineScene",l + bigNumber % 5 - 1);
+                return new NextLevelData("Rain",l + bigNumber % 5 - 1);
             }
         }
     }
