@@ -293,12 +293,12 @@ public class DotsMain : GameMain
             _selectionList.ClearTouchEffects();
             _tweenHolder.newTween(EraseTime, alpha =>
             {
-                var a = -1f * alpha * alpha + 1;
+                //var a = -1f * alpha * alpha + 1;
                 foreach (var dotsPrefabScript in _selectionList.Selections)
                 {
-                    
-                    dotsPrefabScript.gameObject.transform.localScale = new Vector3(a, a, 1f);
-                    dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
+                    dotsPrefabScript.DeathEffect(alpha);
+                    //dotsPrefabScript.gameObject.transform.localScale = new Vector3(a, a, 1f);
+                    //dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
                 }
                 
             }, () =>
@@ -313,8 +313,9 @@ public class DotsMain : GameMain
                     {
                         //Debug.Log("hayde bude loco loco");
                         dotsPrefabScript.InTheRightPlace = true;
-                        dotsPrefabScript.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-                        dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,0f);
+                        dotsPrefabScript.DeathEffect(0f);
+                        //dotsPrefabScript.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                        //dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,0f);
                         dotsPrefabScript.SetDotType((int)dotsPrefabScript.TurnInto);
                     }
                     
