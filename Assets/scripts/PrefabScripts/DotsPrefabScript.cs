@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Classes;
 using Unity.Mathematics;
 using UnityEngine;
@@ -8,6 +9,8 @@ using UnityEngine;
 public class DotsPrefabScript : MonoBehaviour
 {
     public List<SpriteRenderer> dotSprites;
+    public List<SpriteRenderer> bombSprites;
+    private List<SpriteRenderer> allSprites;
     public SpriteRenderer HitBlob;
     public SpriteRenderer DragBar;
     
@@ -24,11 +27,24 @@ public class DotsPrefabScript : MonoBehaviour
     public int Row{ get; private set; } = -1;
 
     public int DotType { get; private set; } = -1;
+    
+    [NonSerialized]
+    public int? TurnInto = null;
+
+    public bool ImTheBomb => DotType >= dotSprites.Count;  // 3,2,1
+    public int BombType => DotType - dotSprites.Count; // 0: adj.
 
 
+    public void DeathEffect(float alpha)
+    {
+        var a = -1f * alpha * alpha + 1;
+        allSprites[DotType].transform.localScale = new Vector3(a, a, 1f);
+        allSprites[DotType].transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
+    }
+    
     public void TweenEffect(float scale)
     {
-        dotSprites[DotType].gameObject.transform.localScale = new Vector3(scale, scale, 1f);
+        allSprites[DotType].gameObject.transform.localScale = new Vector3(scale, scale, 1f);
     }
     
     public void setColumn(int c)
@@ -84,7 +100,7 @@ public class DotsPrefabScript : MonoBehaviour
         dgt.localScale = new Vector3(.01f, dgt.localScale.y, dgt.localScale.z);
     }
 
-    public void MoveDragBar(Vector2 target)
+    public void MoveDragBar(Vector2 target, Color? forceColour = null)
     {
         var p1 = transform.position;
         var c = (Vector2)VectorTools.Vector3BiasedSum(target, p1, 0.5f);
@@ -99,6 +115,11 @@ public class DotsPrefabScript : MonoBehaviour
         
         dgt.rotation = Quaternion.Euler(0f,0f,-ang / 6.282f * 360f+90f);
 
+        if (forceColour != null)
+        {
+            DragBar.color = (Color)forceColour;
+        }
+
     }
     
     
@@ -106,11 +127,65 @@ public class DotsPrefabScript : MonoBehaviour
     
     public void SetDotType(int dt)
     {
-        DotType = dt;
-        for (var i = 0; i < dotSprites.Count; i++)
+        TurnInto = null;
+
+        if (dt >= 0)
         {
-            dotSprites[i].enabled = i == dt;
+            DotType = dt;
         }
+        else
+        {
+            DotType = dotSprites.Count - dt - 1;
+        }
+        
+        for (var i = 0; i < allSprites.Count; i++)
+        {
+            allSprites[i].enabled = i == DotType;
+        }
+        
+        /*
+        DotType = dt;
+        if (dt >= 0)
+        {
+            for (var i = 0; i < allSprites.Count; i++)
+            {
+                allSprites[i].enabled = i == dt;
+            }
+
+            /*
+            for (var i = 0; i < dotSprites.Count; i++)
+            {
+                dotSprites[i].enabled = i == dt;
+            }
+            foreach (var spriteRenderer in bombSprites)
+            {
+                spriteRenderer.gameObject.SetActive(false);
+            }
+            
+        }
+        else
+        {
+            
+            for (var i = 0; i < allSprites.Count; i++)
+            {
+                allSprites[i].enabled = i == dt;
+            }
+            /*
+            foreach (var spriteRenderer in dotSprites)
+            {
+                spriteRenderer.enabled = false;
+            }
+            
+            for (var i = 0; i < bombSprites.Count; i++)
+            {
+                bombSprites[i].enabled = i == Math.Abs(dt) - 1;
+            }
+            
+            
+            
+        }
+        */
+        
     }
     
     // Start is called before the first frame update
@@ -118,6 +193,20 @@ public class DotsPrefabScript : MonoBehaviour
     {
         HitBlob.gameObject.SetActive(false);
         DragBar.gameObject.SetActive(false);
+
+        allSprites = new List<SpriteRenderer>();
+        
+        foreach (var spriteRenderer in dotSprites)
+        {
+            allSprites.Add(spriteRenderer);
+        }
+        
+        foreach (var spriteRenderer in bombSprites)
+        {
+            allSprites.Add(spriteRenderer);
+        }
+
+
     }
 
     // Update is called once per frame

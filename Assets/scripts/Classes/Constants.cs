@@ -43,6 +43,7 @@ namespace Classes
         public const int BetweenHeartsTime = 60; // in secs
         public const float FurnitureChance = 0.1f;
         public const bool MatchDiagonal = true;
+        public const int DotsAdjBombNumber = 6;
         public static readonly string[] WinTexts = new []{
             "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
         };
