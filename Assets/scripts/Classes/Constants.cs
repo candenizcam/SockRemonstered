@@ -43,9 +43,11 @@ namespace Classes
         public const int BetweenHeartsTime = 60; // in secs
         public const float FurnitureChance = 0.1f;
         public const bool MatchDiagonal = true;
+        public const int DotsAdjBombNumber = 6;
         public static readonly string[] WinTexts = new []{
             "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
         };
+        public const bool SupressAd = false;
         
         public const float WorldHeight =  2532f / 200f;
         //public static readonly float UiHeight = 2532f;
@@ -110,7 +112,7 @@ namespace Classes
             }
             else
             {
-                return new NextLevelData("WashingMachineScene",l + bigNumber % 5 - 1);
+                return new NextLevelData("Rain",l + bigNumber % 5 - 1);
             }
         }
     }

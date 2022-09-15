@@ -114,6 +114,8 @@ public class WMMain : GameMain
         _wmHud.generateSocks(_wmScoreboard.ScoreAddressArray());
         _wmHud.adjustSocks(_wmScoreboard.Collected);
         _wmHud.RemoveFromVisualElement(_uiDocument.rootVisualElement);
+        _quickSettings.RemoveFromVisualElement(_uiDocument.rootVisualElement);
+        _betweenLevels.RemoveFromVisualElement(_uiDocument.rootVisualElement);
     }
 
     private void InitializeStartAnimation( WMLevelInfo thisLevel)
@@ -140,7 +142,8 @@ public class WMMain : GameMain
         {
             _wmHud.StartAnimation(0f);
             _wmHud.AddToVisualElement(_uiDocument.rootVisualElement);
-            
+            _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
+            _betweenLevels.AddToVisualElement(_uiDocument.rootVisualElement);
             Curtain.SetActive(false);
             foreach (var starter in _starters)
             {   

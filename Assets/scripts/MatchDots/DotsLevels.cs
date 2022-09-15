@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using Classes;
 
 namespace MatchDots
 {
@@ -21,6 +22,38 @@ namespace MatchDots
 
         };
 
+        public static readonly TutorialFrame[] Tutorial = new TutorialFrame[]
+        {
+            new TutorialFrame("TutorialDots/Pause_1", .4f),
+            new TutorialFrame("TutorialDots/Pause_2", .4f),
+            new TutorialFrame("TutorialDots/Pause_3", .4f),
+            new TutorialFrame("TutorialDots/Pause_4", .4f),
+            new TutorialFrame("TutorialDots/Pause_5", .4f),
+            new TutorialFrame("TutorialDots/Pause_6", .4f),
+            new TutorialFrame("TutorialDots/Pause_7", .4f),
+            new TutorialFrame("TutorialDots/Pause_8", .4f),
+            new TutorialFrame("TutorialDots/Pause_9", .4f),
+            new TutorialFrame("TutorialDots/Pause_10", .4f),
+            new TutorialFrame("TutorialDots/Pause_11", .4f),
+            new TutorialFrame("TutorialDots/Pause_12", .4f),
+            new TutorialFrame("TutorialDots/Pause_13", .4f),
+            new TutorialFrame("TutorialDots/Pause_14", .4f),
+            new TutorialFrame("TutorialDots/Pause_15", .4f),
+            new TutorialFrame("TutorialDots/Pause_16", .4f),
+            new TutorialFrame("TutorialDots/Pause_17", .4f),
+            new TutorialFrame("TutorialDots/Pause_18", .4f),
+            new TutorialFrame("TutorialDots/Pause_19", .4f),
+            new TutorialFrame("TutorialDots/Pause_20", .4f),
+            new TutorialFrame("TutorialDots/Pause_21", .4f),
+            new TutorialFrame("TutorialDots/Pause_22", .4f),
+            new TutorialFrame("TutorialDots/Pause_23", .4f),
+            new TutorialFrame("TutorialDots/Pause_24", .4f),
+            new TutorialFrame("TutorialDots/Pause_25", .4f),
+            new TutorialFrame("TutorialDots/Pause_26", .4f),
+            new TutorialFrame("TutorialDots/Pause_27", .4f),
+            new TutorialFrame("TutorialDots/Pause_28", .4f),
+            new TutorialFrame("TutorialDots/Pause_29", .4f)
+        };
     }
 
 
@@ -52,6 +85,9 @@ namespace MatchDots
         
     }
 
+    
+    
+    
     public struct DotsObstacle
     {
         public int Type; //1: gap

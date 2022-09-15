@@ -153,6 +153,11 @@ namespace Classes
             ve.Add(_betweenElement);
         }
 
+        public void RemoveFromVisualElement(VisualElement ve)
+        {
+            ve.Remove(_betweenElement);
+        }
+
         public void setVisible(bool b)
         {
             _betweenElement.visible = b;

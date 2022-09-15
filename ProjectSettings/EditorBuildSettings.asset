@@ -14,7 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Dots.unity
     guid: d17e451ab1b41f540b87100e866b0530
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WashingMachineScene.unity
     guid: ba2cde91d74a0d94888b027f6c136df8
+  - enabled: 1
+    path: Assets/Scenes/Rain.unity
+    guid: 889ea1cbffeed4846a98563614d7664a
   m_configObjects: {}

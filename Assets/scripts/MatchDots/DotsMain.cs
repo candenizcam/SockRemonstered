@@ -86,7 +86,7 @@ public class DotsMain : GameMain
         
 
 
-        InitializeUi<DotsHud>();
+        InitializeUi<DotsHud>(tutorialFrames: DotsLevels.Tutorial);
         
         //_dotsScoreboard.MoveCounter
         
@@ -285,6 +285,11 @@ public class DotsMain : GameMain
             {
                 dotsPrefabScript.InTheRightPlace = false;
             }
+
+            if (_selectionList.Selections.Count > Constants.DotsAdjBombNumber)
+            {
+                _selectionList.Selections.Last().TurnInto = -1;
+            }
             _selectionList.ClearTouchEffects();
             _tweenHolder.newTween(EraseTime, alpha =>
             {
@@ -300,7 +305,19 @@ public class DotsMain : GameMain
             {
                 foreach (var dotsPrefabScript in _selectionList.Selections)
                 {
-                    dotsPrefabScript.gameObject.SetActive(false);
+                    if (dotsPrefabScript.TurnInto == null)
+                    {
+                        dotsPrefabScript.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        //Debug.Log("hayde bude loco loco");
+                        dotsPrefabScript.InTheRightPlace = true;
+                        dotsPrefabScript.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                        dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,0f);
+                        dotsPrefabScript.SetDotType((int)dotsPrefabScript.TurnInto);
+                    }
+                    
                 }
                 
             });
@@ -308,16 +325,10 @@ public class DotsMain : GameMain
             {
                 _selectionList.Clear();
                 moveDown();
-                //fillPhase();
-                //_dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
-                //var hi = _dotsScoreboard.GetHudInfo();
-                //_dotsHud.updateInfo(hi.movesLeft,hi.mood);
             });
         
             _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
             {
-                //_selectionList.Clear();
-                //moveDown();
                 fillPhase();
                 _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
                 var hi = _dotsScoreboard.GetHudInfo();
@@ -325,9 +336,7 @@ public class DotsMain : GameMain
                 
                 if (!_dotGrid.AnyLegalMoves())
                 {
-                    _gameState = GameState.Lost;
-                    LevelDone(false);
-                    _betweenLevels.UpdateSmallText(  "No more moves!");
+                    NoLegalMoves();
                 }
             });    
         }
@@ -417,6 +426,131 @@ public class DotsMain : GameMain
         _tweenHolder.Update(Time.deltaTime);
         _timer.Update(Time.deltaTime);
     }
+
+
+    void Explode()
+    {
+        var bombs = _dotGrid.DotsList.Where(x => x.ImTheBomb);
+        
+        foreach (var bomb in bombs)
+        {
+            bomb.InTheRightPlace = false;
+            var type = bomb.BombType;
+            var l = new List<DotsPrefabScript>();
+            if (type == 0)
+            { //adj
+                for (var i = -1; i < 2; i++)
+                {
+                    var row = _dotGrid.DotsList.Where(x => x.Row == bomb.Row + i);
+                    if(!row.Any()) continue;
+                    for (var j = -1; j < 2; j++)
+                    {
+                        var c = row.Where(x => x.Column == bomb.Column + j);
+                        if(!c.Any()) continue;
+
+                        foreach (var dotsPrefabScript in c)
+                        {
+                            l.Add(dotsPrefabScript);
+                        }
+                    }
+                }
+                
+            }
+            
+            _dotsScoreboard.AddToRemoved(l.Select(x => x.DotType).ToList());
+            
+            foreach (var dotsPrefabScript in l)
+            {
+                dotsPrefabScript.InTheRightPlace = false;
+            }
+            
+            foreach (var dotsPrefabScript in l)
+            {
+                dotsPrefabScript.HitBlob.gameObject.SetActive(true);
+                dotsPrefabScript.HitBlob.color = Color.black;
+                if(bomb==dotsPrefabScript) continue;
+                
+                dotsPrefabScript.MoveDragBar(bomb.gameObject.transform.position, Color.black);
+                
+            
+                
+                dotsPrefabScript.DragBar.gameObject.SetActive(true);
+                
+            }
+            
+            
+            _tweenHolder.newTween(EraseTime, alpha =>
+            {
+                var a = -1f * alpha * alpha + 1;
+                foreach (var dotsPrefabScript in l)
+                {
+                    dotsPrefabScript.DeathEffect(alpha);
+                    //dotsPrefabScript.gameObject.transform.localScale = new Vector3(a, a, 1f);
+                    //dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
+                }
+                
+            }, () =>
+            {
+                foreach (var dotsPrefabScript in l)
+                {
+                    if (dotsPrefabScript.TurnInto == null)
+                    {
+                        dotsPrefabScript.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        //Debug.Log("hayde bude loco loco");
+                        dotsPrefabScript.InTheRightPlace = true;
+                        dotsPrefabScript.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                        dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,0f);
+                        dotsPrefabScript.SetDotType((int)dotsPrefabScript.TurnInto);
+                    }
+                    
+                }
+                
+                foreach (var dotsPrefabScript in l)
+                {
+                    dotsPrefabScript.TweenEffect(1f);
+                    dotsPrefabScript.HitBlob.gameObject.SetActive(false);
+                    dotsPrefabScript.DragBar.gameObject.SetActive(false);
+                }
+                
+            });
+            _timer.addEvent(EraseTime+.1f, () =>
+            {
+                
+                moveDown();
+            });
+        
+            _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
+            {
+                fillPhase();
+                _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
+                var hi = _dotsScoreboard.GetHudInfo();
+                _dotsHud.updateInfo(hi.movesLeft,hi.mood);
+                
+                if (!_dotGrid.AnyLegalMoves())
+                {
+                    NoLegalMoves();
+                }
+            });  
+            
+            //foreach (var dotsPrefabScript in l)
+            //{
+            //    dotsPrefabScript.SetDotType(-1);
+            //}
+            //Debug.Log($"exploding: {l.Count}");
+            
+            
+        }
+    }
+
+    private void NoLegalMoves()
+    {
+        _gameState = GameState.Lost;
+        LevelDone(false);
+        _betweenLevels.UpdateSmallText(  "No more moves!");
+    }
     
     
     // Update is called once per frame
@@ -444,11 +578,23 @@ public class DotsMain : GameMain
             {
                 _quickSettings.SetVisible(true);
             }
+            _quickSettings.TutorialRoll(Time.deltaTime);
         }else if (_gameState == GameState.Standby)
         {
             if (_dotGrid.DotsList.All(x => x.InTheRightPlace))
             {
-                _gameState = GameState.Game;
+                if (_dotGrid.DotsList.Any(x => x.ImTheBomb))
+                {
+                
+                    Explode();
+                }
+                else
+                {
+                    _gameState = GameState.Game;
+                    
+                }
+                
+                
             }
         }else if (_gameState == GameState.Won || _gameState == GameState.Lost)
         {
