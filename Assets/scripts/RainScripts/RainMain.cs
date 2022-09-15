@@ -70,7 +70,7 @@ public class RainMain : GameMain
         {
             var sgd = SerialGameData.LoadOrGenerate();
             var levelInfo = Constants.GetNextLevel(sgd.nextLevel);
-            if (levelInfo.SceneName != "WashingMachineScene")
+            if (levelInfo.SceneName != "Rain")
             {
                 throw new Exception("there is a problem");
             }
