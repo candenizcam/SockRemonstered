@@ -457,19 +457,36 @@ public class DotsMain : GameMain
                 
             }
             
+            _dotsScoreboard.AddToRemoved(l.Select(x => x.DotType).ToList());
+            
             foreach (var dotsPrefabScript in l)
             {
                 dotsPrefabScript.InTheRightPlace = false;
             }
+            
+            foreach (var dotsPrefabScript in l)
+            {
+                dotsPrefabScript.HitBlob.gameObject.SetActive(true);
+                dotsPrefabScript.HitBlob.color = Color.black;
+                if(bomb==dotsPrefabScript) continue;
+                
+                dotsPrefabScript.MoveDragBar(bomb.gameObject.transform.position, Color.black);
+                
+            
+                
+                dotsPrefabScript.DragBar.gameObject.SetActive(true);
+                
+            }
+            
             
             _tweenHolder.newTween(EraseTime, alpha =>
             {
                 var a = -1f * alpha * alpha + 1;
                 foreach (var dotsPrefabScript in l)
                 {
-                    
-                    dotsPrefabScript.gameObject.transform.localScale = new Vector3(a, a, 1f);
-                    dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
+                    dotsPrefabScript.DeathEffect(alpha);
+                    //dotsPrefabScript.gameObject.transform.localScale = new Vector3(a, a, 1f);
+                    //dotsPrefabScript.gameObject.transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
                 }
                 
             }, () =>
@@ -489,6 +506,13 @@ public class DotsMain : GameMain
                         dotsPrefabScript.SetDotType((int)dotsPrefabScript.TurnInto);
                     }
                     
+                }
+                
+                foreach (var dotsPrefabScript in l)
+                {
+                    dotsPrefabScript.TweenEffect(1f);
+                    dotsPrefabScript.HitBlob.gameObject.SetActive(false);
+                    dotsPrefabScript.DragBar.gameObject.SetActive(false);
                 }
                 
             });

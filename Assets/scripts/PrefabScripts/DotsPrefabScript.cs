@@ -34,6 +34,14 @@ public class DotsPrefabScript : MonoBehaviour
     public bool ImTheBomb => DotType >= dotSprites.Count;  // 3,2,1
     public int BombType => DotType - dotSprites.Count; // 0: adj.
 
+
+    public void DeathEffect(float alpha)
+    {
+        var a = -1f * alpha * alpha + 1;
+        allSprites[DotType].transform.localScale = new Vector3(a, a, 1f);
+        allSprites[DotType].transform.rotation = Quaternion.Euler(0f,0f,alpha*720f);
+    }
+    
     public void TweenEffect(float scale)
     {
         allSprites[DotType].gameObject.transform.localScale = new Vector3(scale, scale, 1f);
@@ -92,7 +100,7 @@ public class DotsPrefabScript : MonoBehaviour
         dgt.localScale = new Vector3(.01f, dgt.localScale.y, dgt.localScale.z);
     }
 
-    public void MoveDragBar(Vector2 target)
+    public void MoveDragBar(Vector2 target, Color? forceColour = null)
     {
         var p1 = transform.position;
         var c = (Vector2)VectorTools.Vector3BiasedSum(target, p1, 0.5f);
@@ -106,6 +114,11 @@ public class DotsPrefabScript : MonoBehaviour
         var ang = (float)Math.Atan2(m.x, m.y);
         
         dgt.rotation = Quaternion.Euler(0f,0f,-ang / 6.282f * 360f+90f);
+
+        if (forceColour != null)
+        {
+            DragBar.color = (Color)forceColour;
+        }
 
     }
     
