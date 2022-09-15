@@ -188,7 +188,7 @@ MonoBehaviour:
   wheel: {fileID: 972951352}
   bottomWater: {fileID: 1593147444}
   topWater: {fileID: 1562502672}
-  LevelIndex: 8
+  LevelIndex: -1
 --- !u!1 &972951352
 GameObject:
   m_ObjectHideFlags: 0

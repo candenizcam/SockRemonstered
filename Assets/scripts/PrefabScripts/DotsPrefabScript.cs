@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Classes;
 using Unity.Mathematics;
 using UnityEngine;
@@ -8,6 +9,8 @@ using UnityEngine;
 public class DotsPrefabScript : MonoBehaviour
 {
     public List<SpriteRenderer> dotSprites;
+    public List<SpriteRenderer> bombSprites;
+    private List<SpriteRenderer> allSprites;
     public SpriteRenderer HitBlob;
     public SpriteRenderer DragBar;
     
@@ -24,11 +27,16 @@ public class DotsPrefabScript : MonoBehaviour
     public int Row{ get; private set; } = -1;
 
     public int DotType { get; private set; } = -1;
+    
+    [NonSerialized]
+    public int? TurnInto = null;
 
+    public bool ImTheBomb => DotType >= dotSprites.Count;  // 3,2,1
+    public int BombType => DotType - dotSprites.Count; // 0: adj.
 
     public void TweenEffect(float scale)
     {
-        dotSprites[DotType].gameObject.transform.localScale = new Vector3(scale, scale, 1f);
+        allSprites[DotType].gameObject.transform.localScale = new Vector3(scale, scale, 1f);
     }
     
     public void setColumn(int c)
@@ -106,11 +114,65 @@ public class DotsPrefabScript : MonoBehaviour
     
     public void SetDotType(int dt)
     {
-        DotType = dt;
-        for (var i = 0; i < dotSprites.Count; i++)
+        TurnInto = null;
+
+        if (dt >= 0)
         {
-            dotSprites[i].enabled = i == dt;
+            DotType = dt;
         }
+        else
+        {
+            DotType = dotSprites.Count - dt - 1;
+        }
+        
+        for (var i = 0; i < allSprites.Count; i++)
+        {
+            allSprites[i].enabled = i == DotType;
+        }
+        
+        /*
+        DotType = dt;
+        if (dt >= 0)
+        {
+            for (var i = 0; i < allSprites.Count; i++)
+            {
+                allSprites[i].enabled = i == dt;
+            }
+
+            /*
+            for (var i = 0; i < dotSprites.Count; i++)
+            {
+                dotSprites[i].enabled = i == dt;
+            }
+            foreach (var spriteRenderer in bombSprites)
+            {
+                spriteRenderer.gameObject.SetActive(false);
+            }
+            
+        }
+        else
+        {
+            
+            for (var i = 0; i < allSprites.Count; i++)
+            {
+                allSprites[i].enabled = i == dt;
+            }
+            /*
+            foreach (var spriteRenderer in dotSprites)
+            {
+                spriteRenderer.enabled = false;
+            }
+            
+            for (var i = 0; i < bombSprites.Count; i++)
+            {
+                bombSprites[i].enabled = i == Math.Abs(dt) - 1;
+            }
+            
+            
+            
+        }
+        */
+        
     }
     
     // Start is called before the first frame update
@@ -118,6 +180,20 @@ public class DotsPrefabScript : MonoBehaviour
     {
         HitBlob.gameObject.SetActive(false);
         DragBar.gameObject.SetActive(false);
+
+        allSprites = new List<SpriteRenderer>();
+        
+        foreach (var spriteRenderer in dotSprites)
+        {
+            allSprites.Add(spriteRenderer);
+        }
+        
+        foreach (var spriteRenderer in bombSprites)
+        {
+            allSprites.Add(spriteRenderer);
+        }
+
+
     }
 
     // Update is called once per frame
