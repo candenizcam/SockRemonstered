@@ -436,7 +436,9 @@ public class DotsMain : GameMain
 
             if (_selectionList.Selections.Count >= 6)
             {
-                bg.color = Constants.GetDotColours(type);
+
+                var c = Constants.GetDotColours(type);
+                bg.color = c*0.8f + Color.white*0.2f;
 
 
             }
