@@ -32,7 +32,10 @@ namespace MatchDots
             new DotsLevelsInfo(6,7,20,5, new []{22000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,30), new DotsTarget(4,20)}),
             new DotsLevelsInfo(6,7,20,5, new []{23000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,30), new DotsTarget(3,10), new DotsTarget(4,20)}),
             new DotsLevelsInfo(6,7,20,5, new []{24000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,30), new DotsTarget(3,15), new DotsTarget(4,20)}),
-            new DotsLevelsInfo(6,7,20,5, new []{25001},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,30), new DotsTarget(3,20), new DotsTarget(4,20)})
+            new DotsLevelsInfo(6,7,20,5, new []{25001},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,30), new DotsTarget(3,20), new DotsTarget(4,20)}),
+            new DotsLevelsInfo(7,8,12,4, new []{26000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,50)}),
+            new DotsLevelsInfo(7,8,12,4, new []{27000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,60)}),
+            new DotsLevelsInfo(7,8,12,5, new []{28000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,60)})
 
 
         };
