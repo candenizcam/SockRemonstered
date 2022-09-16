@@ -105,22 +105,28 @@ namespace Classes
             _monsterFaces.Portrait.style.bottom = (805f) * scale;
             _bg.Add(_monsterFaces.Portrait);
             
-            _bigButton = new ButtonClickable(bigButton);
+            
             
             var s = Resources.Load<Sprite>("ui/button");
 
-            _bigButton.style.backgroundImage = new StyleBackground(s);
-            _bigButton.style.position = Position.Absolute;
-            _bigButton.style.bottom = 63*scale;
-            _bigButton.style.left = (bgW - s.rect.width*scale) * 0.5f;
-            _bigButton.style.width= s.rect.width*scale;
-            _bigButton.style.height= s.rect.height*scale;
-            _bigButton.style.backgroundColor = Color.clear;
-            _bigButton.style.color = Constants.GameColours[11];
-            _bigButton.style.fontSize = 80f*scale;
-            _bigButton.Text = "CONTINUE";
-            
-            
+            _bigButton = new ButtonClickable(bigButton)
+            {
+                style =
+                {
+                    backgroundImage = new StyleBackground(s),
+                    position = Position.Absolute,
+                    bottom = 63*scale,
+                    left = (bgW - s.rect.width*scale) * 0.5f,
+                    width = s.rect.width*scale,
+                    height = s.rect.height*scale,
+                    backgroundColor = Color.clear,
+                    color = Constants.GameColours[11],
+                    fontSize = 80f*scale
+                },
+                Text = "CONTINUE"
+            };
+
+
             _bigButton.OnTouchDown = () =>
             {
                 _bigButton.style.unityBackgroundImageTintColor = Color.gray;
