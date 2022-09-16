@@ -31,7 +31,7 @@ namespace MatchDots
                     flexDirection = FlexDirection.Row,
                     justifyContent = Justify.SpaceAround,
                     alignContent = Align.Center,
-                    backgroundImage = new StyleBackground(Resources.Load<Sprite>("ui/buttons/money_bg_2")) 
+                    backgroundImage = new StyleBackground(Resources.Load<Sprite>("ui/hedefarkasi")) 
                 }
             };
             
