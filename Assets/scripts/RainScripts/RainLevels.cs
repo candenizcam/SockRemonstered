@@ -15,7 +15,7 @@ namespace RainScripts
                     new RainSockInfo(3,0,5,10,bias:3),
                     new RainSockInfo(0,0,0,8),
                     new RainSockInfo(3,0,0,15),
-                }),
+                }),//1
             
             new RainLevelInfo(1f,2f,-1, 15,
                 new RainSockInfo[]
@@ -40,7 +40,7 @@ namespace RainScripts
                     new RainSockInfo(0,0,0,10,2),
                     new RainSockInfo(1,0,0,10,2),
                     new RainSockInfo(2,0,0,10,2),
-                }),
+                }),//4
             new RainLevelInfo(0.5f,4f,-1, 25,
                 new RainSockInfo[]
                 {
@@ -62,7 +62,7 @@ namespace RainScripts
                     new RainSockInfo(4,0,0,5),
                     new RainSockInfo(0,0,0,10),
                     new RainSockInfo(2,0,0,30),
-                }),
+                }),//6
             new RainLevelInfo(.7f,2f,-1, 15,
                 new RainSockInfo[]
                 {
@@ -79,7 +79,7 @@ namespace RainScripts
                     new RainSockInfo(2,0,0,10),
                     new RainSockInfo(2,0,0,15),
                     new RainSockInfo(2,0,0,20),
-                })
+                })//8
             
         };
 
