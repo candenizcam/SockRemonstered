@@ -10,9 +10,11 @@ namespace MatchDots
         private int _rows;
         private int _cols;
         private DotsObstacle[] _obstacle;
+        
         private int _fillSize = 0;
         private List<DotsPrefabScript> _dotsList = new List<DotsPrefabScript>();
         public List<DotsPrefabScript> DotsList => _dotsList;
+        public DotsObstacle[] Obstacles => _obstacle;
         
         public DotGrid(DotsLevelsInfo dli)
         {
@@ -21,10 +23,14 @@ namespace MatchDots
             _cols = dli.Cols;
             _obstacle = dli.Obstacles;
 
+       
+            
             
             
 
         }
+
+
 
         public void FillTheDotsList( List<DotsPrefabScript> l)
         {
@@ -48,16 +54,17 @@ namespace MatchDots
                 return dist;
             }
             
-            var r = 0;
-            for (int i = 0; i < _rows; i++)
+            var r =dist;
+            for (int i = 0; i < dist; i++)
             {
                 if (thisColObs.Any(x => x.R == i + 1))
                 {
+                    r += 1;
                     
                 }
                 else
                 {
-                    r += 1;
+                    
                 }
             }
 
@@ -67,7 +74,7 @@ namespace MatchDots
 
         public bool GapSpot(int r, int c)
         {
-            return _obstacle.Any(x => x.C == c && x.R == r && x.Type == -1);
+            return _obstacle.Any(x => x.C == c && x.R == r && x.Type == 1);
         }
 
         public void GetBlobs()
@@ -102,6 +109,7 @@ namespace MatchDots
                 for (int j = 0; j < _cols; j++)
                 {
                     var l1 = new List<DotsPrefabScript>();
+                    if(ar[i,j]==null) continue;
                     l1.Add(ar[i,j]);
                     RecursiveBlober(ar,l1, i,j);
                     if (l1.Count > 2)
@@ -128,6 +136,7 @@ namespace MatchDots
                     if(newC<0 || newC>=_cols) continue;
 
                     var t = ar[newR, newC];
+                    if (t == null) continue;
                     if (t.DotType == l.Last().DotType && !l.Contains(t))
                     {
                         l.Add(t);
@@ -149,5 +158,20 @@ namespace MatchDots
             return ar;
         }
         //public 
+        
+        public int[] ColNeeds()
+        {
+            var stabilized = DotsList.Where(x => x.InTheRightPlace);
+            
+            
+            
+            
+                var a = new int[_cols];
+            for (int i = 0; i < _cols; i++)
+            {
+                a[i] = _rows - stabilized.Count(x => x.Column == i+1) - _obstacle.Count(x => x.C == i+1);
+            }
+            return a;
+        }
     }
 }
