@@ -55,10 +55,10 @@ namespace MatchDots
             return (remainers * 10,$"  {remainers * 10}");
         }
 
-        public void AddToRemoved(List<int> r)
+        public void AddToRemoved(List<int> r, int movesChange = 1)
         {
             _removedTypes.AddRange(r);
-            MoveCounter += 1;
+            MoveCounter += movesChange;
             updateRems();
         }
 

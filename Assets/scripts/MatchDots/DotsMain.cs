@@ -495,7 +495,7 @@ public class DotsMain : GameMain
                 
             }
             
-            _dotsScoreboard.AddToRemoved(l.Select(x => x.DotType).ToList());
+            _dotsScoreboard.AddToRemoved(l.Select(x => x.DotType).ToList(),0);
             
             foreach (var dotsPrefabScript in l)
             {

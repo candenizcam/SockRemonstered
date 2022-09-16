@@ -167,10 +167,11 @@ namespace Classes
         {
             var sgd1 = SerialGameData.LoadOrGenerate();
             InitializeUiDocument();
-            
+            var levelInfo = Constants.GetNextLevel(sgd1.nextLevel);
+            Debug.Log($"{levelInfo.LevelNo}");
             InitializeHud<T>(topHeight,bottomHeight);
             _gameHud.SetLevelNo($"Level {sgd1.nextLevel}");
-            InitializeQuickSettings(tutorialFrames ??= new TutorialFrame[]{},sgd1.sound,sgd1.music);
+            InitializeQuickSettings(tutorialFrames ??= new TutorialFrame[]{},sgd1.sound,sgd1.music, levelInfo.LevelNo==0);
             InitializeBetweenLevels();
             if (!Constants.SupressAd)
             {
@@ -196,10 +197,10 @@ namespace Classes
             _uiDocument.panelSettings.match = 0f;
         }
 
-        private void InitializeQuickSettings(TutorialFrame[] tutorialFrames, int sound, int music)
+        private void InitializeQuickSettings(TutorialFrame[] tutorialFrames, int sound, int music, bool tutorialOn)
         {
             
-            _quickSettings = new QuickSettings(sound, music,tutorialFrames);
+            _quickSettings = new QuickSettings(sound, music,tutorialOn,tutorialFrames);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
             _quickSettings.SetVisible(false);
             _quickSettings.SettingsButtonAction = QuickSettingsButtonFunction;
