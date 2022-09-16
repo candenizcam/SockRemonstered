@@ -23,7 +23,7 @@ public class RainHud : GameHud
     {
         base.Initialize(topHeight,bottomHeight);
         var s = Resources.Load<Sprite>("ui/clothesline");
-        var w = Constants.UiWidth - _monsterFaces.ScaledWidth;
+        var w = Constants.UiWidth - _monsterFaces.ScaledWidth-20f;
         var h = s.rect.height/s.rect.width*w;
         _frameWidth = w;
         _frameHeight = h;
@@ -93,9 +93,9 @@ public class RainHud : GameHud
     public void StartAnimation(float alpha)
     {
         var w = _frameWidth*alpha + (Constants.UiWidth+100f)*(1f-alpha);
-        _frame.style.top = 0f * alpha + (Constants.UiHeight*0.5f - 220f - 180f) * (1f - alpha);
+        _frame.style.top = 47f * alpha + (Constants.UiHeight*0.5f - 220f - 180f) * (1f - alpha);
         _frame.style.width = w;
-        _frame.style.left = 0f * alpha - 50f*(1f-alpha);
+        _frame.style.left = 24f * alpha - 50f*(1f-alpha);
         _frame.style.height = (_frameHeight+200f) * alpha + 360f * (1f - alpha);
         
         var xStep = w/_amount;
