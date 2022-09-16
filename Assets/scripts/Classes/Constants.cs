@@ -65,8 +65,8 @@ namespace Classes
         public static readonly Color[] DotsColours = new Color[]
         {
             new Color(0.3f,0f,0f,1f),
-            new Color(0.3f,0.15f,0f,1f),
-            new Color(0.3f,0.3f,0f,1f),
+            new Color(0.3f,0.1f,0f,1f),
+            new Color(0.3f,0.2f,0f,1f),
             new Color(0f,0.3f,.1f,1f),
             new Color(0f,0.1f,0.3f,1f),
             new Color(0.3f,0.1f,0.4f,1f)

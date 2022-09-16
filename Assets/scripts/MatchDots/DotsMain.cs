@@ -14,6 +14,8 @@ public class DotsMain : GameMain
     //public SpriteRenderer BottomFrame;
     public SpriteRenderer topFrame;
     public SpriteRenderer sockBg;
+
+    public FizzlerScript fizzlerScript;
     // Start is called before the first frame update
     public int LevelNo;
     private int _levelNo;
@@ -286,7 +288,7 @@ public class DotsMain : GameMain
                 dotsPrefabScript.InTheRightPlace = false;
             }
 
-            if (_selectionList.Selections.Count > Constants.DotsAdjBombNumber)
+            if (_selectionList.Selections.Count >= Constants.DotsAdjBombNumber)
             {
                 _selectionList.Selections.Last().TurnInto = -1;
             }
@@ -354,6 +356,8 @@ public class DotsMain : GameMain
     {
         if (Input.touches.Length == 0)
         {
+            bg.color = Color.white;
+            fizzlerScript.FizzlerColour = -1;
             return;
         }
         
@@ -368,6 +372,8 @@ public class DotsMain : GameMain
         }
         catch (InvalidOperationException)
         {
+            bg.color = Color.white;
+            fizzlerScript.FizzlerColour = -1;
             TerminateTouch();
             return;
         }
@@ -396,6 +402,9 @@ public class DotsMain : GameMain
             return;
         }
 
+        
+        
+
         var lineType = _selectionList.LineType();
 
         if (lineType == -1)
@@ -413,6 +422,34 @@ public class DotsMain : GameMain
                     _selectionList.SetDragChain();
                 }
             }
+        }
+        if (_selectionList.Selections.Count >= 3)
+        {
+            var type = _selectionList.Selections.Last().DotType;
+            fizzlerScript.FizzlerColour =type;
+            fizzlerScript.FizzlerBrightness = _selectionList.Selections.Count switch
+            {
+                >= 5 => 3,
+                >= 4 => 2,
+                _ => 1
+            };
+
+            if (_selectionList.Selections.Count >= 6)
+            {
+
+                var c = Constants.GetDotColours(type);
+                bg.color = c*0.8f + Color.white*0.2f;
+
+
+            }
+            else
+            {
+                bg.color = Color.white;
+            }
+        }
+        else
+        {
+            fizzlerScript.FizzlerColour = -1;
         }
     }
     
