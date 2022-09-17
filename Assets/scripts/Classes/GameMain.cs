@@ -197,7 +197,7 @@ namespace Classes
 
         private void InitializeQuickSettings(TutorialFrame[] tutorialFrames, int sound, int music, bool tutorialOn)
         {
-            
+            Debug.Log($"tfl {tutorialFrames.Length}");
             _quickSettings = new QuickSettings(sound, music,tutorialOn,tutorialFrames);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
             _quickSettings.SetVisible(false);

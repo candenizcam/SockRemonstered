@@ -251,6 +251,7 @@ public class RainMain : GameMain
             {
                 _quickSettings.SetVisible(true);
             }
+            _quickSettings.TutorialRoll(Time.deltaTime);
         }
         else if(_gameState == GameState.Game)
         {
