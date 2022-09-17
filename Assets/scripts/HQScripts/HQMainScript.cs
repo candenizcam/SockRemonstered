@@ -39,6 +39,7 @@ public class HQMainScript : MonoBehaviour
         
         Application.targetFrameRate = 60;
         
+        
         _random = new System.Random();
         _timer = new Timer();
         var sgd = SerialGameData.LoadOrGenerate();
@@ -112,6 +113,19 @@ public class HQMainScript : MonoBehaviour
           
         };
 
+
+        var surePopup = new SurePopup();
+        surePopup.YesAction = () =>
+        {
+            SerialGameData.ResetSaves();
+            SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+        };
+        surePopup.NoAction= () =>
+        {
+            _safeElement.Remove(surePopup);
+        };
+        
+
         _aboutUsPopup = new AboutUsPopup();
         _aboutUsPopup.CloseButtonAction = () =>
         {
@@ -120,8 +134,10 @@ public class HQMainScript : MonoBehaviour
 
         _aboutUsPopup.ResetButtonAction = () =>
         {
-            SerialGameData.ResetSaves();
-            SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+            //_safeElement.Remove(_aboutUsPopup);
+            _safeElement.Add(surePopup);
+            //SerialGameData.ResetSaves();
+            //SceneManager.LoadScene( SceneManager.GetActiveScene().name );
         };
         
         

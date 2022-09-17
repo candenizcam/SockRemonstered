@@ -51,6 +51,25 @@ namespace HQScripts
                 }
             };
 
+
+            var version = new Label
+            {
+                text = $"Version: {Application.version}",
+                style =
+                {
+                    bottom = 292f,
+                    position = Position.Absolute,
+                    left = 0f,
+                    width = bgW,
+                    fontSize = 48f ,
+                    unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter),
+                    color = Constants.GameColours[19]
+                }
+            };
+            thing.Add(version);
+
+
+
             var v = new VisualElement
             {
                 style =
