@@ -51,18 +51,22 @@ namespace Classes
             _bg.style.unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"));
 
             _bigText = new Label();
-            _smallText = new Label();
+            _smallText = new Label
+            {
+                style =
+                {
+                    bottom = 458f * scale,
+                    position = Position.Absolute,
+                    left = 0f,
+                    width = bgW,
+                    fontSize = 109f * scale,
+                    unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter),
+                    color = Constants.GameColours[11]
+                },
+                text = "Level failed!"
+            };
 
-            _smallText.style.bottom = 458f * scale;
-            _smallText.style.position = Position.Absolute;
-            _smallText.style.left = 0f;
-            _smallText.style.width = bgW;
-            _smallText.style.fontSize = 109f * scale;
-            _smallText.style.unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter);
-            _smallText.text = "Level failed!";
-            _smallText.style.color = Constants.GameColours[11];
-            
-            
+
             _bigText.style.bottom = 565f * scale;
             _bigText.style.position = Position.Absolute;
             _bigText.style.fontSize = 64 * scale;

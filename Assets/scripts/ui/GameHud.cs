@@ -61,7 +61,7 @@ namespace Classes
             //style.height = height;
             //style.backgroundImage = new StyleBackground(s2);
 
-            var s = Resources.Load<Sprite>("ui/buttons/money_bg");
+            var s = Resources.Load<Sprite>("ui/LevelBack");
             
             LevelNoLabel = new Label
             {

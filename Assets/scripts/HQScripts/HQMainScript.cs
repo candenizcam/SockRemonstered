@@ -39,6 +39,7 @@ public class HQMainScript : MonoBehaviour
         
         Application.targetFrameRate = 60;
         
+        
         _random = new System.Random();
         _timer = new Timer();
         var sgd = SerialGameData.LoadOrGenerate();

@@ -5,6 +5,9 @@ namespace Classes
 {
     public static class Constants
     {
+        public const bool ReleaseVersion = false; // release için bu true
+        public const bool SupressAd = true; // bu da false olucak
+        
         public static readonly Color[] GameColours =
         {
             new Color(0.63f, 0.18f, 0.15f), //a12d26 0
@@ -26,7 +29,7 @@ namespace Classes
             new Color(0.24f, 0.47f, 0.61f), //3e789b
             new Color(0.44f, 0.51f, 0.80f), //7181cc
             new Color(0.78f, 0.50f, 0.42f), //c67f6c
-            new Color(0.36f, 0.13f, 0.22f), //5b2139
+            new Color(0.36f, 0.13f, 0.22f), //5b2139 titilating burgundy
             new Color(0.62f, 0.13f, 0.41f), //9d2269 20
             new Color(0.75f, 0.45f, 0.53f), //c07486
             new Color(0.87f, 0.65f, 0.66f), //dda6a9
@@ -47,7 +50,7 @@ namespace Classes
         public static readonly string[] WinTexts = new []{
             "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
         };
-        public const bool SupressAd = true;
+        
         
         public const float WorldHeight =  2532f / 200f;
         //public static readonly float UiHeight = 2532f;
@@ -59,7 +62,7 @@ namespace Classes
         public static float UnsafeLeftUi => Screen.safeArea.xMin/ Screen.width * Constants.UiWidth;
         public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
 
-        public const bool ReleaseVersion = false;
+        
         public const int AdPeriod = 3; // on 3 ad calls, ad is shown
         
         
