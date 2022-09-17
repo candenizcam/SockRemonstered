@@ -5,6 +5,7 @@ namespace Classes
 {
     public static class Constants
     {
+        public const bool ReleaseVersion = false;
         public static readonly Color[] GameColours =
         {
             new Color(0.63f, 0.18f, 0.15f), //a12d26 0
@@ -59,7 +60,7 @@ namespace Classes
         public static float UnsafeLeftUi => Screen.safeArea.xMin/ Screen.width * Constants.UiWidth;
         public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
 
-        public const bool ReleaseVersion = false;
+       
         
         
         
