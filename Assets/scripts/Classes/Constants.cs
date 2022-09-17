@@ -47,7 +47,7 @@ namespace Classes
         public static readonly string[] WinTexts = new []{
             "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
         };
-        public const bool SupressAd = false;
+        public const bool SupressAd = true;
         
         public const float WorldHeight =  2532f / 200f;
         //public static readonly float UiHeight = 2532f;

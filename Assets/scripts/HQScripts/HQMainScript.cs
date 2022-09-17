@@ -14,16 +14,19 @@ public class HQMainScript : MonoBehaviour
     private HQLayout _mainCamera;
     private UIDocument _uiDocument;
     private VisualElement _safeElement;
+    private AboutUsPopup _aboutUsPopup;
     private Timer _timer;
     private float _timeHolder;
     private HQHud _hqHud;
     private Shop _shop;
     private RewardedAd _rewarded;
+    
     public bool ResetSaves = false;
     public MonsterPrefabScript MonsterPrefabScript;
     public List<FurnitureScript> Furnitures;
 
     public SpriteRenderer bg;
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -116,6 +119,24 @@ public class HQMainScript : MonoBehaviour
             
             
           
+        };
+
+        _aboutUsPopup = new AboutUsPopup();
+        _aboutUsPopup.CloseButtonAction = () =>
+        {
+            _safeElement.Remove(_aboutUsPopup);
+        };
+
+        _aboutUsPopup.ResetButtonAction = () =>
+        {
+            SerialGameData.ResetSaves();
+            SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+        };
+        
+        
+        _hqHud.OtherButtonAction = () =>
+        {
+            _safeElement.Add(_aboutUsPopup);
         };
 
 

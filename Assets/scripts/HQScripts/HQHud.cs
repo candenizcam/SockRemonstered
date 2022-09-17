@@ -111,11 +111,8 @@ namespace HQScripts
             topBar.Add(_livesButton);
             topBar.Add(_coinsButton);
             
-            if (!Constants.ReleaseVersion)
-            {
-                var otherButton = new ButtonClickable(1f,"ui/buttons/Pause",Color.gray,OtherButtonFunction);
-                topBar.Add(otherButton);
-            }
+            var otherButton = new ButtonClickable(1f,"ui/buttons/AboutUsButton",Color.gray,OtherButtonFunction);
+            topBar.Add(otherButton);
         }
 
         void AchiButtonFunction()
