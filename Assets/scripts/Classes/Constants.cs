@@ -105,14 +105,14 @@ namespace Classes
             var delta = (int) bigNumber % 9;
             if (delta == 0)
             {
-                return new NextLevelData("Cards",kappa);
+                return new NextLevelData("Cards",kappa-1);
             }else if (delta < 6)
             {
-                return new NextLevelData("Dots",5*kappa + delta);
+                return new NextLevelData("Dots",5*kappa + delta-1);
             }
             else
             {
-                return new NextLevelData("Rain", 3*kappa + delta - 5);
+                return new NextLevelData("Rain", 3*kappa + delta - 5-1);
             }
 
             /*
