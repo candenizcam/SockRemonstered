@@ -493,6 +493,7 @@ public class DotsMain : GameMain
         else
         {
             fizzlerScript.FizzlerColour = -1;
+            bg.color = Color.white;
         }
     }
     
