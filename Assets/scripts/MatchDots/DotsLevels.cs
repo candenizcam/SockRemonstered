@@ -57,7 +57,12 @@ namespace MatchDots
             new DotsLevelsInfo(7,8,15,6, new []{47000},new DotsObstacle[]{new DotsObstacle(1,8,1), new DotsObstacle(4,5,1), new DotsObstacle(7,2,1)}, new DotsTarget[]{new DotsTarget(-1,80), new DotsTarget(0,15)}),
             new DotsLevelsInfo(7,8,15,6, new []{48001},new DotsObstacle[]{new DotsObstacle(5,5,1), new DotsObstacle(1,3,1), new DotsObstacle(7,8,1)}, new DotsTarget[]{new DotsTarget(-1,80), new DotsTarget(1,15), new DotsTarget(2,15)}),
             new DotsLevelsInfo(7,8,18,6, new []{49000},new DotsObstacle[]{new DotsObstacle(2,4,1), new DotsObstacle(5,7,1), new DotsObstacle(3,6,1)}, new DotsTarget[]{new DotsTarget(-1,80), new DotsTarget(3,15), new DotsTarget(4,15), new DotsTarget(5,15)}),
-            new DotsLevelsInfo(7,8,18,6, new []{50001},new DotsObstacle[]{new DotsObstacle(4,7,1), new DotsObstacle(2,6,1), new DotsObstacle(1,5,1), new DotsObstacle(1,3,1)}, new DotsTarget[]{new DotsTarget(-1,100)})
+            new DotsLevelsInfo(7,8,18,6, new []{50001},new DotsObstacle[]{new DotsObstacle(4,7,1), new DotsObstacle(2,6,1), new DotsObstacle(1,5,1), new DotsObstacle(1,3,1)}, new DotsTarget[]{new DotsTarget(-1,100)}),
+            new DotsLevelsInfo(7,8,18,5, new []{51000},new DotsObstacle[]{new DotsObstacle(7,1,1), new DotsObstacle(2,3,1), new DotsObstacle(4,5,1), new DotsObstacle(7,2,1)}, new DotsTarget[]{new DotsTarget(-1,100)}),
+            new DotsLevelsInfo(7,8,20,6, new []{52001},new DotsObstacle[]{new DotsObstacle(6,4,1), new DotsObstacle(4,7,1), new DotsObstacle(2,6,1), new DotsObstacle(1,5,1), new DotsObstacle(1,3,1)}, new DotsTarget[]{new DotsTarget(-1,100)}),
+            new DotsLevelsInfo(7,8,20,6, new []{53001},new DotsObstacle[]{new DotsObstacle(1,5,1), new DotsObstacle(6,7,1), new DotsObstacle(2,3,1)}, new DotsTarget[]{new DotsTarget(-1,100)}),
+            new DotsLevelsInfo(7,8,20,6, new []{54000},new DotsObstacle[]{new DotsObstacle(1,2,1), new DotsObstacle(7,7,1)}, new DotsTarget[]{new DotsTarget(-1,100)}),
+            new DotsLevelsInfo(7,8,20,6, new []{55000},new DotsObstacle[]{new DotsObstacle(1,8,1), new DotsObstacle(4,5,1), new DotsObstacle(7,2,1)}, new DotsTarget[]{new DotsTarget(-1,100)})
 
 
 
