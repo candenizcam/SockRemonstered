@@ -80,8 +80,35 @@ namespace RainScripts
                     new RainSockInfo(2,0,0,10),
                     new RainSockInfo(2,0,0,15),
                     new RainSockInfo(2,0,0,20),
-                })//8
-            
+                }),//8
+            new RainLevelInfo(.8f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(3,1,6,15, bias:1),
+                    new RainSockInfo(7,0,9,20, bias:2),
+                    new RainSockInfo(8,0,0,5),
+                    new RainSockInfo(8,0,0,10),
+                    new RainSockInfo(3,0,0,15, bias:2),
+                    new RainSockInfo(3,0,0,20),
+                }),//9
+            new RainLevelInfo(.8f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(1,1,5,15, bias:1),
+                    new RainSockInfo(6,0,10,20, bias:2),
+                    new RainSockInfo(4,0,0,5),
+                    new RainSockInfo(3,0,0,15, bias:2),
+                    new RainSockInfo(1,0,0,20),
+                }),//10
+            new RainLevelInfo(.7f,3f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(2,1,10,5, bias:2),
+                    new RainSockInfo(4,0,5,10, bias:1),
+                    new RainSockInfo(7,0,0,10),
+                    new RainSockInfo(6,0,0,5, bias:3),
+                    new RainSockInfo(2,1,0,20),
+                })//11
         };
 
 
