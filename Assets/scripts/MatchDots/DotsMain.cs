@@ -184,33 +184,44 @@ public class DotsMain : GameMain
             var c = i + 1;
 
             var thisCol = realDots.Where(x => x.Column == c);
-            if(!thisCol.Any()) continue; // if nobodys is left on the row, continue
-            var delta = 0;
+            if(!thisCol.Any()) continue;
+
+            foreach (var dotsPrefabScript in thisCol)
+            {
+                dotsPrefabScript.TargetRow = dotsPrefabScript.Row;
+            }
+
+            thisCol = thisCol.OrderByDescending(x => x.TargetRow);
+            var st = "";
+            foreach (var dotsPrefabScript in thisCol)
+            {
+                st += $"{dotsPrefabScript.TargetRow}";
+            }
+            Debug.Log($"st: {st}");
+
             for (int j = _rows; j > 0; j--)
             {
+                if(_dotGrid.GapSpot(j,c)) continue;
                 
                 
-
-                var s = thisCol.Where(x => x.Row == j);
-
-                if (s.Any() && delta>0)
+                var s = thisCol.Where(x => x.TargetRow <= j);
+                Debug.Log($"s count: {s.Count()}");
+                if (s.Any())
                 {
-                    var f = s.First();
-                    f.TargetRow =  f.Row + delta;
-                    f.InTheRightPlace = false;
-                }
-                else if (_dotGrid.GapSpot(j,c))
-                {
-                    if (delta > 0)
-                    {
-                        delta += 1;
-                    }
+                    var s2 = s.First();
+                    Debug.Log($"{s2.TargetRow}");
                     
-                } else if(!s.Any()  )
-                {
-                    delta += 1;
+                    s2.TargetRow = j;
                 }
+                
+                
             }
+            foreach (var dotsPrefabScript in thisCol)
+            {
+                dotsPrefabScript.TargetRow = dotsPrefabScript.Row==dotsPrefabScript.TargetRow ? -1:dotsPrefabScript.TargetRow;
+            }
+
+
         }
 
         var movers = _dotGrid.DotsList.Where(x => x.TargetRow != -1);
