@@ -61,7 +61,7 @@ public class CardsMain : GameMain
     {
         _gameState = GameState.Game;
         var sgd = SerialGameData.LoadOrGenerate();
-        if (LevelNo > 0)
+        if (LevelNo > 0 && !Constants.ReleaseVersion)
         {
             _levelNo = LevelNo - 1;
         }
@@ -75,6 +75,9 @@ public class CardsMain : GameMain
             }
             _levelNo = levelInfo.LevelNo;
         }
+        
+        _levelNo %= CardLevels.CardLevelInfos.Length;
+        
         var thisLevel = CardLevels.CardLevelInfos[_levelNo];
         _rows = thisLevel.Row;
         _columns = thisLevel.Column;
@@ -357,6 +360,7 @@ public class CardsMain : GameMain
             {
                 _quickSettings.SetVisible(true);
             }
+            _quickSettings.TutorialRoll(Time.deltaTime);
         }else if (_gameState == GameState.Standby)
         {
             

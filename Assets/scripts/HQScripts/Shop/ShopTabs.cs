@@ -29,16 +29,14 @@ namespace Classes
             }, new string[] {"ui/shop/ShopIcon-a","ui/shop/ShopIcon-i" }, Color.gray, changeOnClick: false);
             //_furniButton.Scale(scale);
             
-            _coinsButton = new MultiButtonClickable(scale,(x) =>
-            {
-                TabFunc(2);
-            }, new string[] {"ui/shop/BankIcon-a","ui/shop/BankIcon-i" }, Color.gray, changeOnClick: false);
+            
             //_coinsButton.Scale(scale);
 
 
             style.flexDirection = FlexDirection.Row;
             style.alignContent = Align.Center;
-            style.justifyContent = Justify.SpaceBetween;
+            
+            style.justifyContent = Constants.ReleaseVersion ?  Justify.SpaceAround:Justify.SpaceBetween;
             style.paddingBottom = 32f * scale;
             style.paddingTop= 32f * scale;
             style.paddingLeft = 32f * scale;
@@ -46,14 +44,26 @@ namespace Classes
             
             Add(_clothButton);
             Add(_furniButton);
-            Add(_coinsButton);
+            if (!Constants.ReleaseVersion)
+            {
+                _coinsButton = new MultiButtonClickable(scale,(x) =>
+                {
+                    TabFunc(2);
+                }, new string[] {"ui/shop/BankIcon-a","ui/shop/BankIcon-i" }, Color.gray, changeOnClick: false);
+                Add(_coinsButton);
+            }
+            
         }
 
         public void TabFunc(int i)
         {
             _clothButton.ChangeIndex(i==0 ? 1 : 0);
             _furniButton.ChangeIndex(i==1 ? 1 : 0);
-            _coinsButton.ChangeIndex(i==2 ? 1 : 0);
+            if (!Constants.ReleaseVersion)
+            {
+                _coinsButton.ChangeIndex(i==2 ? 1 : 0);
+            }
+           
             
             TabAction(i);
         }

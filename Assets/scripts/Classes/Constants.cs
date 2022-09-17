@@ -5,6 +5,10 @@ namespace Classes
 {
     public static class Constants
     {
+        public const bool ReleaseVersion = true; // release için bu true
+        public const bool SupressAd = false; // bu da false olucak
+        public const bool RealAd = false; // bu sadece public için true, yoksa false
+        
         public static readonly Color[] GameColours =
         {
             new Color(0.63f, 0.18f, 0.15f), //a12d26 0
@@ -26,7 +30,7 @@ namespace Classes
             new Color(0.24f, 0.47f, 0.61f), //3e789b
             new Color(0.44f, 0.51f, 0.80f), //7181cc
             new Color(0.78f, 0.50f, 0.42f), //c67f6c
-            new Color(0.36f, 0.13f, 0.22f), //5b2139
+            new Color(0.36f, 0.13f, 0.22f), //5b2139 titilating burgundy
             new Color(0.62f, 0.13f, 0.41f), //9d2269 20
             new Color(0.75f, 0.45f, 0.53f), //c07486
             new Color(0.87f, 0.65f, 0.66f), //dda6a9
@@ -40,14 +44,14 @@ namespace Classes
         };
 
         public const int MaxHearts = 3;
-        public const int BetweenHeartsTime = 60; // in secs
+        public const int BetweenHeartsTime = 300; // in secs
         public const float FurnitureChance = 0.1f;
         public const bool MatchDiagonal = true;
         public const int DotsAdjBombNumber = 6;
         public static readonly string[] WinTexts = new []{
             "Yarn-tastic!", "Fuzzah!", "Wooltranice!" 
         };
-        public const bool SupressAd = false;
+        
         
         public const float WorldHeight =  2532f / 200f;
         //public static readonly float UiHeight = 2532f;
@@ -58,7 +62,9 @@ namespace Classes
         public static float UnsafeBottomUi => Screen.safeArea.yMin/ Screen.height * Constants.UiHeight;
         public static float UnsafeLeftUi => Screen.safeArea.xMin/ Screen.width * Constants.UiWidth;
         public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
+
         
+        public const int AdPeriod = 3; // on 3 ad calls, ad is shown
         
         
         public static readonly Color[] DotsColours = new Color[]
@@ -99,6 +105,21 @@ namespace Classes
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {
+            var kappa = (int) bigNumber / 9;
+            var delta = (int) bigNumber % 9;
+            if (delta == 0)
+            {
+                return new NextLevelData("Cards",kappa-1);
+            }else if (delta < 6)
+            {
+                return new NextLevelData("Dots",5*kappa + delta-1);
+            }
+            else
+            {
+                return new NextLevelData("Rain", 3*kappa + delta - 5-1);
+            }
+
+            /*
             if (bigNumber % 5==0)
             {
                 return new NextLevelData("Cards",bigNumber / 5 - 1);
@@ -113,6 +134,7 @@ namespace Classes
             {
                 return new NextLevelData("Rain",l + bigNumber % 5 - 1);
             }
+            */
         }
     }
 

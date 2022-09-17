@@ -22,9 +22,10 @@ namespace ui
         private StyleBackground[] _tutorialSprite;
         private float _tutorialTimeCounter = 0f;
         private int _tutorialIndex = 0;
+        private bool _tutorialOn = false;
         
         
-        public QuickSettings( int sound, int music, TutorialFrame[] tutorialFrames)
+        public QuickSettings( int sound, int music, bool tutorialOn, TutorialFrame[] tutorialFrames)
         {
 
             _tutorialFrames = tutorialFrames;
@@ -96,6 +97,24 @@ namespace ui
              };
 
             _qsElements.Add(returnButton);
+
+            _tutorialOn = tutorialOn;
+            var tutorialButton = new MultiButtonClickable(1f, a =>
+            {
+                //MusicButtonFunction(a==0);
+                _tutorialOn = a == 0;
+
+            }, new[] {"ui/buttons/tutorial_on", "ui/buttons/tutorial_off"}, Color.gray,startIndex:tutorialOn ? 1: 0)
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = 960f,
+                    bottom = bottom+32f
+                }
+            };
+            _qsElements.Add(tutorialButton);
+            
             
             TutorialRoll(0f);
         }
@@ -103,29 +122,36 @@ namespace ui
 
         public void TutorialRoll(float dt)
         {
-            
-            if (_tutorialFrames.Length > 0)
+            if (_tutorialOn)
             {
-                
-                _tutorialTimeCounter += dt;
-                
-                if (_tutorialTimeCounter >= _tutorialFrames[_tutorialIndex].StayTime)
+                if (_tutorialFrames.Length > 0)
                 {
-                    _tutorialTimeCounter -= _tutorialFrames[_tutorialIndex].StayTime;
-                    Debug.Log($"{_tutorialIndex}, {_tutorialFrames[_tutorialIndex].Path}, {_tutorialSprite[_tutorialIndex]}");
                 
+                    _tutorialTimeCounter += dt;
                 
-                
-                    _tutorialIndex += 1;
-                    if (_tutorialIndex >= _tutorialFrames.Length)
+                    if (_tutorialTimeCounter >= _tutorialFrames[_tutorialIndex].StayTime)
                     {
-                        _tutorialIndex -= _tutorialFrames.Length;
+                        _tutorialTimeCounter -= _tutorialFrames[_tutorialIndex].StayTime;
+                        //Debug.Log($"{_tutorialIndex}, {_tutorialFrames[_tutorialIndex].Path}, {_tutorialSprite[_tutorialIndex]}");
+                
+                
+                
+                        _tutorialIndex += 1;
+                        if (_tutorialIndex >= _tutorialFrames.Length)
+                        {
+                            _tutorialIndex -= _tutorialFrames.Length;
+                        }
+
+                        _qsElements.style.backgroundImage = _tutorialSprite[_tutorialIndex];
+
                     }
-
-                    _qsElements.style.backgroundImage = _tutorialSprite[_tutorialIndex];
-
                 }
             }
+            else
+            {
+                _qsElements.style.backgroundImage = null;
+            }
+            
             
             
         }

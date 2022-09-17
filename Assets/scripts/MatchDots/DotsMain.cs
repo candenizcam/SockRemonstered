@@ -16,6 +16,8 @@ public class DotsMain : GameMain
     public SpriteRenderer sockBg;
 
     public FizzlerScript fizzlerScript;
+
+
     // Start is called before the first frame update
     public int LevelNo;
     private int _levelNo;
@@ -38,7 +40,7 @@ public class DotsMain : GameMain
     {
         _gameState = GameState.Loading;
         var sgd = SerialGameData.LoadOrGenerate();
-        if (LevelNo > 0)
+        if (LevelNo > 0 && !Constants.ReleaseVersion)
         {
             _levelNo = LevelNo - 1;
         }
@@ -54,6 +56,9 @@ public class DotsMain : GameMain
             _levelNo = levelInfo.LevelNo;
         }
 
+        _levelNo %= DotsLevels.Levels.Length;
+        
+        
         _tweenHolder = new TweenHolder();
         _random = new System.Random();
         
@@ -72,6 +77,7 @@ public class DotsMain : GameMain
         _dotGrid = new DotGrid(thisLevel);
         var r = Resources.Load<GameObject>("prefabs/DotsPrefab");
         var amn = _dotGrid.ActiveMemberNo();
+        Debug.Log($"active members: {amn}");
         var dl = new List<DotsPrefabScript>();
         for (int i = 0; i < amn; i++)
         {
@@ -82,7 +88,30 @@ public class DotsMain : GameMain
 
         
 
+        var ores = Resources.Load<GameObject>("prefabs/DotstaclePrefab");
+        foreach (var dotGridObstacle in _dotGrid.Obstacles)
+        {
+            var o = Instantiate(ores).GetComponent<DotstacleScript>();
+            o.Row = dotGridObstacle.R;
+            o.Column = dotGridObstacle.C;
+            o.SetObstacleIndex(dotGridObstacle.Type);
 
+            var obs_rect = _mainCamera.GetGridRect(o.Row, o.Column);
+
+            var t = o.gameObject.transform;
+            t.position = new Vector3(obs_rect.center.x, obs_rect.center.y, 0f);
+            t.localScale = new Vector3(obs_rect.width / o.WorldWidth, obs_rect.height / o.WorldHeight, 1f);
+
+        }
+        
+        //var o = Resources.Load<GameObject>("prefabs/DotstaclePrefab");
+        //var dll = new List<DotstacleScript>();
+        //for (int i = 0; i < _dotGrid.ObstacleCount; i++)
+        //{
+        //    dll.Add(Instantiate(r).GetComponent<DotstacleScript>());
+        //}
+
+        
         
         
         
@@ -127,10 +156,8 @@ public class DotsMain : GameMain
                 _dotsHud.StartAnimation(1f);
                 _gameState = GameState.Standby;
                 _dotsHud.ClearBg();
-
                 _timer.addEvent(0.3f, () =>
                 {
-                    
                     fillPhase();
                     _tweenHolder.newTween(0.3f, alpha =>
                     {
@@ -161,25 +188,43 @@ public class DotsMain : GameMain
 
             var thisCol = realDots.Where(x => x.Column == c);
             if(!thisCol.Any()) continue;
-            var delta = 0;
+
+            foreach (var dotsPrefabScript in thisCol)
+            {
+                dotsPrefabScript.TargetRow = dotsPrefabScript.Row;
+            }
+
+            thisCol = thisCol.OrderByDescending(x => x.TargetRow);
+            var st = "";
+            foreach (var dotsPrefabScript in thisCol)
+            {
+                st += $"{dotsPrefabScript.TargetRow}";
+            }
+            Debug.Log($"st: {st}");
+
             for (int j = _rows; j > 0; j--)
             {
-                
                 if(_dotGrid.GapSpot(j,c)) continue;
-
-                var s = thisCol.Where(x => x.Row == j);
-
-                if (s.Any() && delta>0)
+                
+                
+                var s = thisCol.Where(x => x.TargetRow <= j);
+                Debug.Log($"s count: {s.Count()}");
+                if (s.Any())
                 {
-                    var f = s.First();
-                    f.TargetRow =  f.Row + delta;
-                    f.InTheRightPlace = false;
+                    var s2 = s.First();
+                    Debug.Log($"{s2.TargetRow}");
+                    
+                    s2.TargetRow = j;
                 }
-                else if(!s.Any())
-                {
-                    delta += 1;
-                }
+                
+                
             }
+            foreach (var dotsPrefabScript in thisCol)
+            {
+                dotsPrefabScript.TargetRow = dotsPrefabScript.Row==dotsPrefabScript.TargetRow ? -1:dotsPrefabScript.TargetRow;
+            }
+
+
         }
 
         var movers = _dotGrid.DotsList.Where(x => x.TargetRow != -1);
@@ -219,14 +264,16 @@ public class DotsMain : GameMain
 
     void fillPhase()
     {
-        var cn = ColNeeds();
+        var cn = _dotGrid.ColNeeds();
         fillGrid(cn);
     }
 
     void fillGrid(int[] colNeeds)
     {
         var unstable = _dotGrid.DotsList.Where(x => !x.InTheRightPlace).ToList();
-
+        
+        if(!unstable.Any()) return;
+        
         for (int i = 0; i < _rows; i++)
         {
             for (int j = 0; j < _cols; j++)
@@ -236,7 +283,6 @@ public class DotsMain : GameMain
 
                 var t = unstable[0];
                 var r = _dotGrid.GetRowFromColTop(j+1, colNeeds[j]);
-                
                 var gridRect = _mainCamera.GetGridRect(r,j+1);
                 t.setRow(r);
                 t.setColumn(j+1);
@@ -263,16 +309,7 @@ public class DotsMain : GameMain
     }
 
 
-    int[] ColNeeds()
-    {
-        var stabilized = _dotGrid.DotsList.Where(x => x.InTheRightPlace);
-        var a = new int[_cols];
-        for (int i = 0; i < _cols; i++)
-        {
-            a[i] = _rows - stabilized.Count(x => x.Column == i+1);
-        }
-        return a;
-    }
+   
 
 
     void TerminateTouch()
@@ -332,6 +369,7 @@ public class DotsMain : GameMain
         
             _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
             {
+                
                 fillPhase();
                 _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
                 var hi = _dotsScoreboard.GetHudInfo();
@@ -390,8 +428,16 @@ public class DotsMain : GameMain
             return;
         }
         
-        var thisDot = _dotGrid.DotsList.Find(x => x.Row == p.r && x.Column == p.c);
+        //var thisDot = _dotGrid.DotsList.Find(x => x.Row == p.r && x.Column == p.c);
 
+        var w = _dotGrid.DotsList.Where(x => x.Row == p.r && x.Column == p.c);
+        
+        if (!w.Any())
+        {
+            return;
+        }
+
+        var thisDot = w.First();
         if (_selectionList.IsLatestPick(thisDot))
         {
             return;
@@ -450,6 +496,7 @@ public class DotsMain : GameMain
         else
         {
             fizzlerScript.FizzlerColour = -1;
+            bg.color = Color.white;
         }
     }
     
@@ -495,7 +542,7 @@ public class DotsMain : GameMain
                 
             }
             
-            _dotsScoreboard.AddToRemoved(l.Select(x => x.DotType).ToList());
+            _dotsScoreboard.AddToRemoved(l.Select(x => x.DotType).ToList(),0);
             
             foreach (var dotsPrefabScript in l)
             {
@@ -562,6 +609,7 @@ public class DotsMain : GameMain
         
             _timer.addEvent(EraseTime+SmallFallTime+.2f, () =>
             {
+                
                 fillPhase();
                 _dotsHud.UpdateTargets(_dotsScoreboard.GetRems());
                 var hi = _dotsScoreboard.GetHudInfo();

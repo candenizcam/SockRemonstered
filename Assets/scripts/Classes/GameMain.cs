@@ -96,23 +96,21 @@ namespace Classes
         protected void Restart()
         {
             var sgd = SerialGameData.LoadOrGenerate();
-            Debug.Log("restart me");
             if (!Constants.SupressAd)
             {
-                if (sgd.AdTime() && interstatial.IsLoaded() )
+                if (sgd.InterstatialAdTime() && interstatial.IsLoaded() )
                 {
                     OnAdClosedAction = () =>
                     {
-                        var nl = Constants.GetNextLevel(sgd.nextLevel);
-                        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+                        SerialGameData.Apply(a =>
+                        {
+                            var nl = Constants.GetNextLevel(a.nextLevel);
+                            SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+                        });
                         interstatial.Destroy();
-                        //_uiDocument.rootVisualElement.SetEnabled(true);
                         _uiDocument.enabled = true;
                     };
                     _uiDocument.enabled = false;
-                
-                    //_uiDocument.rootVisualElement.SetEnabled(false);
-
                     interstatial.Show();
 
                 }
@@ -165,10 +163,13 @@ namespace Classes
 
         protected void InitializeUi<T>(float topHeight=220f, float bottomHeight=200f, TutorialFrame[] tutorialFrames= null) where T: GameHud, new()
         {
+            var sgd1 = SerialGameData.LoadOrGenerate();
             InitializeUiDocument();
-            
+            var levelInfo = Constants.GetNextLevel(sgd1.nextLevel);
+            Debug.Log($"{levelInfo.LevelNo}");
             InitializeHud<T>(topHeight,bottomHeight);
-            InitializeQuickSettings(tutorialFrames ??= new TutorialFrame[]{});
+            _gameHud.SetLevelNo($"Level {sgd1.nextLevel}");
+            InitializeQuickSettings(tutorialFrames ??= new TutorialFrame[]{},sgd1.sound,sgd1.music, levelInfo.LevelNo==0);
             InitializeBetweenLevels();
             if (!Constants.SupressAd)
             {
@@ -194,10 +195,10 @@ namespace Classes
             _uiDocument.panelSettings.match = 0f;
         }
 
-        private void InitializeQuickSettings(TutorialFrame[] tutorialFrames)
+        private void InitializeQuickSettings(TutorialFrame[] tutorialFrames, int sound, int music, bool tutorialOn)
         {
-            var sgd1 = SerialGameData.LoadOrGenerate();
-            _quickSettings = new QuickSettings( sgd1.sound, sgd1.music,tutorialFrames);
+            Debug.Log($"tfl {tutorialFrames.Length}");
+            _quickSettings = new QuickSettings(sound, music,tutorialOn,tutorialFrames);
             _quickSettings.AddToVisualElement(_uiDocument.rootVisualElement);
             _quickSettings.SetVisible(false);
             _quickSettings.SettingsButtonAction = QuickSettingsButtonFunction;
@@ -247,7 +248,30 @@ namespace Classes
         
         protected void ToHQ()
         {
-            SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+            var sgd = SerialGameData.LoadOrGenerate();
+            if (!Constants.SupressAd)
+            {
+                if (sgd.InterstatialAdTime() && interstatial.IsLoaded() )
+                {
+                    OnAdClosedAction = () =>
+                    {
+                        SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+                        interstatial.Destroy();
+                        _uiDocument.enabled = true;
+                    };
+                    _uiDocument.enabled = false;
+                    interstatial.Show();
+
+                }
+                else
+                {
+                    SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+                }
+            }
+            else
+            {
+                SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+            }
         }
         
         

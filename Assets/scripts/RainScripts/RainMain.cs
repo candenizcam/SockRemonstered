@@ -62,7 +62,7 @@ public class RainMain : GameMain
     {
         _gameState = GameState.Loading;
         
-        if (LevelIndex > 0)
+        if (LevelIndex > 0 && !Constants.ReleaseVersion)
         {
             _levelIndex = LevelIndex-1;
         }
@@ -77,6 +77,7 @@ public class RainMain : GameMain
             _levelIndex = levelInfo.LevelNo;
         }
 
+        _levelIndex %= RainLevels.RainLevelInfos.Length;
 
         var topBarHeight = 320f;
         _mainCamera = new RainLayout(Camera.main,topBarHeight);
@@ -182,13 +183,13 @@ public class RainMain : GameMain
         }
 
         var c = _rainScoreboard.GetCollected();
-        for (var i = 0; i < _rainScoreboard.Collected.Length; i++)
-        {
-            if (c[i] < 0)
-            {
-                _rainScoreboard.Collected[i] = 0;   
-            }
-        }
+        //for (var i = 0; i < _rainScoreboard.Collected.Length; i++)
+        //{
+        //    if (c[i] < 0)
+        //    {
+        //        _rainScoreboard.Collected[i] = c[i];   
+        //    }
+        //}
         RainHud.UpdateSocks(_rainScoreboard.GetSockInfo());
         //RainHud.adjustSocks(_rainScoreboard.GetCollected());
     }
@@ -250,6 +251,7 @@ public class RainMain : GameMain
             {
                 _quickSettings.SetVisible(true);
             }
+            _quickSettings.TutorialRoll(Time.deltaTime);
         }
         else if(_gameState == GameState.Game)
         {

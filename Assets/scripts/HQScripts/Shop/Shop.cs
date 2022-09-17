@@ -63,6 +63,13 @@ namespace HQScripts
             _mainHolder.style.color = Constants.GameColours[11];
             
             
+            var cross = new ButtonClickable(1f, "ui/x", Color.gray, BgButtonFunction);
+            cross.style.position = Position.Absolute;
+            cross.style.top = -50f;
+            cross.style.right = -20f;
+            
+            _mainHolder.Add(cross);
+            
 
             var tabHolder = new VisualElement();
             tabHolder.style.paddingLeft = 23f;

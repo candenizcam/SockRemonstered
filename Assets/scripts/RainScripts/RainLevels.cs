@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Classes;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace RainScripts
                     new RainSockInfo(3,0,5,10,bias:3),
                     new RainSockInfo(0,0,0,8),
                     new RainSockInfo(3,0,0,15),
-                }),
+                }),//1
             
             new RainLevelInfo(1f,2f,-1, 15,
                 new RainSockInfo[]
@@ -40,7 +41,7 @@ namespace RainScripts
                     new RainSockInfo(0,0,0,10,2),
                     new RainSockInfo(1,0,0,10,2),
                     new RainSockInfo(2,0,0,10,2),
-                }),
+                }),//4
             new RainLevelInfo(0.5f,4f,-1, 25,
                 new RainSockInfo[]
                 {
@@ -62,7 +63,7 @@ namespace RainScripts
                     new RainSockInfo(4,0,0,5),
                     new RainSockInfo(0,0,0,10),
                     new RainSockInfo(2,0,0,30),
-                }),
+                }),//6
             new RainLevelInfo(.7f,2f,-1, 15,
                 new RainSockInfo[]
                 {
@@ -79,8 +80,84 @@ namespace RainScripts
                     new RainSockInfo(2,0,0,10),
                     new RainSockInfo(2,0,0,15),
                     new RainSockInfo(2,0,0,20),
-                })
-            
+                }),//8
+            new RainLevelInfo(.8f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(3,1,6,15, bias:1),
+                    new RainSockInfo(7,0,9,20, bias:2),
+                    new RainSockInfo(8,0,0,5),
+                    new RainSockInfo(8,0,0,10),
+                    new RainSockInfo(3,0,0,15, bias:2),
+                    new RainSockInfo(3,0,0,20),
+                }),//9
+            new RainLevelInfo(.8f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(1,1,5,15, bias:1),
+                    new RainSockInfo(6,0,10,20, bias:2),
+                    new RainSockInfo(4,0,0,5),
+                    new RainSockInfo(3,0,0,15, bias:2),
+                    new RainSockInfo(1,0,0,20),
+                }),//10
+            new RainLevelInfo(.7f,3f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(2,1,10,5, bias:2),
+                    new RainSockInfo(4,0,5,10, bias:1),
+                    new RainSockInfo(7,0,0,10),
+                    new RainSockInfo(6,0,0,5, bias:3),
+                    new RainSockInfo(2,1,0,20),
+                }),//11
+            new RainLevelInfo(.6f,2f,-1, 24,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(4,1,12,20, bias:2),
+                    new RainSockInfo(0,1,6,15, bias:1),
+                    new RainSockInfo(1,0,0,10),
+                    new RainSockInfo(4,0,0,7, bias:3),
+                }),//12
+            new RainLevelInfo(.7f,4f,-1, 24,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(8,0,6,20, bias:2),
+                    new RainSockInfo(0,1,6,15, bias:1),
+                    new RainSockInfo(3,1,6,15),
+                    new RainSockInfo(4,0,0,10, bias:3),
+                    new RainSockInfo(4,0,0,5, bias:1),
+                }),//13
+            new RainLevelInfo(.8f,4f,-1, 24,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(2,0,6,20, bias:2),
+                    new RainSockInfo(4,1,6,5, bias:2),
+                    new RainSockInfo(8,0,6,15, bias:2),
+                    new RainSockInfo(1,1,0,10, bias:3),
+                    new RainSockInfo(1,0,0,15, bias:1),
+                }),//14
+            new RainLevelInfo(.8f,4f,-1, 24,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(1,1,6,20, bias:2),
+                    new RainSockInfo(0,1,6,5, bias:2),
+                    new RainSockInfo(8,0,6,15, bias:3),
+                    new RainSockInfo(2,1,0,10, bias:3),
+                    new RainSockInfo(6,0,0,5, bias:1),
+                    new RainSockInfo(5,0,0,15, bias:3),
+                    new RainSockInfo(4,0,0,5, bias:1),
+                }),//15
+            new RainLevelInfo(.9f,4f,-1, 24,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(3,1,5,20, bias:2),
+                    new RainSockInfo(2,1,5,5, bias:2),
+                    new RainSockInfo(7,0,5,15, bias:3),
+                    new RainSockInfo(3,0,5,15, bias:3),
+                    new RainSockInfo(0,1,0,10, bias:3),
+                    new RainSockInfo(8,0,0,5, bias:1),
+                    new RainSockInfo(2,0,0,15, bias:3),
+                    new RainSockInfo(0,0,0,5, bias:1),
+                })//16
         };
 
 
@@ -90,11 +167,17 @@ namespace RainScripts
             "prefabs/SockPrefabs/s7", "prefabs/SockPrefabs/s8", "prefabs/SockPrefabs/s9"};
 
 
-        public static string[,] RainUISockLookup =
+        public static List<string[]> RainUISockLookup = new List<string[]>()
         {
-            { "ui/wm_socks/ss1"}, {"ui/wm_socks/ss2" }, {"ui/wm_socks/ss3" },
-            {"ui/wm_socks/ss4" }, {"ui/wm_socks/ss5" }, {"ui/wm_socks/ss6" },
-            {"ui/wm_socks/ss7" }, {"ui/wm_socks/ss8" }, {"ui/wm_socks/ss9" }
+            new []{"ui/wm_socks/ss1", "ui/wm_socks/ss12"},
+            new []{"ui/wm_socks/ss2", "ui/wm_socks/ss22"},
+            new []{"ui/wm_socks/ss3", "ui/wm_socks/ss32"},
+            new []{"ui/wm_socks/ss4", "ui/wm_socks/ss42"}, 
+            new []{"ui/wm_socks/ss5", "ui/wm_socks/ss52"}, 
+            new []{"ui/wm_socks/ss6" },
+            new []{"ui/wm_socks/ss7" }, 
+            new []{"ui/wm_socks/ss8" }, 
+            new []{"ui/wm_socks/ss9" }
             
         };
         

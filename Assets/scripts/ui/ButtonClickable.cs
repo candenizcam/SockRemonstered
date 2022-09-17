@@ -18,8 +18,9 @@ namespace Classes
             get => _textLabel.text;
             set => _textLabel.text = value;
         }
-        
-        
+
+        public float Width => width;
+        public float Height => height;
         protected float width;
         protected float height;
         protected float scale;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Classes;
+using GoogleMobileAds.Api;
 using HQScripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,15 +14,19 @@ public class HQMainScript : MonoBehaviour
     private HQLayout _mainCamera;
     private UIDocument _uiDocument;
     private VisualElement _safeElement;
+    private AboutUsPopup _aboutUsPopup;
     private Timer _timer;
     private float _timeHolder;
     private HQHud _hqHud;
     private Shop _shop;
+    private RewardedAd _rewarded;
+    
     public bool ResetSaves = false;
     public MonsterPrefabScript MonsterPrefabScript;
     public List<FurnitureScript> Furnitures;
 
     public SpriteRenderer bg;
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -33,6 +38,7 @@ public class HQMainScript : MonoBehaviour
 
         
         Application.targetFrameRate = 60;
+        
         
         _random = new System.Random();
         _timer = new Timer();
@@ -69,6 +75,21 @@ public class HQMainScript : MonoBehaviour
             var nl = Constants.GetNextLevel(sgd.nextLevel);
             SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
         };
+
+        _hqHud.LivesButtonAction = () =>
+        {
+            SerialGameData.Apply(sgd=>
+            {
+                if (sgd.getHearts()!=Constants.MaxHearts)
+                {
+                    _rewarded.Show();
+                }
+                
+                
+                
+            },andSave : false);
+
+        };
         
         _timer.addEvent(1f, () =>
         {
@@ -89,11 +110,40 @@ public class HQMainScript : MonoBehaviour
 
         _hqHud.AchiButtonAction = () =>
         {
-            SerialGameData.ResetSaves();
-            
-
-            SceneManager.LoadScene( SceneManager.GetActiveScene().name );
           
+        };
+
+
+        var surePopup = new SurePopup();
+        surePopup.YesAction = () =>
+        {
+            SerialGameData.ResetSaves();
+            SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+        };
+        surePopup.NoAction= () =>
+        {
+            _safeElement.Remove(surePopup);
+        };
+        
+
+        _aboutUsPopup = new AboutUsPopup();
+        _aboutUsPopup.CloseButtonAction = () =>
+        {
+            _safeElement.Remove(_aboutUsPopup);
+        };
+
+        _aboutUsPopup.ResetButtonAction = () =>
+        {
+            //_safeElement.Remove(_aboutUsPopup);
+            _safeElement.Add(surePopup);
+            //SerialGameData.ResetSaves();
+            //SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+        };
+        
+        
+        _hqHud.OtherButtonAction = () =>
+        {
+            _safeElement.Add(_aboutUsPopup);
         };
 
 
@@ -104,9 +154,39 @@ public class HQMainScript : MonoBehaviour
 
         };
         UpdateStuff();
+        
+        
+        if (!Constants.SupressAd)
+        {
+            _rewarded = AdHandler.RequestRewardedAd();
+            _rewarded.OnUserEarnedReward += OnAdReward;
+            _rewarded.OnAdClosed += OnAdClosed;
+        }
+        
     }
 
 
+    private void OnAdClosed(object sender, EventArgs e)
+    {
+        _rewarded.Destroy();
+        _rewarded = AdHandler.RequestRewardedAd();
+        _rewarded.OnUserEarnedReward += OnAdReward;
+        _rewarded.OnAdClosed += OnAdClosed;
+        
+    }
+    
+    private void OnAdReward(object sender, Reward r)
+    {
+        Debug.Log("reward");
+        SerialGameData.Apply(sgd =>
+        {
+            sgd.changeHearts(1);
+        });
+        
+        UpdateStuff();
+
+        
+    }
 
     private void UpdateStuff()
     {

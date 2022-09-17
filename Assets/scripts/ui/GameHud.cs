@@ -21,12 +21,17 @@ namespace Classes
         public Action SettingsButtonAction = () => {};
         protected MonsterFaces _monsterFaces;
         protected MoveCounter _moveCounter;
-        
+        protected Label LevelNoLabel;
  
         public GameHud()
         {
             Initialize();
             
+        }
+
+        public void SetLevelNo(string s)
+        {
+            LevelNoLabel.text = s;
         }
 
         public virtual void Initialize(float topHeight = 220f, float bottomHeight = 200f)
@@ -48,7 +53,35 @@ namespace Classes
             settingsButton.style.position = Position.Absolute;
             settingsButton.style.left = 32f*scale;
             settingsButton.style.bottom = 32f*scale;
-        
+
+            //var s2 = Resources.Load<Sprite>(imagePath);
+            //width = s2.rect.width * scale;
+            //height = s2.rect.height * scale;
+            //style.width = width;
+            //style.height = height;
+            //style.backgroundImage = new StyleBackground(s2);
+
+            var s = Resources.Load<Sprite>("ui/LevelBack");
+            
+            LevelNoLabel = new Label
+            {
+                style =
+                {
+                    backgroundImage = new StyleBackground(s),
+                    position = Position.Absolute,
+                    bottom = 32f,
+                    left = 64f + settingsButton.Width,
+                    width = s.rect.width,
+                    height = s.rect.height,
+                    unityTextAlign = TextAnchor.MiddleCenter,
+                    color = Constants.GameColours[11],
+                    fontSize = s.rect.height*0.4f,
+                    unityFontDefinition = new StyleFontDefinition((Font)Resources.Load("fonts/funkyfont"))
+                    
+                },
+                text = "Level 999"
+            };
+
 
             _bottomBar = new VisualElement();
         
@@ -60,6 +93,7 @@ namespace Classes
             
             
             _bottomBar.Add(settingsButton);
+            _bottomBar.Add(LevelNoLabel);
             
             var w = 382f;
             var h = 284f;

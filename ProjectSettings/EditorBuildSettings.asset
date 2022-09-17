@@ -20,4 +20,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Rain.unity
     guid: 889ea1cbffeed4846a98563614d7664a
-  m_configObjects: {}
+  m_configObjects:
+    UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 42ccad66d75754b0f989c27f4d2aa249, type: 2}
