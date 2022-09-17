@@ -40,7 +40,7 @@ public class DotsMain : GameMain
     {
         _gameState = GameState.Loading;
         var sgd = SerialGameData.LoadOrGenerate();
-        if (LevelNo > 0)
+        if (LevelNo > 0 && !Constants.ReleaseVersion)
         {
             _levelNo = LevelNo - 1;
         }

@@ -49,6 +49,10 @@ namespace RainScripts
                 if (_scoreSocks[i].SockNo == no && _scoreSocks[i].SockType == style)
                 {
                     _collected[i] += by;
+                    if (_scoreSocks[i].LevelCollect < _collected[i])
+                    {
+                        _collected[i] = _scoreSocks[i].LevelCollect;
+                    }
                 }
             }
             
