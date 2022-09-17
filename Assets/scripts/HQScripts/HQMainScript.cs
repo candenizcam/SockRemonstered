@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Classes;
+using GoogleMobileAds.Api;
 using HQScripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,7 @@ public class HQMainScript : MonoBehaviour
     private float _timeHolder;
     private HQHud _hqHud;
     private Shop _shop;
+    private RewardedAd _rewarded;
     public bool ResetSaves = false;
     public MonsterPrefabScript MonsterPrefabScript;
     public List<FurnitureScript> Furnitures;
@@ -69,6 +71,21 @@ public class HQMainScript : MonoBehaviour
             var nl = Constants.GetNextLevel(sgd.nextLevel);
             SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
         };
+
+        _hqHud.LivesButtonAction = () =>
+        {
+            SerialGameData.Apply(sgd=>
+            {
+                if (sgd.getHearts()!=Constants.MaxHearts)
+                {
+                    _rewarded.Show();
+                }
+                
+                
+                
+            },andSave : false);
+
+        };
         
         _timer.addEvent(1f, () =>
         {
@@ -109,9 +126,39 @@ public class HQMainScript : MonoBehaviour
 
         };
         UpdateStuff();
+        
+        
+        if (!Constants.SupressAd)
+        {
+            _rewarded = AdHandler.RequestRewardedAd();
+            _rewarded.OnUserEarnedReward += OnAdReward;
+            _rewarded.OnAdClosed += OnAdClosed;
+        }
+        
     }
 
 
+    private void OnAdClosed(object sender, EventArgs e)
+    {
+        _rewarded.Destroy();
+        _rewarded = AdHandler.RequestRewardedAd();
+        _rewarded.OnUserEarnedReward += OnAdReward;
+        _rewarded.OnAdClosed += OnAdClosed;
+        
+    }
+    
+    private void OnAdReward(object sender, Reward r)
+    {
+        Debug.Log("reward");
+        SerialGameData.Apply(sgd =>
+        {
+            sgd.changeHearts(1);
+        });
+        
+        UpdateStuff();
+
+        
+    }
 
     private void UpdateStuff()
     {
