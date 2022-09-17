@@ -56,6 +56,9 @@ public class DotsMain : GameMain
             _levelNo = levelInfo.LevelNo;
         }
 
+        _levelNo %= DotsLevels.Levels.Length;
+        
+        
         _tweenHolder = new TweenHolder();
         _random = new System.Random();
         

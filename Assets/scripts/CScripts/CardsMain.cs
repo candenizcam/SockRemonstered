@@ -75,6 +75,9 @@ public class CardsMain : GameMain
             }
             _levelNo = levelInfo.LevelNo;
         }
+        
+        _levelNo %= CardLevels.CardLevelInfos.Length;
+        
         var thisLevel = CardLevels.CardLevelInfos[_levelNo];
         _rows = thisLevel.Row;
         _columns = thisLevel.Column;

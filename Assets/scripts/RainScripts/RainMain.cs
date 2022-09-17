@@ -77,6 +77,7 @@ public class RainMain : GameMain
             _levelIndex = levelInfo.LevelNo;
         }
 
+        _levelIndex %= RainLevels.RainLevelInfos.Length;
 
         var topBarHeight = 320f;
         _mainCamera = new RainLayout(Camera.main,topBarHeight);

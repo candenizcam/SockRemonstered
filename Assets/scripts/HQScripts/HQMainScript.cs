@@ -109,15 +109,6 @@ public class HQMainScript : MonoBehaviour
 
         _hqHud.AchiButtonAction = () =>
         {
-            if (!Constants.ReleaseVersion)
-            {
-                SerialGameData.ResetSaves();
-            
-
-                SceneManager.LoadScene( SceneManager.GetActiveScene().name );
-            }
-            
-            
           
         };
 
