@@ -96,23 +96,21 @@ namespace Classes
         protected void Restart()
         {
             var sgd = SerialGameData.LoadOrGenerate();
-            Debug.Log("restart me");
             if (!Constants.SupressAd)
             {
-                if (sgd.AdTime() && interstatial.IsLoaded() )
+                if (sgd.InterstatialAdTime() && interstatial.IsLoaded() )
                 {
                     OnAdClosedAction = () =>
                     {
-                        var nl = Constants.GetNextLevel(sgd.nextLevel);
-                        SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+                        SerialGameData.Apply(a =>
+                        {
+                            var nl = Constants.GetNextLevel(a.nextLevel);
+                            SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+                        });
                         interstatial.Destroy();
-                        //_uiDocument.rootVisualElement.SetEnabled(true);
                         _uiDocument.enabled = true;
                     };
                     _uiDocument.enabled = false;
-                
-                    //_uiDocument.rootVisualElement.SetEnabled(false);
-
                     interstatial.Show();
 
                 }
@@ -250,7 +248,30 @@ namespace Classes
         
         protected void ToHQ()
         {
-            SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+            var sgd = SerialGameData.LoadOrGenerate();
+            if (!Constants.SupressAd)
+            {
+                if (sgd.InterstatialAdTime() && interstatial.IsLoaded() )
+                {
+                    OnAdClosedAction = () =>
+                    {
+                        SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+                        interstatial.Destroy();
+                        _uiDocument.enabled = true;
+                    };
+                    _uiDocument.enabled = false;
+                    interstatial.Show();
+
+                }
+                else
+                {
+                    SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+                }
+            }
+            else
+            {
+                SceneManager.LoadScene("HQ", LoadSceneMode.Single);
+            }
         }
         
         

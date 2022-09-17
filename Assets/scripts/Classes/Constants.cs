@@ -40,7 +40,7 @@ namespace Classes
         };
 
         public const int MaxHearts = 3;
-        public const int BetweenHeartsTime = 60; // in secs
+        public const int BetweenHeartsTime = 300; // in secs
         public const float FurnitureChance = 0.1f;
         public const bool MatchDiagonal = true;
         public const int DotsAdjBombNumber = 6;
@@ -60,7 +60,7 @@ namespace Classes
         public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
 
         public const bool ReleaseVersion = false;
-        
+        public const int AdPeriod = 3; // on 3 ad calls, ad is shown
         
         
         public static readonly Color[] DotsColours = new Color[]

@@ -21,11 +21,21 @@ namespace Classes
         public List<string> purchased; // maybe this will be server one day...
         public string[] lineup;
         public List<string> activeFurnitures; // maybe this will be server one day...
+        public int AdCounter = 0;
         private const string Location = "/sockMonsterData.dat";
 
-        public bool AdTime()
+        public bool InterstatialAdTime()
         {
-            return true;
+            //AdCounter
+            AdCounter += 1;
+            if (AdCounter == Constants.AdPeriod)
+            {
+                AdCounter = 0;
+            }
+            Save();
+            
+            
+            return AdCounter==0;
         }
 
         public int getHearts()
