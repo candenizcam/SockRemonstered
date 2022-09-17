@@ -58,6 +58,8 @@ namespace Classes
         public static float UnsafeBottomUi => Screen.safeArea.yMin/ Screen.height * Constants.UiHeight;
         public static float UnsafeLeftUi => Screen.safeArea.xMin/ Screen.width * Constants.UiWidth;
         public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
+
+        public const bool ReleaseVersion = false;
         
         
         
@@ -99,6 +101,21 @@ namespace Classes
 
         public static NextLevelData GetNextLevel(int bigNumber)
         {
+            var kappa = (int) bigNumber / 9;
+            var delta = (int) bigNumber % 9;
+            if (delta == 0)
+            {
+                return new NextLevelData("Cards",kappa);
+            }else if (delta < 6)
+            {
+                return new NextLevelData("Dots",5*kappa + delta);
+            }
+            else
+            {
+                return new NextLevelData("Rain", 3*kappa + delta - 5);
+            }
+
+            /*
             if (bigNumber % 5==0)
             {
                 return new NextLevelData("Cards",bigNumber / 5 - 1);
@@ -113,6 +130,7 @@ namespace Classes
             {
                 return new NextLevelData("Rain",l + bigNumber % 5 - 1);
             }
+            */
         }
     }
 

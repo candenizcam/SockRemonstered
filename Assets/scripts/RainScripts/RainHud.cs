@@ -117,7 +117,7 @@ public class RainHud : GameHud
         {
             var no = rainSockInfo.LevelCollect;
             
-            var path = RainLevels.RainUISockLookup[rainSockInfo.SockType, rainSockInfo.SockNo];
+            var path = RainLevels.RainUISockLookup[rainSockInfo.SockType][rainSockInfo.SockNo];
             var frame = new VisualElement
             {
                 style =

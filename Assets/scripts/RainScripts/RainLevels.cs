@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Classes;
 using UnityEngine;
 
@@ -90,11 +91,17 @@ namespace RainScripts
             "prefabs/SockPrefabs/s7", "prefabs/SockPrefabs/s8", "prefabs/SockPrefabs/s9"};
 
 
-        public static string[,] RainUISockLookup =
+        public static List<string[]> RainUISockLookup = new List<string[]>()
         {
-            { "ui/wm_socks/ss1"}, {"ui/wm_socks/ss2" }, {"ui/wm_socks/ss3" },
-            {"ui/wm_socks/ss4" }, {"ui/wm_socks/ss5" }, {"ui/wm_socks/ss6" },
-            {"ui/wm_socks/ss7" }, {"ui/wm_socks/ss8" }, {"ui/wm_socks/ss9" }
+            new []{"ui/wm_socks/ss1", "ui/wm_socks/ss12"},
+            new []{"ui/wm_socks/ss2", "ui/wm_socks/ss22"},
+            new []{"ui/wm_socks/ss3", "ui/wm_socks/ss32"},
+            new []{"ui/wm_socks/ss4", "ui/wm_socks/ss42"}, 
+            new []{"ui/wm_socks/ss5", "ui/wm_socks/ss52"}, 
+            new []{"ui/wm_socks/ss6" },
+            new []{"ui/wm_socks/ss7" }, 
+            new []{"ui/wm_socks/ss8" }, 
+            new []{"ui/wm_socks/ss9" }
             
         };
         
