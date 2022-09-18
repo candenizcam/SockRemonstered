@@ -12,7 +12,7 @@ namespace MatchDots
             new DotsLevelsInfo(4,5,10,4, new []{1000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,20)}),
             new DotsLevelsInfo(4,5,10,4, new []{2000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(2,16),new DotsTarget(3,16)}),
             new DotsLevelsInfo(4,5,15,5, new []{3000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(2,10), new DotsTarget(3,10),new DotsTarget(4,10)}),
-            new DotsLevelsInfo(4,5,15,6, new []{4003},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(0,8),new DotsTarget(2,8),new DotsTarget(-1,16)}),
+            new DotsLevelsInfo(4,5,15,6, new []{4003},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(5,8),new DotsTarget(2,8),new DotsTarget(-1,16)}),
             new DotsLevelsInfo(5,6,12,6, new []{5000},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(-1,30)}),
             new DotsLevelsInfo(5,6,12,4, new []{6004, 6007},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(2,20)}),
             new DotsLevelsInfo(5,6,12,4, new []{7001, 7002},new DotsObstacle[]{}, new DotsTarget[]{new DotsTarget(0,20)}),

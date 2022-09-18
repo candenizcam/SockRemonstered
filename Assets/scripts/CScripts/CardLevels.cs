@@ -10,8 +10,14 @@ namespace Cards.CScripts
             new CardLevelInfo(3,2,8,2),
             new CardLevelInfo(3,2,10),
             new CardLevelInfo(4,3,14,cardTypes:3),
-            new CardLevelInfo(4,3,17,cardTypes:4)
-            
+            new CardLevelInfo(4,3,17,cardTypes:4),
+            new CardLevelInfo(4,3,17,cardTypes:5),
+            new CardLevelInfo(4,3,17),
+            new CardLevelInfo(4,4,24,cardTypes:5),
+            new CardLevelInfo(4,4,24,cardTypes:6),
+            new CardLevelInfo(4,4,24),
+            new CardLevelInfo(4,4,22)
+
         };
 
         public static readonly TutorialFrame[] Tutorial = new TutorialFrame[]

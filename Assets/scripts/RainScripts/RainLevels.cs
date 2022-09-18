@@ -157,7 +157,181 @@ namespace RainScripts
                     new RainSockInfo(8,0,0,5, bias:1),
                     new RainSockInfo(2,0,0,15, bias:3),
                     new RainSockInfo(0,0,0,5, bias:1),
-                })//16
+                }),//16
+            new RainLevelInfo(.9f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(4,1,8,20, bias:2),
+                    new RainSockInfo(0,0,8,5, bias:2),
+                    new RainSockInfo(5,0,0,20, bias:1),
+                    new RainSockInfo(5,0,0,10, bias:3),
+                    new RainSockInfo(2,1,0,10),
+                    new RainSockInfo(6,0,0,5),
+                }),//17
+            new RainLevelInfo(.7f,3f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(2,1,8,20, bias:2),
+                    new RainSockInfo(2,0,8,5, bias:2),
+                    new RainSockInfo(8,0,0,5, bias:1),
+                    new RainSockInfo(8,0,0,10, bias:3),
+                    new RainSockInfo(3,0,0,10),
+                    new RainSockInfo(6,0,0,5),
+                }),//18
+            new RainLevelInfo(.8f,2f,-1, 25,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(3,0,12,15, bias:2),
+                    new RainSockInfo(6,0,8,10, bias:3),
+                    new RainSockInfo(1,0,0,5),
+                    new RainSockInfo(4,0,0,10),
+                    new RainSockInfo(7,0,0,10),
+                    new RainSockInfo(8,0,0,5),
+                }),//19
+            new RainLevelInfo(.9f,4f,-1, 30,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(6,0,8,15, bias:2),
+                    new RainSockInfo(7,0,8,10, bias:2),
+                    new RainSockInfo(8,0,8,5, bias:2),
+                    new RainSockInfo(4,0,0,20),
+                    new RainSockInfo(4,0,0,15),
+                    new RainSockInfo(4,0,0,10),
+                    new RainSockInfo(4,0,0,5),
+                }),//20
+            new RainLevelInfo(.7f,2f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(4,0,8,15, bias:2),
+                    new RainSockInfo(4,1,8,10, bias:2),
+                    new RainSockInfo(0,1,0,5),
+                    new RainSockInfo(0,1,0,20),
+                    new RainSockInfo(3,1,0,15),
+                    new RainSockInfo(3,1,0,10),
+                    new RainSockInfo(3,1,0,5),
+                }),//21
+            new RainLevelInfo(.8f,3f,-1, 25,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(1,0,10,15, bias:2),
+                    new RainSockInfo(1,1,10,10, bias:2),
+                    new RainSockInfo(3,1,0,20),
+                    new RainSockInfo(2,1,0,15),
+                    new RainSockInfo(3,0,0,10),
+                    new RainSockInfo(2,0,0,5),
+                }),//22
+            new RainLevelInfo(.9f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(3,1,15,10, bias:2),
+                    new RainSockInfo(4,1,0,20, bias:1),
+                    new RainSockInfo(4,1,0,15, bias:1),
+                    new RainSockInfo(4,1,0,10, bias:1),
+                    new RainSockInfo(4,1,0,5, bias:1),
+                }),//23
+            new RainLevelInfo(.8f,3f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(7,0,15,15, bias:2),
+                    new RainSockInfo(6,0,0,20, bias:1),
+                    new RainSockInfo(8,0,0,15, bias:1),
+                    new RainSockInfo(6,0,0,10, bias:1),
+                    new RainSockInfo(8,0,0,5, bias:1),
+                    new RainSockInfo(6,0,0,15, bias:1),
+                    new RainSockInfo(8,0,0,10, bias:1),
+                }),//24
+            new RainLevelInfo(.9f,2f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(4,1,15,10, bias:2),
+                    new RainSockInfo(3,1,0,20, bias:1),
+                    new RainSockInfo(3,1,0,15, bias:1),
+                    new RainSockInfo(3,1,0,10, bias:1),
+                    new RainSockInfo(3,1,0,5, bias:1),
+                }),//25
+            new RainLevelInfo(.7f,2f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(5,0,15,15, bias:2),
+                    new RainSockInfo(0,1,0,10),
+                    new RainSockInfo(0,1,0,20),
+                    new RainSockInfo(4,0,0,15),
+                    new RainSockInfo(4,0,0,10),
+                    new RainSockInfo(4,0,0,5),
+                }),//26
+            new RainLevelInfo(.7f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(8,0,15,15, bias:2),
+                    new RainSockInfo(6,0,0,20, bias:1),
+                    new RainSockInfo(7,0,0,15, bias:1),
+                    new RainSockInfo(6,0,0,10, bias:1),
+                    new RainSockInfo(7,0,0,5, bias:1),
+                    new RainSockInfo(6,0,0,15, bias:1),
+                    new RainSockInfo(7,0,0,10, bias:1),
+                }),//27
+            new RainLevelInfo(.9f,3f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(1,1,15,10, bias:2),
+                    new RainSockInfo(1,0,0,5, bias:1),
+                    new RainSockInfo(1,0,0,10, bias:1),
+                    new RainSockInfo(1,0,0,15, bias:1),
+                    new RainSockInfo(1,0,0,20, bias:1),
+                }),//28
+            new RainLevelInfo(.9f,4f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(0,1,15,15, bias:2),
+                    new RainSockInfo(5,0,0,10),
+                    new RainSockInfo(5,0,0,20),
+                    new RainSockInfo(4,0,0,15),
+                    new RainSockInfo(4,0,0,10),
+                    new RainSockInfo(4,0,0,5),
+                }),//29
+            new RainLevelInfo(.9f,3f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(6,0,15,15, bias:2),
+                    new RainSockInfo(8,0,0,20, bias:1),
+                    new RainSockInfo(7,0,0,15, bias:1),
+                    new RainSockInfo(8,0,0,10, bias:1),
+                    new RainSockInfo(7,0,0,5, bias:1),
+                    new RainSockInfo(8,0,0,15, bias:1),
+                    new RainSockInfo(7,0,0,10, bias:1),
+                }),//30
+            new RainLevelInfo(.8f,3f,-1, 25,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(7,0,10,20, bias:2),
+                    new RainSockInfo(3,1,10,5, bias:2),
+                    new RainSockInfo(1,1,0,5, bias:1),
+                    new RainSockInfo(1,1,0,10, bias:1),
+                    new RainSockInfo(1,1,0,15, bias:1),
+                    new RainSockInfo(1,1,0,20, bias:1),
+                }),//31
+            new RainLevelInfo(.7f,2f,-1, 20,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(2,0,15,20, bias:2),
+                    new RainSockInfo(2,1,0,20, bias:1),
+                    new RainSockInfo(2,1,0,15, bias:1),
+                    new RainSockInfo(2,1,0,10, bias:1),
+                    new RainSockInfo(2,1,0,5, bias:1),
+                }),//32
+            new RainLevelInfo(.8f,3f,-1, 30,
+                new RainSockInfo[]
+                {
+                    new RainSockInfo(8,0,8,15, bias:2),
+                    new RainSockInfo(0,1,8,10, bias:2),
+                    new RainSockInfo(3,1,8,20, bias:2),
+                    new RainSockInfo(7,0,0,20, bias:3),
+                    new RainSockInfo(7,0,0,5, bias:3),
+                    new RainSockInfo(4,0,0,15, bias:3),
+                    new RainSockInfo(4,0,0,10, bias:3),
+                    new RainSockInfo(4,1,0,15, bias:3),
+                    new RainSockInfo(4,1,0,5, bias:3),
+                })//33
         };
 
 
