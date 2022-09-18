@@ -32,10 +32,8 @@ namespace RainScripts
                 v.Add(
                         new RainSockInfo(_scoreSocks[i].SockType, _scoreSocks[i].SockNo, _scoreSocks[i].LevelCollect-_collected[i],
                             _scoreSocks[i].Speed)
-                    );
-                
+                    );   
             }
-
             return v.ToArray();
         }
 
@@ -55,41 +53,6 @@ namespace RainScripts
                     }
                 }
             }
-            
-            
-            
-            
-            /*
-            for (var i = 0; i < _scoreSocks.Count; i++)
-            {
-                if (_scoreSocks[i].SockNo == no && _scoreSocks[i].SockType == style)
-                {
-                    if (_collected[i] == 0)
-                    {
-                        _collected[i] += by;
-                        return; 
-                    }else if (_collected[i] == 10000)
-                    {
-                        throw new Exception("collected is greater than 10000 something is clearly wrong");
-                    }
-                    else
-                    {
-                        if (lastValue>_collected[i])
-                        {
-                            lastIndex = i;
-                            lastValue = _collected[i];
-                            
-                        }
-                        
-                    }        
-                } 
-            }
-            if(lastIndex==-1) return;
-
-            _collected[lastIndex] += by;
-            */
-
-
         }
 
         public bool GameWon()
@@ -135,8 +98,6 @@ namespace RainScripts
                     _collected[i] = -1*_collected[i];
                 }
             }
-
-
             return _collected;
         }
         

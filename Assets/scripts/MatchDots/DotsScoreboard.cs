@@ -14,6 +14,7 @@ namespace MatchDots
         public int MoveCounter { get; private set; } = 0;
         private int _totalMoves;
         private List<DotsTarget> _rems;
+        private int _extraCoins = 0;
         
         public DotsScoreboard(DotsLevelsInfo dli)
         {
@@ -27,15 +28,8 @@ namespace MatchDots
         {
             var remainers = _totalMoves - MoveCounter;
             var tm = $"{Math.Max(0, remainers)}";
-
             var rest = _rems.Sum(x => x.Amount);
-            
-            //if(rest>remainers*5) MonsterMood.Sad
-
             var mood = rest > remainers * 5 ? MonsterMood.Sad : (rest > remainers * 3 ? MonsterMood.Excited : MonsterMood.Happy);
-            
-            //_totalMoves - MoveCounter > rest
-            
             return (tm, mood);
         }
 
@@ -52,14 +46,16 @@ namespace MatchDots
         public (int number, string text)  GetLevelPoints()
         {
             var remainers = _totalMoves - MoveCounter;
-            return (remainers * 10,$"  {remainers * 10}");
+            return (remainers * 10 + _extraCoins*5 + 20,$"  {remainers * 10 + _extraCoins*5 + 20}");
         }
 
         public void AddToRemoved(List<int> r, int movesChange = 1)
         {
+            _extraCoins += Math.Max(r.Count - 5, 0)*2;
             _removedTypes.AddRange(r);
             MoveCounter += movesChange;
             updateRems();
+            
         }
 
 

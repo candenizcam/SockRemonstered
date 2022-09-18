@@ -5,8 +5,8 @@ namespace Classes
 {
     public static class Constants
     {
-        public const bool ReleaseVersion = true; // release için bu true
-        public const bool SupressAd = false; // bu da false olucak
+        public const bool ReleaseVersion = false; // release için bu true
+        public const bool SupressAd = true; // bu da false olucak
         public const bool RealAd = false; // bu sadece public için true, yoksa false
         
         public static readonly Color[] GameColours =

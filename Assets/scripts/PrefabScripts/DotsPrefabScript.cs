@@ -22,7 +22,10 @@ public class DotsPrefabScript : MonoBehaviour
     
     public bool InTheRightPlace { get; set; } = false;
     public int Column { get; private set; } = -1;
-    public int TargetRow = -1;
+    [NonSerialized]public int SoftRow = -1; // for times when prefab needs to remember coords
+    [NonSerialized]public int SoftCol = -1;
+    [NonSerialized]public int SoftType = -1;
+    
     
     public int Row{ get; private set; } = -1;
 
@@ -47,14 +50,12 @@ public class DotsPrefabScript : MonoBehaviour
         allSprites[DotType].gameObject.transform.localScale = new Vector3(scale, scale, 1f);
     }
     
-    public void setColumn(int c)
-    {
-        Column = c;
-    }
     
-    public void setRow(int r)
+
+    public void SetRowAndCol(int? r=null, int? c=null)
     {
-        Row = r;
+        Column = c ??= Column;
+        Row = r ??= Row;
     }
 
 
@@ -77,8 +78,7 @@ public class DotsPrefabScript : MonoBehaviour
         if (dt != null)
         {
             SetDotType((int)dt);
-            HitBlob.color = Constants.DotsColours[(int)dt];
-            DragBar.color = Constants.DotsColours[(int)dt];
+            
         }
 
         _hitbox = RectTools.ScaleByCentre(gridRect, _hitboxCoeff, _hitboxCoeff);
@@ -142,6 +142,13 @@ public class DotsPrefabScript : MonoBehaviour
         {
             allSprites[i].enabled = i == DotType;
         }
+
+        if (dt >= 0)
+        {
+            HitBlob.color = Constants.DotsColours[(int)dt];
+            DragBar.color = Constants.DotsColours[(int)dt];
+        }
+        
         
         /*
         DotType = dt;
@@ -215,3 +222,4 @@ public class DotsPrefabScript : MonoBehaviour
         
     }
 }
+

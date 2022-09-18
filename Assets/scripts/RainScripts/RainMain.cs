@@ -105,7 +105,6 @@ public class RainMain : GameMain
         _wheelSpeed = thisLevel.WheelSpeed;
         _sockSpawnTime = thisLevel.SockSpawnTime;
         _maxSock = thisLevel.MaxSock;
-        //InitializeStartAnimation(thisLevel);
         
         _rainScoreboard = new RainScoreboard((from t in thisLevel.RainSockInfos
             where t.LevelCollect > 0
@@ -113,12 +112,6 @@ public class RainMain : GameMain
         MoveNo = thisLevel.MoveNo;
         
         RainHud.GenerateSocks(_rainScoreboard.GetSockInfo());
-        
-        
-        //RainHud.generateSocks(_rainScoreboard.ScoreAddressArray());
-        
-        //RainHud.adjustSocks(_rainScoreboard.Collected);
-        
         UiStartAnimation();
     }
     private void UiStartAnimation()
@@ -191,7 +184,6 @@ public class RainMain : GameMain
         //    }
         //}
         RainHud.UpdateSocks(_rainScoreboard.GetSockInfo());
-        //RainHud.adjustSocks(_rainScoreboard.GetCollected());
     }
 
 
@@ -234,7 +226,6 @@ public class RainMain : GameMain
 
         if (_gameState==GameState.Won || _gameState==GameState.Lost)
         {
-            
             foreach (var sockPrefabScript in _activeSocks.Where(sockPrefabScript => sockPrefabScript.ToBeDestroyed))
             {
                 Destroy(sockPrefabScript.gameObject);
@@ -255,12 +246,7 @@ public class RainMain : GameMain
         }
         else if(_gameState == GameState.Game)
         {
-            
-
-            
-            
             var i = 0;
-            
             _sockSpawnTimer += Time.deltaTime;
             if (_sockSpawnTimer > _sockSpawnTime)
             {
@@ -300,13 +286,8 @@ public class RainMain : GameMain
 
         }
         else if(_gameState == GameState.Loading)
-        {
-            
+        {   
         }
-        
-        
-        
-        
     }
 
     /** This script generates a sock

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -22,12 +24,49 @@ namespace MatchDots
             _rows =dli.Rows;
             _cols = dli.Cols;
             _obstacle = dli.Obstacles;
+        }
 
-       
-            
-            
-            
 
+        public bool LegalMovesCanBeFixed()
+        {
+            
+            var a = _dotsList.Max(x => x.DotType);
+            for (int i = 0; i <= a; i++)
+            {
+                if (_dotsList.Count(x => x.DotType == i) >= 3)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+
+        public void ShuffleDots()
+        {
+            var rnd = new System.Random(250);
+
+
+            for (int j = 0; j < 100; j++)
+            {
+                var shuffled = _dotsList.OrderBy(x => rnd.Next()).ToList();
+                for (var i = 0; i < _dotsList.Count; i++)
+                {
+                    shuffled[i].SoftCol = _dotsList[i].Column;
+                    shuffled[i].SoftRow = _dotsList[i].Row;
+                    _dotsList[i].SoftType = shuffled[i].DotType;
+                }
+
+                var softArray = Get2DDotArray(true);
+
+
+                var b = AnyLegalMoves(softArray);
+                if (b)
+                {
+                    break;
+                }
+            }
         }
 
 
@@ -100,9 +139,9 @@ namespace MatchDots
             // look at blobs to find legal moves some day
         }
 
-        public bool AnyLegalMoves()
+        public bool AnyLegalMoves( [CanBeNull] DotsPrefabScript[,] arIn = null)
         {
-            var ar = Get2DDotArray();
+            var ar =  arIn ??= Get2DDotArray();
             
             for (int i = 0; i < _rows; i++)
             {
@@ -148,12 +187,20 @@ namespace MatchDots
         }
         
         
-        DotsPrefabScript[,] Get2DDotArray()
+        DotsPrefabScript[,] Get2DDotArray(bool soft = false)
         {
             var ar = new DotsPrefabScript[_rows, _cols];
             foreach (var dotsPrefabScript in DotsList)
             {
-                ar[dotsPrefabScript.Row - 1, dotsPrefabScript.Column - 1] = dotsPrefabScript;
+                if (soft)
+                {
+                    ar[dotsPrefabScript.SoftRow - 1, dotsPrefabScript.SoftCol - 1] = dotsPrefabScript;
+                }
+                else
+                {
+                    ar[dotsPrefabScript.Row - 1, dotsPrefabScript.Column - 1] = dotsPrefabScript;
+                }
+                
             }
             return ar;
         }
