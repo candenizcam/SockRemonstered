@@ -29,15 +29,44 @@ namespace Classes
                 _hearts.Add(h);
             }
 
-            _loader = new VisualElement();
-            _loader.style.position = Position.Absolute;
-            _loader.style.right = 0f;
-            _loader.style.bottom = 0f;
-            _loader.style.height = height;
-            _loader.style.width = 0f;
-            _loader.style.backgroundColor = new Color(0.2f,0.2f,0.2f,0.2f);
+            _loader = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    right = 0f,
+                    bottom = 0f,
+                    height = height,
+                    width = 0f,
+                    overflow = Overflow.Hidden,
+                    //backgroundColor =Color.red
+                }
+            };
             Add(_loader);
+
+            var ssss = Resources.Load<Sprite>("ui/livesbg_dark");
+
+            var nl = new VisualElement
+            {
+                style =
+                {
+                    backgroundImage = new StyleBackground(ssss),
+                    unityBackgroundImageTintColor =new Color(0.2f,0.2f,0.2f,0.2f),
+                    //backgroundColor = new Color(1f,0f,1f),
+                    position = Position.Absolute,
+                    right = 0f,
+                    top = 0f,
+                    width = width,
+                    height =height,
+                    unityBackgroundScaleMode = ScaleMode.StretchToFill
+                    //unityBackgroundScaleMode = ScaleMode.ScaleAndCrop,
+                }
+            };
             
+            
+            _loader.Add(nl);
+
+
             OnTouchDown = () =>
             {
                 style.unityBackgroundImageTintColor = Color.gray;

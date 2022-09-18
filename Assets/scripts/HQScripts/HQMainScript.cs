@@ -72,8 +72,14 @@ public class HQMainScript : MonoBehaviour
         _hqHud.PlayButtonAction = () =>
         {
             var sgd = SerialGameData.LoadOrGenerate();
-            var nl = Constants.GetNextLevel(sgd.nextLevel);
-            SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+            if (sgd.getHearts() > 0)
+            {
+                var nl = Constants.GetNextLevel(sgd.nextLevel);
+                SceneManager.LoadScene(nl.SceneName, LoadSceneMode.Single);
+                
+            }
+            
+            
         };
 
         _hqHud.LivesButtonAction = () =>
