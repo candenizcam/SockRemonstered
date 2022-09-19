@@ -179,7 +179,7 @@ namespace HQScripts
             _purchaseTab.ItemAction = thisItem =>
             {
                 var sgd = SerialGameData.LoadOrGenerate();
-                if (sgd.coins > thisItem.Price)
+                if (sgd.coins >= thisItem.Price)
                 {
 
                     sgd.coins -= thisItem.Price;

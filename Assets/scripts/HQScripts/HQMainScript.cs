@@ -229,16 +229,17 @@ public class HQMainScript : MonoBehaviour
                 MonsterPrefabScript.UpdateDress(sgd.lineup);
             }
             
-            // ShopExclamation
-            // sgd.activeFurnitures
             try
             {
-                var f = ShopItems.ShopItemsArray.First(x => !sgd.activeFurnitures.Contains(x.ID));
-                _hqHud.ShopExclamation(f.Price <= sgd.coins);
+                var cheapest = ShopItems
+                    .GetNotCoinsArray()
+                    .Where(x => !sgd.purchased.Contains(x.ID))
+                    .Min(x => x.Price);
+                _hqHud.ShopExclamation(cheapest <= sgd.coins);
             }
             catch (InvalidOperationException e)
             {
-                
+                _hqHud.ShopExclamation(false);
             }
             
 

@@ -48,16 +48,22 @@ namespace HQScripts
             
             generateTopBarElements(_topBar);
 
-            _bottomBar = new VisualElement();
-            _bottomBar.style.position = Position.Absolute;
-            _bottomBar.style.left = 0f;
-            _bottomBar.style.bottom = 0f;
-            _bottomBar.style.height = 200f;
-            _bottomBar.style.width = Constants.UiWidth;
-            _bottomBar.style.flexDirection =FlexDirection.Row;
-            _bottomBar.style.alignItems= Align.Center;
-            _bottomBar.style.justifyContent = Justify.SpaceAround;
-            
+            _bottomBar = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = 0f,
+                    bottom = 0f,
+                    height = 220f,
+                    paddingBottom = 32f,
+                    width = Constants.UiWidth,
+                    flexDirection = FlexDirection.Row,
+                    alignItems = Align.FlexEnd,
+                    justifyContent = Justify.SpaceAround
+                }
+            };
+
             var bottomVisual = new Image();
             bottomVisual.sprite  = Resources.Load<Sprite>("ui/bottom");
             bottomVisual.style.position = Position.Absolute;

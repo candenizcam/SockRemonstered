@@ -41,7 +41,8 @@ namespace ui
                     height = Constants.UiHeight,
                     left = 0f,
                     top = 0f,
-                    backgroundColor = new Color(0.102f, 0.024f, 0.071f,0.84f)
+                    backgroundColor = new Color(0.102f, 0.024f, 0.071f,0.84f),
+                    unityBackgroundScaleMode = ScaleMode.ScaleToFit
                 }
             };
 

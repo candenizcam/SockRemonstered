@@ -13,7 +13,7 @@ public class DotsMain : GameMain
     public SpriteRenderer bg;
     //public SpriteRenderer BottomFrame;
     public SpriteRenderer topFrame;
-    public SpriteRenderer sockBg;
+    //public SpriteRenderer sockBg;
 
     public FizzlerScript fizzlerScript;
 
@@ -112,8 +112,8 @@ public class DotsMain : GameMain
         var bottom = pfr.yMax;
         var tw = topFrame.size;
         topFrame.gameObject.transform.position = new Vector3(left + tw.x / 2f, bottom + tw.y / 2f, -3f);
-        var littleSs = w / (sockBg.bounds.size.x-.2f);
-        sockBg.gameObject.transform.localScale = new Vector3(littleSs, littleSs, 1f);
+        //var littleSs = w / (sockBg.bounds.size.x-.2f);
+        //sockBg.gameObject.transform.localScale = new Vector3(littleSs, littleSs, 1f);
         
         
         

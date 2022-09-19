@@ -357,7 +357,8 @@ namespace RainScripts
         
         public static readonly TutorialFrame[] Tutorial = new TutorialFrame[]
         {
-
+            new TutorialFrame("TutorialRain/RainTutorial_1", .4f),
+            new TutorialFrame("TutorialRain/RainTutorial_2", .4f),
         };
 
     }
