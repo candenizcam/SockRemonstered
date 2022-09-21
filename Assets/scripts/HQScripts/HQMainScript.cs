@@ -116,7 +116,24 @@ public class HQMainScript : MonoBehaviour
 
         _hqHud.AchiButtonAction = () =>
         {
-          
+            if (!Constants.ReleaseVersion)
+            {
+                SerialGameData.Apply(sgd =>
+                {
+                    sgd.nextLevel += 1;
+                });
+            }
+        };
+        
+        _hqHud.SettingsButtonAction = () =>
+        {
+            if (!Constants.ReleaseVersion)
+            {
+                SerialGameData.Apply(sgd =>
+                {
+                    sgd.nextLevel -= 1;
+                });
+            }
         };
 
 
