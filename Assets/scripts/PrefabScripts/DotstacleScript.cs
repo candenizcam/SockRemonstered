@@ -4,34 +4,19 @@ using UnityEngine;
 
 public class DotstacleScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public List<SpriteRenderer> ObstacleVisuals;
-
+    
+    public SpriteRenderer ObstacleVisual;
+    public SpriteRenderer ObstacleBack;
     public int Row;
     public int Column;
-    private int ObstacleIndex = 0;
 
+    public float WorldWidth => ObstacleVisual.bounds.size.x;
+    public float WorldHeight => ObstacleVisual.bounds.size.y;
 
-    public float WorldWidth => ObstacleVisuals[ObstacleIndex].bounds.size.x;
-    public float WorldHeight => ObstacleVisuals[ObstacleIndex].bounds.size.y;
-
-    public void SetObstacleIndex(int obstacleNo)
+    public void Recolour(Color c)
     {
-        ObstacleIndex = obstacleNo - 1;
-        for (var i = 0; i < ObstacleVisuals.Count; i++)
-        {
-            ObstacleVisuals[i].enabled = i == ObstacleIndex;
-        }
+        ObstacleBack.color = c;
     }
+
     
-    void Awake()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -94,11 +94,12 @@ public class DotsMain : GameMain
             var o = Instantiate(ores).GetComponent<DotstacleScript>();
             o.Row = dotGridObstacle.R;
             o.Column = dotGridObstacle.C;
-            o.SetObstacleIndex(dotGridObstacle.Type);
+            //o.SetObstacleIndex(dotGridObstacle.Type);
             var obs_rect = _mainCamera.GetGridRect(o.Row, o.Column);
             var t = o.gameObject.transform;
             t.position = new Vector3(obs_rect.center.x, obs_rect.center.y, 0f);
             t.localScale = new Vector3(obs_rect.width / o.WorldWidth, obs_rect.height / o.WorldHeight, 1f);
+            _dotGrid.DotstacleScripts.Add(o);
         }
         
         InitializeUi<DotsHud>(tutorialFrames: DotsLevels.Tutorial);
@@ -335,13 +336,29 @@ public class DotsMain : GameMain
         
         
     }
+
+
+    private void FizzleAndShine(Color c, int? fizzlerIndex = null)
+    {
+        bg.color = c;
+        foreach (var dotGridObstacle in _dotGrid.DotstacleScripts)
+        {
+            dotGridObstacle.Recolour(c);
+        }
+        if (fizzlerIndex != null)
+        {
+            fizzlerScript.FizzlerColour = (int)fizzlerIndex;
+        }
+        
+    }
     
     private void HandleTouch()
     {
         if (Input.touches.Length == 0)
         {
-            bg.color = Color.white;
-            fizzlerScript.FizzlerColour = -1;
+            FizzleAndShine(Color.white, -1);
+            //bg.color = Color.white;
+            //fizzlerScript.FizzlerColour = -1;
             return;
         }
         
@@ -356,8 +373,9 @@ public class DotsMain : GameMain
         }
         catch (InvalidOperationException)
         {
-            bg.color = Color.white;
-            fizzlerScript.FizzlerColour = -1;
+            FizzleAndShine(Color.white, -1);
+            //bg.color = Color.white;
+            //fizzlerScript.FizzlerColour = -1;
             TerminateTouch();
             return;
         }
@@ -430,19 +448,22 @@ public class DotsMain : GameMain
             {
 
                 var c = Constants.GetDotColours(type);
-                bg.color = c*0.8f + Color.white*0.2f;
+                //bg.color = c*0.8f + Color.white*0.2f;
+                FizzleAndShine(c*0.8f + Color.white*0.2f);
 
 
             }
             else
             {
-                bg.color = Color.white;
+                FizzleAndShine(Color.white);
+                //bg.color = Color.white;
             }
         }
         else
         {
-            fizzlerScript.FizzlerColour = -1;
-            bg.color = Color.white;
+            FizzleAndShine(Color.white,-1);
+            //fizzlerScript.FizzlerColour = -1;
+            //bg.color = Color.white;
         }
     }
     

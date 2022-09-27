@@ -54,7 +54,7 @@ namespace Classes
         {
             var lp = GetLevelPoints();
             var levelNo = 0;
-            var buttonText = "RETURN";
+            var buttonText = "NEXT";
             if (won)
             {
                 _gameState = GameState.Won;
@@ -64,7 +64,7 @@ namespace Classes
                     sgd.nextLevel += 1;
                     sgd.coins += lp.number;
                 });
-                _betweenLevels.OnBigButton = ToHQ;
+                _betweenLevels.OnBigButton = Restart;
             }
             else
             {

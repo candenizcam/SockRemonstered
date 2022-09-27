@@ -16,6 +16,7 @@ namespace MatchDots
         private int _fillSize = 0;
         private List<DotsPrefabScript> _dotsList = new List<DotsPrefabScript>();
         public List<DotsPrefabScript> DotsList => _dotsList;
+        public List<DotstacleScript> DotstacleScripts = new List<DotstacleScript>();
         public DotsObstacle[] Obstacles => _obstacle;
         
         public DotGrid(DotsLevelsInfo dli)
