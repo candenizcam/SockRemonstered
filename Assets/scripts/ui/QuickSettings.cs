@@ -66,7 +66,7 @@ namespace ui
                  style =
                  {
                      position = Position.Absolute,
-                     left = 264f,
+                     left = 264f - 32f,
                      bottom = bottom+ 32f
                  }
              };
@@ -81,7 +81,7 @@ namespace ui
                  style =
                  {
                      position = Position.Absolute,
-                     left = 496f,
+                     left = 496f- 32f,
                      bottom = bottom+32f
                  }
              };
@@ -92,7 +92,7 @@ namespace ui
                  style =
                  {
                      position = Position.Absolute,
-                     left = 728f,
+                     left = 728f - 32f,
                      bottom = bottom+32f
                  }
              };
@@ -110,7 +110,7 @@ namespace ui
                 style =
                 {
                     position = Position.Absolute,
-                    left = 960f,
+                    left = 960f- 32f,
                     bottom = bottom+32f
                 }
             };

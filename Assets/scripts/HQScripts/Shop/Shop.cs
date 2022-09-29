@@ -104,7 +104,7 @@ namespace HQScripts
                 
                 
             });
-            _shopTabs.TabFunc(0);
+            
             _mainHolder.Add(_shopTabs);
             _mainHolder.Add(tabHolder);
             
@@ -217,6 +217,12 @@ namespace HQScripts
             };
             //_purchaseTab.UpdateShopItems(ShopItems.ShopItemsArray);
             UpdateShopItems();
+            
+            SerialGameData.Apply(a =>
+            {   
+                _shopTabs.TabFunc(a.purchased.Count == 0 ? 1 : 0);
+            },false);
+            
         }
 
 
