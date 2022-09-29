@@ -222,7 +222,7 @@ public class CardsMain : GameMain
             {
                 broker = true;
                 _gameState = GameState.Standby;
-                _tweenHolder.newTween(0.5f, alpha =>
+                _tweenHolder.newTween(0.3f, alpha =>
                 {
                     var t = sockCardPrefabScript.gameObject.transform;
                     var x = (float)Math.Sin(alpha * Math.PI)*90;

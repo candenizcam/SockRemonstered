@@ -46,7 +46,7 @@ namespace ui
                 }
             };
 
-            var settingsButton = new ButtonClickable(1f,"ui/buttons/Pause-2",Color.gray,SettingsButtonFunction)
+            var settingsButton = new ButtonClickable(1f,"ui/buttons/Exit",Color.gray,SettingsButtonFunction)
              {
                  style =
                  {
@@ -105,7 +105,7 @@ namespace ui
                 //MusicButtonFunction(a==0);
                 _tutorialOn = a == 0;
 
-            }, new[] {"ui/buttons/tutorial_on", "ui/buttons/tutorial_off"}, Color.gray,startIndex:tutorialOn ? 1: 0)
+            }, new[] {"ui/buttons/tutorial_off", "ui/buttons/tutorial_on"}, Color.gray,startIndex:tutorialOn ? 1: 0)
             {
                 style =
                 {
